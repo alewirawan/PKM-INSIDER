@@ -3,21 +3,17 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
-import {
-  getBlogPosts,
-  listenCmsUpdates,
-  seedCmsPosts,
-  type CmsPost,
-} from "../lib/local-cms";
+import { listPublicPosts } from "../lib/cms/posts";
+import type { CmsPost } from "../lib/cms/types";
 import { NewsletterForm } from "./NewsletterForm";
 
 export function PublicBlog() {
-  const [posts, setPosts] = useState<CmsPost[]>(seedCmsPosts);
+  const [posts, setPosts] = useState<CmsPost[]>([]);
   const [category, setCategory] = useState("Semua");
   useEffect(() => {
-    const load = () => setPosts(getBlogPosts(false));
-    load();
-    return listenCmsUpdates(load);
+    let active = true;
+    listPublicPosts().then((items) => { if (active) setPosts(items); }).catch(() => { if (active) setPosts([]); });
+    return () => { active = false; };
   }, []);
   const categories = useMemo(
     () => ["Semua", ...Array.from(new Set(posts.map((post) => post.category)))],

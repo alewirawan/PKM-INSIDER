@@ -3,21 +3,15 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import {
-  getBlogPosts,
-  listenCmsUpdates,
-  seedCmsPosts,
-  type CmsPost,
-} from "../lib/local-cms";
+import { listPublicPosts } from "../lib/cms/posts";
+import type { CmsPost } from "../lib/cms/types";
 
 export function HomeNews() {
-  const [items, setItems] = useState<CmsPost[]>(
-    seedCmsPosts.filter((post) => post.status === "Terbit").slice(0, 3),
-  );
+  const [items, setItems] = useState<CmsPost[]>([]);
   useEffect(() => {
-    const load = () => setItems(getBlogPosts(false).slice(0, 3));
-    load();
-    return listenCmsUpdates(load);
+    let active = true;
+    listPublicPosts().then((posts) => { if (active) setItems(posts.slice(0, 3)); }).catch(() => { if (active) setItems([]); });
+    return () => { active = false; };
   }, []);
 
   return (

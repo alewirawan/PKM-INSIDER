@@ -6,14 +6,17 @@ import { FileQuestion, PenLine, Search } from "lucide-react";
 import { type FormEvent, useEffect, useState } from "react";
 import {
   articleContentToText,
-  deleteBlogPost,
+  createPost,
+  listAdminPosts,
+  removePost,
+  updatePost,
   estimateReadTime,
   formatIndonesianDate,
   parseArticleContent,
   slugify,
-  upsertBlogPost,
-  type CmsPost,
-} from "../../lib/local-cms";
+} from "../../lib/cms/posts";
+import { hasBackendApi } from "../../lib/api-client";
+import type { CmsPost } from "../../lib/cms/types";
 import { AdminEmptyState, AdminPageHeader } from "./AdminUi";
 
 type PostForm = {
@@ -31,7 +34,7 @@ const blankPost: PostForm = {
   title: "",
   slug: "",
   category: "Pengumuman",
-  date: "2026-09-18",
+  date: new Date(Date.now() + 7 * 60 * 60 * 1000).toISOString().slice(0, 10),
   image: "/images/campus.jpg",
   excerpt: "",
   content: "",
@@ -60,6 +63,14 @@ export function PostsModule({
   });
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("Semua");
+  const [saving, setSaving] = useState(false);
+  useEffect(() => {
+    if (!hasBackendApi()) {
+      setPosts([]);
+      return;
+    }
+    listAdminPosts().then(setPosts).catch(() => setPosts([]));
+  }, [setPosts]);
   useEffect(() => {
     if (!preset) return;
     const timer = window.setTimeout(() => {
@@ -95,7 +106,7 @@ export function PostsModule({
       title: post.title,
       slug: post.slug,
       category: post.category,
-      date: post.updatedAt.slice(0, 10),
+      date: post.publishedAt.slice(0, 10),
       image: post.image,
       excerpt: post.excerpt,
       content: articleContentToText(post.content),
@@ -105,57 +116,71 @@ export function PostsModule({
     setEditorOpen(true);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
-  function save(event: FormEvent<HTMLFormElement>) {
+  async function save(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (!hasBackendApi()) {
+      notify("Backend API belum dikonfigurasi.", "warning");
+      return;
+    }
     const content = parseArticleContent(form.content);
-    let slug = slugify(form.slug || form.title);
-    const conflict = posts.find(
-      (post) => post.slug === slug && post.id !== editing,
-    );
-    if (conflict) slug = `${slug}-${String(Date.now()).slice(-4)}`;
-    const post: CmsPost = {
-      id: editing ?? `post-${Date.now()}`,
+    const payload = {
       title: form.title.trim(),
-      slug,
+      slug: slugify(form.slug || form.title),
       category: form.category,
-      date: formatIndonesianDate(form.date),
-      readTime: estimateReadTime(content),
       image: form.image,
       excerpt: form.excerpt.trim(),
       content,
       author: form.author.trim(),
       status: form.status,
-      updatedAt: `${form.date}T12:00:00.000Z`,
+      publishedAt: new Date(`${form.date}T12:00:00+07:00`).toISOString(),
     };
-    const next = upsertBlogPost(post);
-    setPosts(next);
-    notify(
-      post.status === "Terbit"
-        ? "Artikel diterbitkan dan langsung tampil di website."
-        : "Draft artikel berhasil disimpan.",
-    );
-    reset();
+    setSaving(true);
+    try {
+      const saved = editing
+        ? await updatePost(editing, payload)
+        : await createPost(payload);
+      const next = editing
+        ? posts.map((item) => item.id === saved.id ? saved : item)
+        : [saved, ...posts];
+      setPosts(next);
+      notify(saved.status === "Terbit" ? "Artikel berhasil diterbitkan." : "Draft artikel berhasil disimpan.");
+      reset();
+    } catch (error) {
+      notify(error instanceof Error ? error.message : "Gagal menyimpan artikel.", "warning");
+    } finally {
+      setSaving(false);
+    }
   }
-  function remove(post: CmsPost) {
+
+  async function remove(post: CmsPost) {
     if (!window.confirm(`Hapus artikel “${post.title}”?`)) return;
-    setPosts(deleteBlogPost(post.id));
-    notify("Artikel berhasil dihapus.", "warning");
+    try {
+      await removePost(post.id);
+      setPosts(posts.filter((item) => item.id !== post.id));
+      notify("Artikel berhasil dihapus.", "warning");
+    } catch (error) {
+      notify(error instanceof Error ? error.message : "Gagal menghapus artikel.", "warning");
+    }
   }
-  function toggle(post: CmsPost) {
-    const updated = {
-      ...post,
-      status: (post.status === "Terbit"
-        ? "Draft"
-        : "Terbit") as CmsPost["status"],
-      updatedAt: new Date().toISOString(),
-    };
-    const next = upsertBlogPost(updated);
-    setPosts(next);
-    notify(
-      updated.status === "Terbit"
-        ? "Artikel dipublikasikan."
-        : "Artikel dipindahkan ke draft.",
-    );
+
+  async function toggle(post: CmsPost) {
+    try {
+      const updated = await updatePost(post.id, {
+        title: post.title,
+        slug: post.slug,
+        category: post.category,
+        image: post.image,
+        excerpt: post.excerpt,
+        content: post.content,
+        author: post.author,
+        status: post.status === "Terbit" ? "Draft" : "Terbit",
+        publishedAt: post.publishedAt,
+      });
+      setPosts(posts.map((item) => item.id === updated.id ? updated : item));
+      notify(updated.status === "Terbit" ? "Artikel dipublikasikan." : "Artikel dipindahkan ke draft.");
+    } catch (error) {
+      notify(error instanceof Error ? error.message : "Gagal mengubah status artikel.", "warning");
+    }
   }
   return (
     <div className="admin-view">
@@ -306,8 +331,8 @@ export function PostsModule({
               >
                 Batal
               </button>
-              <button className="button button-accent" type="submit">
-                {form.status === "Terbit"
+              <button className="button button-accent" type="submit" disabled={saving}>
+                {saving ? "Menyimpan…" : form.status === "Terbit"
                   ? "Terbitkan artikel"
                   : "Simpan draft"}{" "}
                 →

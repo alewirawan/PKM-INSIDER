@@ -82,15 +82,32 @@ for (const [route, item] of Object.entries(document.paths)) {
     );
     assert.equal(
       operation["x-implementation-status"],
-      route.startsWith("/auth/")
-        ? "foundation"
-        : operation["x-owner"] === 2
-          ? "implemented"
-          : "planned",
+      route.startsWith("/auth/") ? "foundation" : "planned",
     );
     if (operation.security) assert.ok(operation["x-roles"].length);
   }
 }
+
+const validPost = {
+  title: "Artikel Uji Backend",
+  slug: "artikel-uji-backend",
+  category: "Akademik",
+  image: "/images/science.jpg",
+  excerpt: "Ringkasan artikel yang memenuhi batas minimum.",
+  content: ["Isi artikel uji."],
+  author: "Editor Uji",
+  status: "Draft",
+  publishedAt: "2026-11-05T05:00:00.000Z",
+};
+check("post input includes publication timestamp", "PostInput", validPost, true);
+const postWithoutPublishedAt = { ...validPost };
+delete postWithoutPublishedAt.publishedAt;
+check("post input requires publishedAt", "PostInput", postWithoutPublishedAt, false);
+check("post response includes separate update timestamp", "Post", {
+  ...validPost,
+  id: "7e6b79d5-ae9b-4a9f-88d2-2e7f8c88b3b1",
+  updatedAt: "2026-11-05T05:30:00.000Z",
+}, true);
 
 const student = {
   studentName: "Siswa Uji",

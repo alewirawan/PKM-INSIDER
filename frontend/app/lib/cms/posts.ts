@@ -1,39 +1,28 @@
-import { posts } from "../../data";
-import { KEYS, readJson, writeJson } from "./storage";
-import type { CmsPost } from "./types";
+import type { Post } from "../../data";
+import { requestApi } from "../api-client";
+import type { CmsPost, PostStatus } from "./types";
 
-const seedDates = [
-  "2026-09-12T08:00:00.000Z",
-  "2026-09-05T08:00:00.000Z",
-  "2026-08-28T08:00:00.000Z",
-  "2026-08-20T08:00:00.000Z",
-];
+export type PostPayload = Omit<Post, "date" | "readTime"> & {
+  author: string;
+  status: PostStatus;
+  publishedAt: string;
+};
 
-export const seedCmsPosts: CmsPost[] = posts.map((post, index) => ({
-  ...post,
-  id: `post-${post.slug}`,
-  status: "Terbit",
-  author: index === 0 ? "Nadia Prameswari" : "Tim Komunikasi Nurul Huda",
-  updatedAt: seedDates[index] ?? seedDates[0],
-}));
+type ApiPost = Omit<PostPayload, "publishedAt"> & {
+  id: string;
+  publishedAt: string;
+  updatedAt: string;
+};
 
 export function slugify(value: string) {
   return (
-    value
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .toLowerCase()
-      .trim()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "") || "artikel-baru"
+    value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim()
+      .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "artikel-baru"
   );
 }
 
 export function parseArticleContent(value: string) {
-  return value
-    .split(/\n\s*\n/)
-    .map((paragraph) => paragraph.replace(/\s+/g, " ").trim())
-    .filter(Boolean);
+  return value.split(/\n\s*\n/).map((paragraph) => paragraph.replace(/\s+/g, " ").trim()).filter(Boolean);
 }
 
 export function articleContentToText(content: string[]) {
@@ -46,56 +35,44 @@ export function estimateReadTime(content: string[]) {
 }
 
 export function formatIndonesianDate(value: string) {
-  const date = new Date(`${value}T12:00:00`);
+  const date = value.length === 10
+    ? new Date(`${value}T12:00:00.000Z`)
+    : new Date(value);
   if (Number.isNaN(date.getTime())) return value;
-  return new Intl.DateTimeFormat("id-ID", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  }).format(date);
+  return new Intl.DateTimeFormat("id-ID", { day: "numeric", month: "long", year: "numeric", timeZone: "Asia/Jakarta" }).format(date);
 }
 
-function migratePostBrand(post: CmsPost): CmsPost {
-  const rename = (value: string) =>
-    value
-      .replaceAll("SMA Arunika Nusantara", "SMP Nurul Huda")
-      .replaceAll("Arunika", "Nurul Huda")
-      .replaceAll("beasiswa-arunika", "beasiswa-nurul-huda");
+function fromApi(post: ApiPost): CmsPost {
   return {
     ...post,
-    slug: rename(post.slug),
-    title: rename(post.title),
-    excerpt: rename(post.excerpt),
-    content: post.content.map(rename),
-    author: rename(post.author),
+    date: formatIndonesianDate(post.publishedAt),
+    readTime: estimateReadTime(post.content),
   };
 }
 
-export function getBlogPosts(includeDrafts = false) {
-  const stored = readJson<CmsPost[] | null>(KEYS.posts, null);
-  const source = stored !== null ? stored.map(migratePostBrand) : seedCmsPosts;
-  return source
-    .filter((post) => includeDrafts || post.status === "Terbit")
-    .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+export async function listPublicPosts() {
+  const posts = await requestApi<ApiPost[]>("/posts");
+  return posts.map(fromApi);
 }
 
-export function saveBlogPosts(value: CmsPost[]) {
-  writeJson(KEYS.posts, value);
+export async function listAdminPosts() {
+  const posts = await requestApi<ApiPost[]>("/admin/posts");
+  return posts.map(fromApi);
 }
 
-export function upsertBlogPost(post: CmsPost) {
-  const current = getBlogPosts(true);
-  const existingIndex = current.findIndex((item) => item.id === post.id);
-  const next =
-    existingIndex >= 0
-      ? current.map((item) => (item.id === post.id ? post : item))
-      : [post, ...current];
-  saveBlogPosts(next);
-  return next;
+export async function getPublicPost(slug: string) {
+  const post = await requestApi<ApiPost>(`/posts/by-slug/${encodeURIComponent(slug)}`);
+  return fromApi(post);
 }
 
-export function deleteBlogPost(id: string) {
-  const next = getBlogPosts(true).filter((post) => post.id !== id);
-  saveBlogPosts(next);
-  return next;
+export async function createPost(input: PostPayload) {
+  return fromApi(await requestApi<ApiPost>("/posts", { method: "POST", body: JSON.stringify(input) }));
+}
+
+export async function updatePost(id: string, input: PostPayload) {
+  return fromApi(await requestApi<ApiPost>(`/posts/${encodeURIComponent(id)}`, { method: "PATCH", body: JSON.stringify(input) }));
+}
+
+export async function removePost(id: string) {
+  await requestApi<void>(`/posts/${encodeURIComponent(id)}`, { method: "DELETE" });
 }

@@ -2,20 +2,14 @@
 
 Revisi 1.2.0, 15 Oktober 2026. [openapi.yaml](openapi.yaml) adalah target request,
 response, akses, dan validasi untuk implementasi tim. Fondasi backend hanya
-memiliki auth dan health. Klub dan agenda anggota 2 sudah diimplementasikan;
-resource lain masih berstatus planned. Kontrak tidak
+memiliki auth dan health; resource lain berstatus planned. Kontrak tidak
 menjalankan database, migration, atau upload.
 
 Pembagian path dan pemilik ada di [panduan tim](../docs/README-TIM-PKM.md).
-Schema PostgreSQL seluruh modul sudah tersedia di backend/src/db/schema/;
-lihat [tabel, mapping dan langkah migration](../backend/README.md#schema-seluruh-project).
-Status planned pada operasi tetap berlaku sampai handler dan integrasinya dibuat.
-Nama field API tidak diubah mengikuti nama kolom database; gunakan mapper,
-khususnya status PPDB, nomor pendaftaran, snapshot kegiatan dan metadata dokumen.
 Jika belum terbiasa dengan API, baca [Panduan Anggota](../docs/PANDUAN-ANGGOTA.md)
 terlebih dahulu, lalu pelajari hanya operasi yang berkaitan dengan tugasmu.
 Setiap operasi memiliki x-owner. x-implementation-status membedakan foundation
-dari implemented dan planned; x-roles adalah aturan yang harus ditegakkan server, bukan otorisasi
+dari planned; x-roles adalah aturan yang harus ditegakkan server, bukan otorisasi
 yang otomatis berjalan karena ditulis di YAML.
 
 ## Perubahan dari kontrak lama
@@ -45,7 +39,7 @@ yang otomatis berjalan karena ditulis di YAML.
 | File dipilih     | File dalam memori                        | multipart; tidak dikirim sebagai base64/JSON                                    |
 | File contoh      | fileName dapat berupa nama fiktif        | Tidak diimpor sebagai bukti file; hasFile ditentukan storage server             |
 | Berkas fisik     | Checklist offline                        | receivedDocumentKinds pada request, receivedPhysically pada metadata            |
-| Agenda           | Visibilitas Publik/Internal tersedia     | GET publik memfilter Publik; daftar admin memuat seluruh agenda                 |
+| Agenda           | Belum ada visibilitas pada model UI      | Tambahkan kontrol Publik/Internal saat integrasi anggota 2                      |
 | Error            | ApiError hanya membawa message/requestId | Anggota 10 mengembangkan parsing errors per field bersama pemilik form          |
 
 Nama kegiatan wajib unik setelah trim dan normalisasi kapital. Simpan snapshot

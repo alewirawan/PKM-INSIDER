@@ -23,22 +23,23 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import {
+  getAgenda,
   getApplications,
-  getBlogPosts,
   getMessages,
   getNewsletterSubscriptions,
   getSchoolSettings,
   listenCmsUpdates,
   resetLocalDemoData,
+  seedAgenda,
   seedApplications,
-  seedCmsPosts,
+  type Agenda,
   type Application,
   type CmsPost,
   type ContactMessage,
   type SchoolSettings,
 } from "../lib/local-cms";
 import { hasBackendApi, requestApi } from "../lib/api-client";
-import { useAgenda } from "../lib/use-agenda";
+import { listAdminPosts } from "../lib/cms/posts";
 import { BrandMark } from "./BrandMark";
 import { SchoolDirectoryModule } from "./SchoolDirectoryModule";
 import { StudentRecordsModule } from "./StudentRecordsModule";
@@ -79,7 +80,8 @@ export function AdminDashboard() {
   const [view, setView] = useState<View>("dashboard");
   const [applications, setApplications] =
     useState<Application[]>(seedApplications);
-  const [posts, setPosts] = useState<CmsPost[]>(seedCmsPosts);
+  const [posts, setPosts] = useState<CmsPost[]>([]);
+  const [agenda, setAgenda] = useState<Agenda[]>(seedAgenda);
   const [messages, setMessages] = useState<ContactMessage[]>([]);
   const [settings, setSettings] = useState<SchoolSettings>(() =>
     getSchoolSettings(),
@@ -87,13 +89,13 @@ export function AdminDashboard() {
   const [newsletterCount, setNewsletterCount] = useState(0);
   const [toast, setToast] = useState<Toast>(null);
   const [authenticated, setAuthenticated] = useState(false);
-  const { agenda, error: agendaError } = useAgenda(true, authenticated);
   const [mobileMoreOpen, setMobileMoreOpen] = useState(false);
   const [postPreset, setPostPreset] = useState<string | null>(null);
 
   function reload() {
     setApplications(getApplications());
-    setPosts(getBlogPosts(true));
+    if (!hasBackendApi()) setPosts([]);
+    setAgenda(getAgenda());
     setMessages(getMessages());
     setSettings(getSchoolSettings());
     setNewsletterCount(getNewsletterSubscriptions().length);
@@ -104,7 +106,10 @@ export function AdminDashboard() {
       reload();
       if (hasBackendApi()) {
         requestApi("/auth/session")
-          .then(() => setAuthenticated(true))
+          .then(() => {
+            setAuthenticated(true);
+            void listAdminPosts().then(setPosts).catch(() => setPosts([]));
+          })
           .catch(() => setAuthenticated(false));
       } else {
         setAuthenticated(
@@ -147,8 +152,11 @@ export function AdminDashboard() {
     setView("dashboard");
   }
   function login(mode: "demo" | "backend") {
-    if (mode === "demo")
+    if (mode === "demo") {
       window.sessionStorage.setItem(DEMO_SESSION_KEY, "true");
+    } else {
+      void listAdminPosts().then(setPosts).catch(() => setPosts([]));
+    }
     setAuthenticated(true);
   }
 
@@ -321,21 +329,14 @@ export function AdminDashboard() {
           </div>
         )}
         {view === "dashboard" && (
-          <>
-            {agendaError && (
-              <p role="alert" className="admin-form-error">
-                Agenda: {agendaError}
-              </p>
-            )}
-            <DashboardModule
-              applications={applications}
-              posts={posts}
-              agenda={agenda}
-              messages={messages}
-              onNavigate={navigate}
-              onCreatePost={() => startPost("Pengumuman")}
-            />
-          </>
+          <DashboardModule
+            applications={applications}
+            posts={posts}
+            agenda={agenda}
+            messages={messages}
+            onNavigate={navigate}
+            onCreatePost={() => startPost("Pengumuman")}
+          />
         )}
         {view === "applications" && (
           <ApplicationsModule
@@ -363,7 +364,9 @@ export function AdminDashboard() {
             notify={notify}
           />
         )}
-        {view === "agenda" && <AgendaModule notify={notify} />}
+        {view === "agenda" && (
+          <AgendaModule agenda={agenda} setAgenda={setAgenda} notify={notify} />
+        )}
         {view === "messages" && (
           <MessagesModule
             messages={messages}

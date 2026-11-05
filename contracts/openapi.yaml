@@ -442,6 +442,7 @@ paths:
           }
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
+        "409": { $ref: "#/components/responses/Conflict" }
         "422": { $ref: "#/components/responses/ValidationError" }
       x-implementation-status: planned
       x-owner: 4
@@ -453,7 +454,7 @@ paths:
       - in: path
         name: postId
         required: true
-        schema: { type: string }
+        schema: { type: string, format: uuid }
     patch:
       tags:
         - Content
@@ -480,6 +481,9 @@ paths:
           }
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+        "422": { $ref: "#/components/responses/ValidationError" }
       x-implementation-status: planned
       x-owner: 4
       x-roles:
@@ -496,6 +500,7 @@ paths:
         "204": { description: Artikel dihapus }
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
       x-implementation-status: planned
       x-owner: 4
       x-roles:
@@ -527,7 +532,7 @@ paths:
       description: >-
         Hanya visibility=Publik. Rapat/internal tidak otomatis terbuka. UI lama perlu kontrol
         visibilitas saat integrasi.
-      x-implementation-status: implemented
+      x-implementation-status: planned
       x-owner: 2
     post:
       tags:
@@ -555,7 +560,7 @@ paths:
           }
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
-      x-implementation-status: implemented
+      x-implementation-status: planned
       x-owner: 2
       x-roles:
         - super_admin
@@ -592,7 +597,7 @@ paths:
           }
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
-      x-implementation-status: implemented
+      x-implementation-status: planned
       x-owner: 2
       x-roles:
         - super_admin
@@ -608,7 +613,7 @@ paths:
         "204": { description: Agenda dihapus }
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
-      x-implementation-status: implemented
+      x-implementation-status: planned
       x-owner: 2
       x-roles:
         - super_admin
@@ -1087,7 +1092,7 @@ paths:
           }
         "429": { $ref: "#/components/responses/RateLimited" }
       description: Hanya active=true. Nama merupakan nilai pilihan frontend tahap pertama.
-      x-implementation-status: implemented
+      x-implementation-status: planned
       x-owner: 2
     post:
       tags:
@@ -1117,7 +1122,7 @@ paths:
         "403": { $ref: "#/components/responses/Forbidden" }
         "409": { $ref: "#/components/responses/Conflict" }
         "422": { $ref: "#/components/responses/ValidationError" }
-      x-implementation-status: implemented
+      x-implementation-status: planned
       x-owner: 2
       x-roles:
         - super_admin
@@ -1142,7 +1147,7 @@ paths:
           }
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
-      x-implementation-status: implemented
+      x-implementation-status: planned
       x-owner: 2
       x-roles:
         - super_admin
@@ -1185,7 +1190,7 @@ paths:
       description: >-
         Gunakan active=false, bukan hard delete. Nama pada daftar pilihan historis pendaftar tidak
         ditimpa saat rename/nonaktif.
-      x-implementation-status: implemented
+      x-implementation-status: planned
       x-owner: 2
       x-roles:
         - super_admin
@@ -1261,7 +1266,7 @@ paths:
           }
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
-      x-implementation-status: implemented
+      x-implementation-status: planned
       x-owner: 2
       x-roles:
         - super_admin
@@ -1844,9 +1849,10 @@ components:
         - content
         - author
         - status
+        - publishedAt
       properties:
         title: { type: string, minLength: 3, maxLength: 180 }
-        slug: { type: string, pattern: "^[a-z0-9]+(?:-[a-z0-9]+)*$" }
+        slug: { type: string, pattern: "^[a-z0-9]+(?:-[a-z0-9]+)*$", maxLength: 180 }
         category: { type: string, maxLength: 60 }
         image: { type: string, maxLength: 500 }
         excerpt: { type: string, minLength: 10, maxLength: 220 }
@@ -1858,15 +1864,20 @@ components:
           }
         author: { type: string, minLength: 2, maxLength: 120 }
         status: { type: string, enum: [Terbit, Draft] }
+        publishedAt:
+          type: string
+          format: date-time
+          description: Tanggal dan waktu publikasi artikel; dipertahankan saat artikel diedit.
     Post:
       allOf:
         - { $ref: "#/components/schemas/PostInput" }
         - {
             type: object,
-            required: [id, updatedAt],
+            required: [id, publishedAt, updatedAt],
             properties:
               {
                 id: { type: string },
+                publishedAt: { type: string, format: date-time },
                 updatedAt: { type: string, format: date-time },
               },
           }

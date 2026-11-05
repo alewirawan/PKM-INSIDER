@@ -1,8 +1,6 @@
 /**
- * Backend integration seam.
- *
- * The current mockup still reads from local-cms.ts. When the backend is ready,
- * use requestApi() from repository functions instead of calling localStorage.
+ * Shared HTTP client for backend-backed CMS repositories.
+ * Requests include the HttpOnly admin session cookie when the browser has one.
  */
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/$/, "");
 

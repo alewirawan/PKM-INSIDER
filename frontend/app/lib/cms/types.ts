@@ -28,6 +28,7 @@ export type CmsPost = Post & {
   status: PostStatus;
   author: string;
   updatedAt: string;
+  publishedAt: string;
 };
 
 export type Application = {
@@ -60,7 +61,6 @@ export type Agenda = {
   location: string;
   type: "Akademik" | "PPDB" | "Kegiatan" | "Rapat";
   completed: boolean;
-  visibility: "Publik" | "Internal";
 };
 
 export type ContactMessage = {

@@ -4,7 +4,6 @@ import { PageHero } from "../components/PageHero";
 import { SiteFooter } from "../components/SiteFooter";
 import { SiteHeader } from "../components/SiteHeader";
 import { ClubDirectory } from "../components/ClubDirectory";
-import { PublicAgenda } from "../components/PublicAgenda";
 import { programs } from "../data";
 
 export const metadata: Metadata = {
@@ -92,7 +91,6 @@ export default function ProgramPage() {
           </div>
           <ClubDirectory />
         </section>
-        <PublicAgenda />
         <section className="cta-section">
           <p className="section-kicker">Siap menemukan pilihanmu?</p>
           <h2>

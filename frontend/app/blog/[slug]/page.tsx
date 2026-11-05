@@ -2,12 +2,9 @@ import type { Metadata } from "next";
 import { BlogDetailView } from "../../components/BlogDetailView";
 import { SiteFooter } from "../../components/SiteFooter";
 import { SiteHeader } from "../../components/SiteHeader";
-import { posts } from "../../data";
-import { seedCmsPosts } from "../../lib/local-cms";
+import { getPublicPost } from "../../lib/cms/posts";
 
-export function generateStaticParams() {
-  return posts.map((post) => ({ slug: post.slug }));
-}
+export const dynamicParams = true;
 
 export async function generateMetadata({
   params,
@@ -15,7 +12,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const post = posts.find((item) => item.slug === slug);
+  const post = await getPublicPost(slug).catch(() => undefined);
   if (!post)
     return {
       title: "Artikel Nurul Huda",
@@ -49,10 +46,7 @@ export default async function BlogDetail({
   return (
     <>
       <SiteHeader active="/blog" />
-      <BlogDetailView
-        slug={slug}
-        initialPost={seedCmsPosts.find((post) => post.slug === slug)}
-      />
+      <BlogDetailView slug={slug} />
       <SiteFooter />
     </>
   );

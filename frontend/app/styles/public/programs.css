@@ -131,35 +131,3 @@
   font-size: 9px;
 }
 
-.public-agenda {
-  padding: 64px max(24px, calc((100% - 1200px) / 2));
-  background: #f4f6ed;
-}
-.public-agenda-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
-  gap: 20px;
-}
-.public-agenda article {
-  min-width: 0;
-  overflow-wrap: anywhere;
-  background: #fffdf8;
-  border: 1px solid #dbe4dc;
-  border-radius: 16px;
-  padding: 24px;
-}
-.public-agenda time,
-.public-agenda small {
-  display: block;
-  color: #53675c;
-  margin-bottom: 10px;
-}
-.public-agenda h3 {
-  font:
-    400 24px Georgia,
-    serif;
-  margin: 16px 0;
-}
-.public-agenda p {
-  line-height: 1.7;
-}

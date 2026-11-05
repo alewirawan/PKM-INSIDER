@@ -23,16 +23,14 @@ import {
   addApplication,
   articleContentToText,
   estimateReadTime,
+  formatIndonesianDate,
   getApplications,
-  getBlogPosts,
   getSchoolDirectory,
   parseArticleContent,
   saveApplications,
-  saveBlogPosts,
   saveSchoolDirectory,
   slugify,
   type Application,
-  type CmsPost,
 } from "../app/lib/local-cms";
 import {
   chunkDirectoryRows,
@@ -207,27 +205,11 @@ test("creates stable blog slugs and formatted paragraphs", () => {
   assert.equal(estimateReadTime(paragraphs), "1 menit");
 });
 
-test("keeps drafts in admin while exposing only published posts publicly", () => {
-  const base: Omit<CmsPost, "id" | "slug" | "status"> = {
-    title: "Artikel Otomatis",
-    category: "Akademik",
-    date: "18 September 2026",
-    readTime: "1 menit",
-    image: "/images/science.jpg",
-    excerpt: "Ringkasan",
-    content: ["Isi artikel."],
-    author: "Admin",
-    updatedAt: "2026-09-18T12:00:00.000Z",
-  };
-  saveBlogPosts([
-    { ...base, id: "published", slug: "artikel-otomatis", status: "Terbit" },
-    { ...base, id: "draft", slug: "artikel-draft", status: "Draft" },
-  ]);
-  assert.deepEqual(
-    getBlogPosts(false).map((post) => post.slug),
-    ["artikel-otomatis"],
+test("formats article publication dates from the backend timestamp", () => {
+  assert.equal(
+    formatIndonesianDate("2026-09-12T01:00:00.000Z"),
+    "12 September 2026",
   );
-  assert.equal(getBlogPosts(true).length, 2);
 });
 
 test("new PPDB records become available to the admin data source", () => {

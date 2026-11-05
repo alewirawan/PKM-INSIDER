@@ -16,10 +16,7 @@
     "admin:create": "tsx --env-file-if-exists=.env src/scripts/create-admin.ts",
     "db:generate": "node --env-file-if-exists=.env ./node_modules/drizzle-kit/bin.cjs generate",
     "db:migrate": "node --env-file-if-exists=.env ./node_modules/drizzle-kit/bin.cjs migrate",
-    "db:studio": "node --env-file-if-exists=.env ./node_modules/drizzle-kit/bin.cjs studio",
-    "db:seed:demo": "tsx --env-file-if-exists=.env src/scripts/seed-demo.ts",
-    "db:verify": "tsx --env-file-if-exists=.env src/scripts/verify-database.ts",
-    "db:diagram": "tsx src/scripts/print-dbml.ts"
+    "db:studio": "node --env-file-if-exists=.env ./node_modules/drizzle-kit/bin.cjs studio"
   },
   "dependencies": {
     "@fastify/cookie": "^11.1.2",

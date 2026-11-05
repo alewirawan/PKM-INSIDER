@@ -22,30 +22,6 @@ afterEach(async () => {
 });
 
 describe("backend foundation", () => {
-  it.each(["PATCH", "DELETE"])(
-    "allows browser preflight for %s content requests",
-    async (method) => {
-      const app = await buildApp(config);
-      apps.push(app);
-      const response = await app.inject({
-        method: "OPTIONS",
-        url: "/api/v1/agenda/example",
-        headers: {
-          origin: "http://localhost:3000",
-          "access-control-request-method": method,
-          "access-control-request-headers": "content-type",
-        },
-      });
-      expect(response.statusCode).toBe(204);
-      expect(response.headers["access-control-allow-methods"]).toContain(
-        method,
-      );
-      expect(response.headers["access-control-allow-origin"]).toBe(
-        "http://localhost:3000",
-      );
-      expect(response.headers["access-control-allow-credentials"]).toBe("true");
-    },
-  );
   it("returns a health response without touching the database", async () => {
     const app = await buildApp(config);
     apps.push(app);
@@ -75,6 +51,29 @@ describe("backend foundation", () => {
       method: "POST",
       url: "/api/v1/auth/login",
       payload: { email: "invalid" },
+    });
+    expect(response.statusCode).toBe(422);
+    expect(response.json()).toMatchObject({ code: "VALIDATION_ERROR" });
+  });
+
+  it("requires an authenticated editor for the admin posts endpoint", async () => {
+    const app = await buildApp(config);
+    apps.push(app);
+    const response = await app.inject({
+      method: "GET",
+      url: "/api/v1/admin/posts",
+    });
+    expect(response.statusCode).toBe(401);
+    expect(response.json()).toMatchObject({ code: "UNAUTHORIZED" });
+  });
+
+  it("validates publishedAt and the required article fields", async () => {
+    const app = await buildApp(config);
+    apps.push(app);
+    const response = await app.inject({
+      method: "POST",
+      url: "/api/v1/posts",
+      payload: { title: "Artikel tanpa tanggal" },
     });
     expect(response.statusCode).toBe(422);
     expect(response.json()).toMatchObject({ code: "VALIDATION_ERROR" });

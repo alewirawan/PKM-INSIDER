@@ -1,37 +1,11 @@
 # Panduan Kerja Tim PKM SMP Nurul Huda
 
-Diperbarui: 29 Oktober 2026. Tim: 10 anggota. Repository:
+Diperbarui: 15 Oktober 2026. Tim: 10 anggota. Repository:
 https://github.com/alewirawan/PROJECT-PKM-SMP-NURUL-HUDA
 
 Panduan ini membagi pekerjaan berdasarkan menu dan hasil yang harus dapat
-didemonstrasikan. Frontend tersedia; auth, klub dan agenda sudah terintegrasi.
-Schema database seluruh modul tersedia, sedangkan handler lainnya dilanjutkan anggota.
-Anggota
+didemonstrasikan. Frontend sudah berupa simulasi; backend baru fondasi. Anggota
 melanjutkan source yang tersedia, bukan membuat ulang website.
-
-## Schema bersama yang sudah tersedia
-
-Seluruh file di bawah sudah ADA. Jika path schema yang sama masih tercantum
-dalam daftar BARU pada rencana modul di bawah, lanjutkan file ini; jangan membuat
-tabel kedua. Bagian route/service/repository yang belum ada tetap tugas pemilik.
-Jalankan migration setelah pull, bukan db:generate untuk sekadar menyamakan database.
-
-| Anggota | File di backend/src/db/schema/ | Fokus integrasi berikutnya |
-| --- | --- | --- |
-| 1 dan 9 | settings.ts | Tampilan Pengaturan dan service yang membaca/menyimpan satu konfigurasi sekolah |
-| 2 | clubs.ts, agenda.ts | Pertahankan client/API yang sudah terintegrasi |
-| 3 | directory.ts | Simpan dua daftar dalam transaksi, map urutan array ke sortOrder |
-| 4 | posts.ts | Artikel draft/terbit, slug unik, content berupa array paragraf |
-| 5 dan 6 | applications.ts | Biodata, pilihan kegiatan historis, snapshot kebijakan, history dan idempotency |
-| 7 | documents.ts | Slot kosong/fisik, metadata tiap versi, review dan storage privat |
-| 8 | messages.ts, achievements.ts | Pesan, prestasi dan newsletter tahap lanjutan |
-| 9 | auth.ts, applicant-auth.ts | Session admin dan pendaftar terpisah; aktivasi/pemulihan belum diaktifkan |
-| 9 dan 10 | audit.ts, relations.ts, index.ts | Audit tindakan, relasi query, export bersama dan review migration |
-
-`admissions.ts` hanya export kompatibilitas menuju applications.ts/documents.ts.
-Panduan 23 tabel, kolom/relasi, status database/API, alur transaksi, migration data
-lama dan cara pengujian ada di [panduan backend](../backend/README.md#schema-seluruh-project).
-Diagram yang dapat dibaca/import tersedia di [database.dbml](../backend/database.dbml).
 
 Nama anggota, kemampuan, dan jadwal diisi saat rapat awal. Nomor di bawah adalah
 peran kerja, bukan nama orang atau penilaian kemampuan. Penugasan teknis ini masih
@@ -220,32 +194,12 @@ backend/tests/clubs.test.ts
 backend/tests/agenda.test.ts
 ```
 
-- [x] Klub: daftar aktif, daftar admin, tambah/edit/nonaktif.
-- [x] Nama kegiatan unik; pilihan Belum menentukan bukan record kegiatan.
-- [x] Client dan komponen multiselect opsional tersedia untuk 5 dan 6; daftar pilihan historis tidak ikut berubah saat rename.
-- [x] Agenda dan kontrol Publik/Internal di UI admin.
-- [x] Rapat/internal disaring dari endpoint publik.
-- [x] API dan izin role; narasi Program tetap statis.
-
-Implementasi anggota 2 tersedia sejak 29 Oktober 2026. Daftar BARU di atas
-sekarang sudah dibuat. Tambahan file: `components/PublicAgenda.tsx`,
-`components/ExtracurricularPicker.tsx`, `lib/use-clubs.ts`, `lib/use-agenda.ts`,
-dan `lib/use-content-list.ts` di dalam `frontend/app/`. Registrasi route ada di
-`backend/src/app.ts`, ekspor tabel di `backend/src/db/schema/index.ts`, dan
-migration tabel ada di `backend/drizzle/0001_many_colossus.sql`.
-
-Serah-terima ke 5/6: gunakan `ExtracurricularPicker` dengan `value: string[]`
-dan `onChange(names: string[])`. Nilai kosong adalah `[]`; pilihan boleh beberapa.
-Komponen menampilkan pilihan historis tanpa mengubah nama tersimpan.
-Form online/offline lama masih memakai satu pilihan; pemasangan komponen dan
-perubahan field pendaftaran menjadi `extracurriculars` tetap dikerjakan 5/6.
-`useCatalog()` sekarang membaca daftar klub aktif dari API bila dikonfigurasi,
-serta menyediakan `clubsLoading`/`clubsError`. Jalur prestasi anggota 8 tidak diubah.
-
-Integrasi bersama: `auth/auth.guard.ts` menyediakan pemeriksaan session,
-super_admin/editor dan Origin untuk modul konten. Anggota 9 dapat memakai atau
-menyatukannya dengan guard umum; anggota 10 mereview registrasi route dan
-migration. Petunjuk aktivasi API dan tes database ada di `backend/README.md`.
+- [ ] Kerjakan klub dahulu: daftar aktif, daftar admin, tambah/edit/nonaktif.
+- [ ] Nama kegiatan unik; pilihan Belum menentukan bukan record kegiatan.
+- [ ] Sediakan client multiselect opsional untuk 5 dan 6; daftar pilihan historis tidak ikut berubah saat rename.
+- [ ] Setelah klub selesai, kerjakan Agenda dan kontrol Publik/Internal di UI admin.
+- [ ] Rapat/internal tidak boleh bocor dari endpoint publik.
+- [ ] Gunakan API dan izin role; narasi Program boleh tetap statis.
 
 **Batas:** jangan edit field PPDB milik 5/6 tanpa koordinasi. catalog.ts dan
 use-catalog.ts dipakai juga oleh 8; perubahan bersama direview 10.

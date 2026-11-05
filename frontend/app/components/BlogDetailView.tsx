@@ -3,36 +3,31 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import {
-  getBlogPosts,
-  listenCmsUpdates,
-  seedCmsPosts,
-  type CmsPost,
-} from "../lib/local-cms";
+import { getPublicPost, listPublicPosts } from "../lib/cms/posts";
+import type { CmsPost } from "../lib/cms/types";
 import { ShareButtons } from "./ShareButtons";
 
 export function BlogDetailView({
   slug,
-  initialPost,
 }: {
   slug: string;
-  initialPost?: CmsPost;
 }) {
-  const [post, setPost] = useState<CmsPost | undefined>(
-    initialPost ?? seedCmsPosts.find((item) => item.slug === slug),
-  );
-  const [related, setRelated] = useState<CmsPost[]>(
-    seedCmsPosts.filter((item) => item.slug !== slug).slice(0, 2),
-  );
+  const [post, setPost] = useState<CmsPost | undefined>();
+  const [related, setRelated] = useState<CmsPost[]>([]);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
-    const load = () => {
-      const all = getBlogPosts(false);
-      setPost(all.find((item) => item.slug === slug));
+    let active = true;
+    Promise.all([getPublicPost(slug), listPublicPosts()]).then(([current, all]) => {
+      if (!active) return;
+      setPost(current);
       setRelated(all.filter((item) => item.slug !== slug).slice(0, 2));
-    };
-    load();
-    return listenCmsUpdates(load);
+      setLoading(false);
+    }).catch(() => { if (active) { setPost(undefined); setLoading(false); } });
+    return () => { active = false; };
   }, [slug]);
+
+  if (loading)
+    return <main className="article-missing"><p>Memuat artikel…</p></main>;
 
   if (!post)
     return (
