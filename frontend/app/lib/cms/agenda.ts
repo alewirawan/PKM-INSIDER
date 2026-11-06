@@ -10,6 +10,7 @@ export const seedAgenda: Agenda[] = [
     location: "Ruang Rapat 2",
     type: "Rapat",
     completed: false,
+    visibility: "Internal",
   },
   {
     id: "agenda-2",
@@ -19,6 +20,7 @@ export const seedAgenda: Agenda[] = [
     location: "Aula Utama",
     type: "PPDB",
     completed: false,
+    visibility: "Publik",
   },
   {
     id: "agenda-3",
@@ -28,14 +30,21 @@ export const seedAgenda: Agenda[] = [
     location: "Ruang Konseling",
     type: "PPDB",
     completed: false,
+    visibility: "Internal",
   },
 ];
 
 export function getAgenda() {
   const stored = readJson<Agenda[] | null>(KEYS.agenda, null);
-  return (stored !== null ? stored : seedAgenda).sort((a, b) =>
-    `${a.date}${a.time}`.localeCompare(`${b.date}${b.time}`),
-  );
+  return (stored !== null ? stored : seedAgenda)
+    .map((item) => ({
+      ...item,
+      visibility:
+        item.visibility === "Publik"
+          ? ("Publik" as const)
+          : ("Internal" as const),
+    }))
+    .sort((a, b) => `${a.date}${a.time}`.localeCompare(`${b.date}${b.time}`));
 }
 export function saveAgenda(value: Agenda[]) {
   writeJson(KEYS.agenda, value);

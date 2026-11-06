@@ -22,6 +22,20 @@ afterEach(async () => {
 });
 
 describe("backend foundation", () => {
+  it.each(["PATCH", "DELETE"])("allows browser preflight for %s content requests", async (method) => {
+    const app = await buildApp(config);
+    apps.push(app);
+    for (const path of ["posts", "clubs", "agenda"]) {
+      const response = await app.inject({ method: "OPTIONS", url: `/api/v1/${path}/example`, headers: {
+        origin: "http://localhost:3000", "access-control-request-method": method,
+        "access-control-request-headers": "content-type",
+      } });
+      expect(response.statusCode).toBe(204);
+      expect(response.headers["access-control-allow-methods"]).toContain(method);
+      expect(response.headers["access-control-allow-origin"]).toBe("http://localhost:3000");
+      expect(response.headers["access-control-allow-credentials"]).toBe("true");
+    }
+  });
   it("returns a health response without touching the database", async () => {
     const app = await buildApp(config);
     apps.push(app);

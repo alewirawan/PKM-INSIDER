@@ -1,11 +1,12 @@
 import type { MetadataRoute } from "next";
+import { posts } from "./data";
 type SitemapPost = { slug: string; updatedAt?: string };
 
 async function getPublishedPosts(): Promise<SitemapPost[]> {
   const apiBase = (
     process.env.API_BASE_URL ?? process.env.NEXT_PUBLIC_API_BASE_URL
   )?.replace(/\/$/, "");
-  if (!apiBase) return [];
+  if (!apiBase) return posts;
   try {
     const response = await fetch(`${apiBase}/posts`, {
       headers: { Accept: "application/json" },

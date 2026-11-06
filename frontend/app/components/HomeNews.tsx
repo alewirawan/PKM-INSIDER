@@ -8,14 +8,16 @@ import type { CmsPost } from "../lib/cms/types";
 
 export function HomeNews() {
   const [items, setItems] = useState<CmsPost[]>([]);
+  const [error, setError] = useState("");
   useEffect(() => {
     let active = true;
-    listPublicPosts().then((posts) => { if (active) setItems(posts.slice(0, 3)); }).catch(() => { if (active) setItems([]); });
+    listPublicPosts().then((posts) => { if (active) setItems(posts.slice(0, 3)); }).catch((error) => { if (active) setError(error instanceof Error ? error.message : "Berita gagal dimuat."); });
     return () => { active = false; };
   }, []);
 
   return (
     <div className="news-grid">
+      {error && <p role="alert">{error}</p>}
       {items.map((post, index) => (
         <article
           className={`news-card ${index === 0 ? "featured" : ""}`}

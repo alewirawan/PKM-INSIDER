@@ -94,6 +94,10 @@ test("PPDB and directory expose their new navigation and demo boundaries", async
   assert.match(prestasi, /ilustrasi/i);
 });
 
+test("missing article returns an HTTP 404", async () => {
+  assert.equal((await render("/blog/artikel-tidak-ada-untuk-pengujian")).status, 404);
+});
+
 test("keeps the announcement outside the sticky navigation", async () => {
   for (const path of ["/", "/tentang", "/struktur", "/pendaftaran"]) {
     const response = await render(path);

@@ -6,8 +6,35 @@ const { listClubs, saveClub } = await import("../app/lib/api/clubs");
 const { listAgenda, saveAgendaItem, deleteAgendaItem } =
   await import("../app/lib/api/agenda");
 const originalFetch = globalThis.fetch;
+const { listPublicPosts, listAdminPosts, getPublicPost, createPost, updatePost, removePost } = await import("../app/lib/cms/posts");
 afterEach(() => {
   globalThis.fetch = originalFetch;
+});
+
+test("blog uses API records, preserves dates, and exposes API errors", async () => {
+  const payload = { title: "Artikel Pengujian", slug: "artikel-pengujian", category: "Akademik", image: "/images/science.jpg", excerpt: "Ringkasan untuk pengujian.", content: ["Isi artikel."], author: "Editor Uji", status: "Draft" as const, publishedAt: "2026-11-05T05:00:00.000Z" };
+  const record = { ...payload, id: "id-article", updatedAt: "2026-11-06T05:00:00.000Z" };
+  const calls: { path: string; method: string }[] = [];
+  globalThis.fetch = async (url, init) => {
+    const path = new URL(String(url)).pathname;
+    calls.push({ path, method: init?.method ?? "GET" });
+    assert.equal(init?.credentials, "include");
+    if (init?.method === "DELETE") return new Response(null, { status: 204 });
+    if (init?.body) assert.deepEqual(JSON.parse(String(init.body)), payload);
+    const data = !init?.method && !path.includes("by-slug") ? [record] : record;
+    return new Response(JSON.stringify(data), { headers: { "Content-Type": "application/json" } });
+  };
+  assert.equal((await listPublicPosts())[0].publishedAt, payload.publishedAt);
+  await listAdminPosts();
+  await getPublicPost(payload.slug);
+  await createPost(payload);
+  await updatePost(record.id, payload);
+  await removePost(record.id);
+  assert.deepEqual(calls.map((item) => item.method), ["GET", "GET", "GET", "POST", "PATCH", "DELETE"]);
+  assert.equal(calls[1].path, "/api/v1/admin/posts");
+  globalThis.fetch = async () => new Response(JSON.stringify({ message: "Database tidak tersedia" }), { status: 503, headers: { "Content-Type": "application/json" } });
+  await assert.rejects(listPublicPosts(), /Database tidak tersedia/);
+  await assert.rejects(createPost(payload), /Database tidak tersedia/);
 });
 
 test("uses public and admin endpoints without a demo fallback", async () => {

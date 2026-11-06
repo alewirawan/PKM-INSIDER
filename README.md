@@ -44,10 +44,23 @@ Gunakan instalasi dari root workspace agar dependency tidak terduplikasi di
 
 ## Status backend
 
+Schema database seluruh scope project sudah tersedia: 23 tabel PostgreSQL,
+relasi, constraint, arsip berkas, akun pendaftar, dan migration yang menjaga data
+lama. Setelah pull, jalankan `npm run db:migrate --workspace=@nurul-huda/backend`
+dan `npm run db:verify --workspace=@nurul-huda/backend` pada database lokal yang
+sudah dikonfigurasi. Lihat [diagram database](backend/database.dbml) dan
+[panduan schema serta alur data](backend/README.md#schema-seluruh-project).
+Tabel siap digunakan tidak berarti seluruh endpoint menu sudah selesai.
+
 Backend foundation sudah tersedia menggunakan Fastify, TypeScript, PostgreSQL,
 dan Drizzle ORM. Fondasi ini mencakup schema awal, migration, autentikasi admin,
 health check, security middleware, test, serta Docker setup. Panduan detail ada di
 [`backend/README.md`](backend/README.md).
+
+Bagian anggota 2 sudah terintegrasi: pengelolaan ekstrakurikuler dan agenda,
+daftar publik terfilter, serta penyimpanan PostgreSQL. Jalankan migration
+yang tersedia dan konfigurasi URL API untuk memakai penyimpanan server.
+Tanpa URL API, mode demo browser tetap tersedia.
 
 Selama endpoint resource belum diintegrasikan, konten publik masih disimpan melalui
 `localStorage`, sedangkan data pribadi pendaftar, pesan, dan newsletter hanya

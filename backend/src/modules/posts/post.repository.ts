@@ -18,6 +18,7 @@ export function createPostRepository(db: Database) {
     },
     async create(input: Omit<NewPost, "id" | "createdAt" | "updatedAt">) {
       const [post] = await db.insert(posts).values(input).returning();
+      if (!post) throw new Error("Artikel gagal disimpan.");
       return post;
     },
     async update(id: string, input: Omit<NewPost, "id" | "createdAt" | "updatedAt">) {

@@ -9,12 +9,15 @@ import { ShareButtons } from "./ShareButtons";
 
 export function BlogDetailView({
   slug,
+  initialPost,
 }: {
   slug: string;
+  initialPost?: CmsPost;
 }) {
-  const [post, setPost] = useState<CmsPost | undefined>();
+  const [post, setPost] = useState<CmsPost | undefined>(initialPost);
   const [related, setRelated] = useState<CmsPost[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!initialPost);
+  const [error, setError] = useState("");
   useEffect(() => {
     let active = true;
     Promise.all([getPublicPost(slug), listPublicPosts()]).then(([current, all]) => {
@@ -22,10 +25,11 @@ export function BlogDetailView({
       setPost(current);
       setRelated(all.filter((item) => item.slug !== slug).slice(0, 2));
       setLoading(false);
-    }).catch(() => { if (active) { setPost(undefined); setLoading(false); } });
+    }).catch((error) => { if (active) { setError(error instanceof Error ? error.message : "Artikel gagal dimuat."); setLoading(false); } });
     return () => { active = false; };
   }, [slug]);
 
+  if (error) return <main className="article-missing"><p role="alert">{error}</p></main>;
   if (loading)
     return <main className="article-missing"><p>Memuat artikel…</p></main>;
 

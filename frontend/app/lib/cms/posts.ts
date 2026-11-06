@@ -1,5 +1,6 @@
 import type { Post } from "../../data";
-import { requestApi } from "../api-client";
+import { ApiError, hasBackendApi, requestApi } from "../api-client";
+import { getBlogPosts, upsertBlogPost, deleteBlogPost } from "./posts-demo";
 import type { CmsPost, PostStatus } from "./types";
 
 export type PostPayload = Omit<Post, "date" | "readTime"> & {
@@ -51,28 +52,46 @@ function fromApi(post: ApiPost): CmsPost {
 }
 
 export async function listPublicPosts() {
+  if (!hasBackendApi()) return getBlogPosts(false);
   const posts = await requestApi<ApiPost[]>("/posts");
   return posts.map(fromApi);
 }
 
 export async function listAdminPosts() {
+  if (!hasBackendApi()) return getBlogPosts(true);
   const posts = await requestApi<ApiPost[]>("/admin/posts");
   return posts.map(fromApi);
 }
 
 export async function getPublicPost(slug: string) {
+  if (!hasBackendApi()) {
+    const post = getBlogPosts(false).find((item) => item.slug === slug);
+    if (!post) throw new ApiError(404, "Artikel tidak ditemukan.");
+    return post;
+  }
   const post = await requestApi<ApiPost>(`/posts/by-slug/${encodeURIComponent(slug)}`);
   return fromApi(post);
 }
 
 export async function createPost(input: PostPayload) {
+  if (!hasBackendApi()) return saveDemoPost(crypto.randomUUID(), input);
   return fromApi(await requestApi<ApiPost>("/posts", { method: "POST", body: JSON.stringify(input) }));
 }
 
 export async function updatePost(id: string, input: PostPayload) {
+  if (!hasBackendApi()) return saveDemoPost(id, input);
   return fromApi(await requestApi<ApiPost>(`/posts/${encodeURIComponent(id)}`, { method: "PATCH", body: JSON.stringify(input) }));
 }
 
 export async function removePost(id: string) {
+  if (!hasBackendApi()) { deleteBlogPost(id); return; }
   await requestApi<void>(`/posts/${encodeURIComponent(id)}`, { method: "DELETE" });
+}
+
+function saveDemoPost(id: string, input: PostPayload) {
+  if (getBlogPosts(true).some((post) => post.id !== id && post.slug === input.slug))
+    throw new ApiError(409, "Slug artikel sudah digunakan.");
+  const post = fromApi({ ...input, id, updatedAt: new Date().toISOString() });
+  upsertBlogPost(post);
+  return post;
 }

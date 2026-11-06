@@ -9,7 +9,7 @@
     "dev": "node scripts/run-cli.mjs vinext dev",
     "build": "node scripts/run-cli.mjs vinext build",
     "start": "node scripts/run-cli.mjs wrangler dev --config dist/server/wrangler.json",
-    "test": "npm run build && node --test tests/rendered-html.test.mjs && node --import tsx --test tests/cms-utils.test.ts",
+    "test": "npm run build && node --test tests/rendered-html.test.mjs && node --import tsx --test tests/cms-utils.test.ts tests/content-api.test.ts",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "typecheck": "tsc --noEmit"
   },

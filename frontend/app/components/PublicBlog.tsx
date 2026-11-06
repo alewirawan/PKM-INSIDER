@@ -9,10 +9,12 @@ import { NewsletterForm } from "./NewsletterForm";
 
 export function PublicBlog() {
   const [posts, setPosts] = useState<CmsPost[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [category, setCategory] = useState("Semua");
   useEffect(() => {
     let active = true;
-    listPublicPosts().then((items) => { if (active) setPosts(items); }).catch(() => { if (active) setPosts([]); });
+    listPublicPosts().then((items) => { if (active) setPosts(items); }).catch((error) => { if (active) setError(error instanceof Error ? error.message : "Artikel gagal dimuat."); }).finally(() => { if (active) setLoading(false); });
     return () => { active = false; };
   }, []);
   const categories = useMemo(
@@ -27,7 +29,7 @@ export function PublicBlog() {
 
   return (
     <>
-      {featured ? (
+      {loading ? <p role="status">Memuat artikel…</p> : error ? <p role="alert">{error}</p> : featured ? (
         <section className="featured-post">
           <Link href={`/blog/${featured.slug}`}>
             <Image

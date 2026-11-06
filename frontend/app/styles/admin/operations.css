@@ -36,7 +36,6 @@
 }
 .agenda-list > article {
   display: grid;
-  grid-template-columns: 28px 50px 1fr 28px;
   gap: 14px;
   align-items: center;
   padding: 15px 0;
@@ -348,5 +347,26 @@
   color: #a14c3e;
   font-size: 9px;
   cursor: pointer;
+}
+
+.agenda-actions {
+  display: flex;
+  gap: 8px;
+}
+.agenda-workspace .agenda-list > article {
+  grid-template-columns: 40px 50px minmax(0, 1fr) auto;
+}
+.agenda-actions button {
+  min-width: 40px;
+  min-height: 40px;
+}
+.agenda-list > article > div {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 620px) {
+  .agenda-actions {
+    flex-direction: column;
+  }
 }
 

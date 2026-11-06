@@ -24,8 +24,9 @@ Peta folder dan aturan penempatan kode baru tersedia di
 [`../docs/FRONTEND_STRUCTURE.md`](../docs/FRONTEND_STRUCTURE.md).
 
 Tanpa backend, dashboard masih dapat dibuka dalam mode demo untuk modul mockup.
-Modul Blog & Artikel tidak menggunakan localStorage: daftar publik, detail artikel,
-dan CRUD dashboard memerlukan backend API. Saat `NEXT_PUBLIC_API_BASE_URL` tersedia,
+Blog, klub, dan agenda memakai data demo lokal jika base URL API belum diatur.
+Saat URL API diatur, baca/tulis memakai server dan kegagalan API ditampilkan tanpa
+mengganti data dengan contoh. Saat `NEXT_PUBLIC_API_BASE_URL` tersedia,
 login memakai `/auth/login` dan session cookie HttpOnly sesuai kontrak OpenAPI.
 
 Salin `.env.example` menjadi `.env.local`, lalu isi `NEXT_PUBLIC_API_BASE_URL` ketika backend sudah tersedia. Jangan simpan token atau credential di repository.

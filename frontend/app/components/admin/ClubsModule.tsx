@@ -1,20 +1,25 @@
 "use client";
 import { type FormEvent, useState } from "react";
-import { useCatalog } from "../../lib/use-catalog";
-import { saveClubs } from "../../lib/cms/catalog";
+import { useClubs } from "../../lib/use-clubs";
+import { saveClub } from "../../lib/api/clubs";
+import { hasBackendApi } from "../../lib/api-client";
+import { announceContentUpdate } from "../../lib/use-content-list";
 import { AdminPageHeader } from "./AdminUi";
 import type { AdminNotify } from "./types";
 export function ClubsModule({ notify }: { notify: AdminNotify }) {
-  const { clubs } = useCatalog();
+  const { clubs, loading, error: loadError, refresh } = useClubs(true);
+  const [saving, setSaving] = useState(false);
   const [editing, setEditing] = useState<string | null>(null);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [active, setActive] = useState(true);
   const [error, setError] = useState("");
-  function save(e: FormEvent) {
+  async function save(e: FormEvent) {
     e.preventDefault();
+    if (saving) return;
     if (
       !name.trim() ||
+      !description.trim() ||
       name.trim().toLowerCase() === "belum menentukan" ||
       clubs.some(
         (c) =>
@@ -26,25 +31,28 @@ export function ClubsModule({ notify }: { notify: AdminNotify }) {
       return;
     }
     const club = {
-      id: editing ?? crypto.randomUUID(),
       name: name.trim(),
       description: description.trim(),
       active,
     };
+    setSaving(true);
     try {
-      saveClubs(
-        editing
-          ? clubs.map((c) => (c.id === editing ? club : c))
-          : [...clubs, club],
-      );
+      await saveClub(club, editing ?? undefined);
+      announceContentUpdate();
       setEditing(null);
       setName("");
       setDescription("");
       setActive(true);
       setError("");
-      notify("Ekstrakurikuler disimpan di browser.");
-    } catch {
-      setError("Penyimpanan browser gagal.");
+      notify(
+        hasBackendApi()
+          ? "Ekstrakurikuler tersimpan di server."
+          : "Ekstrakurikuler disimpan di browser (demo).",
+      );
+    } catch (error) {
+      setError(error instanceof Error ? error.message : "Penyimpanan gagal.");
+    } finally {
+      setSaving(false);
     }
   }
   return (
@@ -89,10 +97,16 @@ export function ClubsModule({ notify }: { notify: AdminNotify }) {
               {error}
             </p>
           )}
-          <button className="button button-dark">Simpan kegiatan</button>
+          <button
+            className="button button-dark"
+            disabled={saving || loading || Boolean(loadError)}
+          >
+            {saving ? "Menyimpan…" : "Simpan kegiatan"}
+          </button>
           {editing && (
             <button
               type="button"
+              disabled={saving}
               onClick={() => {
                 setEditing(null);
                 setName("");
@@ -106,12 +120,25 @@ export function ClubsModule({ notify }: { notify: AdminNotify }) {
           )}
         </form>
         <div className="catalog-records">
+          {loading && <p role="status">Memuat kegiatan…</p>}
+          {loadError && (
+            <div role="alert">
+              <p>{loadError}</p>
+              <button onClick={() => void refresh()}>Coba lagi</button>
+            </div>
+          )}
+          {!loading && !loadError && !clubs.length && (
+            <p>
+              Belum ada ekstrakurikuler. Tambahkan kegiatan melalui formulir.
+            </p>
+          )}
           {clubs.map((c) => (
             <article key={c.id}>
               <small>{c.active ? "Aktif" : "Nonaktif"}</small>
               <h3>{c.name}</h3>
               <p>{c.description}</p>
               <button
+                disabled={saving}
                 onClick={() => {
                   setEditing(c.id);
                   setName(c.name);

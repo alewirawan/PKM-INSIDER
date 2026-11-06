@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { ApiError } from "../../lib/api-client";
 import { BlogDetailView } from "../../components/BlogDetailView";
 import { SiteFooter } from "../../components/SiteFooter";
 import { SiteHeader } from "../../components/SiteHeader";
@@ -46,7 +48,10 @@ export default async function BlogDetail({
   return (
     <>
       <SiteHeader active="/blog" />
-      <BlogDetailView slug={slug} />
+      <BlogDetailView slug={slug} initialPost={await getPublicPost(slug).catch((error: unknown) => {
+        if (error instanceof ApiError && error.status === 404) notFound();
+        throw error;
+      })} />
       <SiteFooter />
     </>
   );

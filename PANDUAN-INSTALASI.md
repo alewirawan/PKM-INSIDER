@@ -1,10 +1,10 @@
 # Cara Menjalankan Project SMP Nurul Huda
 
-Panduan paket tim: 28 September 2026.
+Panduan diperbarui: 6 November 2026.
 
-Pembagian tugas dan kontrak diperbarui 15 Oktober 2026. Gunakan
-[panduan tim terkini](docs/README-TIM-PKM.md); PDF lama tetap arsip. Pembaruan
-dokumentasi tidak mengimplementasikan API fitur atau menjalankan database.
+Gunakan [panduan tim terkini](docs/README-TIM-PKM.md); PDF lama tetap arsip.
+Auth, Blog/Artikel, Ekstrakurikuler, dan Agenda sudah memiliki integrasi API.
+Schema database mencakup 23 tabel; modul lainnya dilanjutkan sesuai pembagian tim.
 
 **Untuk pertama kali, ikuti bagian A: demo frontend.** Backend dan database belum
 diperlukan hanya untuk melihat website serta mencoba menu admin simulasi.
@@ -126,9 +126,10 @@ saat refresh. Login demo tidak berarti backend seluruh fitur sudah tersedia.
 
 ## B. Menjalankan backend — untuk anggota yang mengerjakan API
 
-Bagian ini opsional untuk membuka frontend. Backend saat ini baru memiliki auth,
-health, koneksi database, schema, dan migration awal. CRUD fitur sekolah belum
-lengkap; mengaktifkan login backend belum otomatis menyimpan semua menu ke database.
+Bagian ini opsional untuk membuka frontend. Backend memiliki auth, health,
+Blog/Artikel, Ekstrakurikuler, Agenda, dan schema bersama. Mengaktifkan login
+backend belum otomatis menyimpan modul PPDB, direktori, pesan, atau pengaturan
+yang integrasinya belum selesai.
 
 ### 1. Siapkan PostgreSQL
 
@@ -144,7 +145,10 @@ dan sesuaikan DATABASE_URL. Jangan memakai database production untuk latihan.
 
 ### 2. Buat konfigurasi backend
 
-Dari root project, macOS/Linux:
+Dari root project, buat file hanya jika belum tersedia. Jika sudah memiliki
+`backend/.env`, pertahankan konfigurasi dan password database yang dipakai.
+
+macOS/Linux:
 
 ```bash
 cp backend/.env.example backend/.env
@@ -191,12 +195,22 @@ Jalankan dari root:
 
 ```bash
 npm run db:migrate --workspace=@nurul-huda/backend
+npm run db:verify --workspace=@nurul-huda/backend
 npm run admin:create --workspace=@nurul-huda/backend
 ```
 
 Script meminta email, nama, role, dan password minimal 12 karakter. Password tidak
 ditampilkan saat diketik. Gunakan akun development sendiri. Membuat admin cukup
 sekali untuk database yang sama; tidak perlu membuat ulang saat menyalakan server.
+
+Data contoh sekolah, klub, agenda, guru, dan draft artikel dapat ditambahkan
+secara opsional ke database development:
+
+```bash
+npm run db:seed:demo --workspace=@nurul-huda/backend -- --confirm-demo
+```
+
+Seed tidak membuat akun/password atau membuka PPDB otomatis.
 
 ### 5. Jalankan API
 
@@ -214,7 +228,8 @@ PostgreSQL belum berhasil. Health saja bukan bukti migration/login sudah siap.
 
 ### 6. Hubungkan login frontend
 
-Buka terminal kedua pada root project. Salin konfigurasi frontend.
+Buka terminal kedua pada root project. Salin konfigurasi frontend jika
+`frontend/.env.local` belum tersedia; jika sudah ada, ubah nilai URL-nya.
 
 macOS/Linux:
 
@@ -245,7 +260,33 @@ Gunakan `localhost` secara konsisten untuk alamat frontend/API. Jika frontend
 berjalan pada port lain, perbarui FRONTEND_ORIGINS di backend/.env lalu restart API.
 
 Untuk kembali ke mode demo, kosongkan NEXT_PUBLIC_API_BASE_URL di .env.local lalu
-restart frontend. Fitur konten/pendaftaran tetap mockup sampai tim mengintegrasikannya.
+restart frontend. Blog, klub, dan agenda kembali memakai data demo browser;
+data server tetap tersimpan di PostgreSQL.
+
+### Setelah pull berikutnya
+
+Hentikan dev server dengan Ctrl+C terlebih dahulu, lalu jalankan dari root:
+
+```bash
+git pull --ff-only
+npm ci
+```
+
+Untuk mode backend, nyalakan PostgreSQL dan jalankan:
+
+```bash
+docker compose --env-file backend/.env -f compose.dev.yaml up -d
+npm run db:migrate --workspace=@nurul-huda/backend
+npm run db:verify --workspace=@nurul-huda/backend
+npm run dev:backend
+```
+
+Jalankan `npm run dev` di terminal kedua. Mode demo cukup `npm run dev`.
+Tidak perlu menyalin ulang .env, membuat admin ulang, atau menjalankan db:generate.
+Jika pernah menjalankan migration Blog `0001_posts`, perintah db:migrate
+menangani jalur pemulihan yang dijelaskan di [panduan backend](backend/README.md).
+Backup database berisi data nyata terlebih dahulu; jangan hapus tabel/volume
+untuk mengatasi konflik migration.
 
 ### 7. Menghentikan database
 

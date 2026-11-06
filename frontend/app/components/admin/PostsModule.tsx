@@ -15,7 +15,6 @@ import {
   parseArticleContent,
   slugify,
 } from "../../lib/cms/posts";
-import { hasBackendApi } from "../../lib/api-client";
 import type { CmsPost } from "../../lib/cms/types";
 import { AdminEmptyState, AdminPageHeader } from "./AdminUi";
 
@@ -64,12 +63,13 @@ export function PostsModule({
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("Semua");
   const [saving, setSaving] = useState(false);
+  const [loadError, setLoadError] = useState("");
   useEffect(() => {
-    if (!hasBackendApi()) {
-      setPosts([]);
-      return;
-    }
-    listAdminPosts().then(setPosts).catch(() => setPosts([]));
+    let active = true;
+    listAdminPosts().then((items) => { if (active) setPosts(items); }).catch((error) => {
+      if (active) setLoadError(error instanceof Error ? error.message : "Artikel gagal dimuat.");
+    });
+    return () => { active = false; };
   }, [setPosts]);
   useEffect(() => {
     if (!preset) return;
@@ -118,10 +118,6 @@ export function PostsModule({
   }
   async function save(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!hasBackendApi()) {
-      notify("Backend API belum dikonfigurasi.", "warning");
-      return;
-    }
     const content = parseArticleContent(form.content);
     const payload = {
       title: form.title.trim(),
@@ -184,6 +180,7 @@ export function PostsModule({
   }
   return (
     <div className="admin-view">
+      {loadError && <p role="alert" className="admin-form-error">{loadError}</p>}
       <AdminPageHeader
         eyebrow="Pengelolaan konten"
         title="Artikel & berita"

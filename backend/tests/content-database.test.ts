@@ -48,6 +48,37 @@ describe.skipIf(!databaseUrl)("content PostgreSQL integration", () => {
     await app?.close();
     await database?.client.end();
   });
+  it("keeps posts, clubs and agenda available together and persists article edits", async () => {
+    const payload = {
+      title: "Artikel pengujian", slug: `artikel-uji-${Date.now()}`, category: "Akademik",
+      image: "/images/science.jpg", excerpt: "Ringkasan artikel untuk pengujian integrasi.",
+      content: ["Paragraf pertama.", "Paragraf kedua."], author: "Editor Uji",
+      status: "Draft", publishedAt: "2026-11-06T05:00:00.000Z",
+    };
+    const create = () => app.inject({ method: "POST", url: "/api/v1/posts", headers, payload });
+    const created = await create();
+    expect(created.statusCode).toBe(201);
+    const record = created.json();
+    expect(record.content).toEqual(payload.content);
+    expect((await create()).statusCode).toBe(409);
+    expect((await app.inject(`/api/v1/posts/by-slug/${payload.slug}`)).statusCode).toBe(404);
+    expect((await app.inject({ url: "/api/v1/admin/posts", headers })).json()).toEqual(
+      expect.arrayContaining([expect.objectContaining({ id: record.id })]),
+    );
+    for (const invalid of [{ title: "   " }, { content: ["   "] }, { image: "https://untrusted.example/x.jpg" }]) {
+      expect((await app.inject({ method: "POST", url: "/api/v1/posts", headers, payload: { ...payload, ...invalid } })).statusCode).toBe(422);
+    }
+    expect((await app.inject({ method: "PATCH", url: `/api/v1/posts/${record.id}`, headers: { cookie: headers.cookie }, payload })).statusCode).toBe(403);
+    const published = await app.inject({ method: "PATCH", url: `/api/v1/posts/${record.id}`, headers, payload: { ...payload, status: "Terbit" } });
+    expect(published.statusCode).toBe(200);
+    await app.close();
+    app = await buildApp({ ...testConfig, DATABASE_URL: databaseUrl! });
+    expect((await app.inject(`/api/v1/posts/by-slug/${payload.slug}`)).json()).toMatchObject({ id: record.id, content: payload.content, publishedAt: payload.publishedAt });
+    expect((await app.inject("/api/v1/clubs")).statusCode).toBe(200);
+    expect((await app.inject("/api/v1/agenda")).statusCode).toBe(200);
+    expect((await app.inject({ method: "DELETE", url: `/api/v1/posts/${record.id}`, headers })).statusCode).toBe(204);
+    expect((await app.inject(`/api/v1/posts/by-slug/${payload.slug}`)).statusCode).toBe(404);
+  });
   it("persists across app restart, enforces uniqueness atomically, and filters private records in SQL", async () => {
     const name = `Pramuka ${Date.now()}`;
     const payload = { name, description: "Data pengujian", active: true };

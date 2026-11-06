@@ -23,22 +23,20 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import {
-  getAgenda,
   getApplications,
   getMessages,
   getNewsletterSubscriptions,
   getSchoolSettings,
   listenCmsUpdates,
   resetLocalDemoData,
-  seedAgenda,
   seedApplications,
-  type Agenda,
   type Application,
   type CmsPost,
   type ContactMessage,
   type SchoolSettings,
 } from "../lib/local-cms";
 import { hasBackendApi, requestApi } from "../lib/api-client";
+import { useAgenda } from "../lib/use-agenda";
 import { listAdminPosts } from "../lib/cms/posts";
 import { BrandMark } from "./BrandMark";
 import { SchoolDirectoryModule } from "./SchoolDirectoryModule";
@@ -81,7 +79,6 @@ export function AdminDashboard() {
   const [applications, setApplications] =
     useState<Application[]>(seedApplications);
   const [posts, setPosts] = useState<CmsPost[]>([]);
-  const [agenda, setAgenda] = useState<Agenda[]>(seedAgenda);
   const [messages, setMessages] = useState<ContactMessage[]>([]);
   const [settings, setSettings] = useState<SchoolSettings>(() =>
     getSchoolSettings(),
@@ -89,13 +86,13 @@ export function AdminDashboard() {
   const [newsletterCount, setNewsletterCount] = useState(0);
   const [toast, setToast] = useState<Toast>(null);
   const [authenticated, setAuthenticated] = useState(false);
+  const { agenda, error: agendaError } = useAgenda(true, authenticated);
   const [mobileMoreOpen, setMobileMoreOpen] = useState(false);
   const [postPreset, setPostPreset] = useState<string | null>(null);
 
   function reload() {
     setApplications(getApplications());
-    if (!hasBackendApi()) setPosts([]);
-    setAgenda(getAgenda());
+    if (!hasBackendApi()) void listAdminPosts().then(setPosts);
     setMessages(getMessages());
     setSettings(getSchoolSettings());
     setNewsletterCount(getNewsletterSubscriptions().length);
@@ -328,6 +325,7 @@ export function AdminDashboard() {
             </section>
           </div>
         )}
+        {view === "dashboard" && agendaError && <p role="alert" className="admin-form-error">{agendaError}</p>}
         {view === "dashboard" && (
           <DashboardModule
             applications={applications}
@@ -365,7 +363,7 @@ export function AdminDashboard() {
           />
         )}
         {view === "agenda" && (
-          <AgendaModule agenda={agenda} setAgenda={setAgenda} notify={notify} />
+          <AgendaModule notify={notify} />
         )}
         {view === "messages" && (
           <MessagesModule

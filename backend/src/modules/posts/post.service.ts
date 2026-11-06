@@ -1,20 +1,13 @@
 import { ConflictError, NotFoundError } from "../../shared/errors/app-error.js";
 import type { Post } from "../../db/schema/posts.js";
 import type { PostRepository } from "./post.repository.js";
-
-export type PostInput = {
-  title: string;
-  slug: string;
-  category: string;
-  image: string;
-  excerpt: string;
-  content: string[];
-  author: string;
-  status: "Terbit" | "Draft";
-  publishedAt: string;
-};
+import { parseInput } from "../../shared/http/parse-input.js";
+import { postInput } from "./post.schema.js";
+import type { PostInput } from "./post.schema.js";
+export type { PostInput } from "./post.schema.js";
 
 function toRecord(input: PostInput) {
+  input = parseInput(postInput, input);
   return {
     title: input.title.trim(),
     slug: input.slug.trim(),
@@ -29,7 +22,8 @@ function toRecord(input: PostInput) {
 }
 
 function isUniqueViolation(error: unknown) {
-  return typeof error === "object" && error !== null && "code" in error && error.code === "23505";
+  const value = error as { code?: string; cause?: { code?: string } };
+  return value?.code === "23505" || value?.cause?.code === "23505";
 }
 
 function presentPost(post: Post) {
@@ -43,7 +37,7 @@ function presentPost(post: Post) {
     content: post.content,
     author: post.author,
     status: post.status,
-    publishedAt: post.publishedAt.toISOString(),
+    publishedAt: (post.publishedAt ?? post.createdAt).toISOString(),
     updatedAt: post.updatedAt.toISOString(),
   };
 }
