@@ -3,6 +3,12 @@
 Backend dasar menggunakan Fastify, TypeScript, PostgreSQL, dan Drizzle ORM. Target
 deployment adalah satu VPS untuk satu sekolah.
 
+Jalur resmi development tim menggunakan [Panduan Docker](../PANDUAN-INSTALASI.md).
+compose.dev.yaml sekarang menjalankan PostgreSQL, backend, dan frontend bersama.
+Backend otomatis menjalankan migration dan db:verify saat container dimulai;
+perintah npm pada dokumentasi teknis ini dijalankan melalui layanan backend,
+misalnya `docker compose --env-file backend/.env -f compose.dev.yaml run --rm backend npm run db:verify --workspace=@nurul-huda/backend`.
+
 ## Schema seluruh project
 
 ### Perbaikan integrasi 6 November 2026
@@ -316,7 +322,7 @@ modules/applications/
 Route menangani HTTP, service menangani aturan bisnis, dan repository menjadi
 satu-satunya lapisan yang mengakses database.
 
-## Menjalankan lokal
+## Alternatif manual (bukan jalur standar tim)
 
 Dari root project:
 
@@ -330,13 +336,14 @@ Ubah `DATABASE_URL` dan credential lokal. Jangan commit `.env`.
 Jalankan PostgreSQL melalui Compose:
 
 ```bash
-docker compose --env-file backend/.env -f compose.dev.yaml up -d
+docker compose --env-file backend/.env -f compose.dev.yaml up -d postgres
 ```
 
 Sebelum menyalakan database pertama kali, isi `POSTGRES_PASSWORD` dan password di
 `DATABASE_URL` pada `backend/.env` dengan nilai yang sama. Compose development
-membuka PostgreSQL hanya ke `127.0.0.1:5432`, sehingga API dapat berjalan langsung
-di komputer anggota. Setelah database healthy, jalankan:
+tidak membuka port PostgreSQL ke host. Jalur manual memerlukan PostgreSQL lokal
+terpisah atau override port yang direview; jangan menjalankan backend host dengan
+menganggap database container tersedia di localhost:5432. Setelah database lokal siap, jalankan:
 
 ```bash
 npm run db:migrate --workspace=@nurul-huda/backend

@@ -36,6 +36,8 @@ jobs:
           docker compose -f compose.dev.yaml up --build -d --wait --wait-timeout 300
       - name: Test database, authentication and frontend API integration
         run: docker compose -f compose.dev.yaml run --rm -e RUN_DOCKER_SMOKE=1 backend node docker/smoke.mjs
+      - name: Run team checks inside Docker
+        run: docker compose -f compose.dev.yaml run --rm checks
       - name: Verify persistence after container recreation
         run: |
           docker compose -f compose.dev.yaml down

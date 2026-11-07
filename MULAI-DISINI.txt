@@ -1,68 +1,48 @@
 PAKET TIM PKM - SMP NURUL HUDA
-10 Oktober 2026
+7 November 2026
 
-CARA CEPAT MEMBUKA WEBSITE
+JALANKAN DENGAN DOCKER
 
-1. Pasang Node.js versi 22.13.0 atau lebih baru.
-2. Ekstrak seluruh ZIP.
-3. Buka folder smp-nurul-huda di VS Code.
-4. Pilih Terminal > New Terminal.
-5. Pastikan folder tersebut berisi package.json, frontend, dan backend.
-6. Jalankan:
+1. Install Git dan Docker Desktop, lalu buka Docker Desktop.
+   Windows: aktifkan WSL 2 dan gunakan Linux containers.
+2. Clone repository atau buka folder project yang sudah tersedia.
+   Simpan di luar OneDrive.
+3. Salin backend/.env.example menjadi backend/.env jika belum ada.
+   Isi POSTGRES_PASSWORD. Jangan mengganti password volume database lama.
+4. Jalankan dari root project:
 
-   npm ci
-   npm run dev
+   docker compose --env-file backend/.env -f compose.dev.yaml up --build -d --wait
 
-7. Buka URL pada terminal, biasanya:
-   Website: http://localhost:3000
-   Admin:   http://localhost:3000/admin
-8. Pada admin pilih "Masuk ke mode demo".
-9. Hentikan server dengan Ctrl+C. Untuk menjalankan lagi cukup npm run dev.
+5. Buka http://localhost:3000 atau http://localhost:3000/admin.
+   PostgreSQL, migration 23 tabel, backend, dan frontend berjalan bersama.
+6. Buat akun admin sekali dengan perintah interaktif:
 
-PENTING
+   docker compose --env-file backend/.env -f compose.dev.yaml run --rm backend npm run admin:create --workspace=@nurul-huda/backend
 
-- Untuk demo tidak perlu database, Docker, atau file .env frontend.
-- Jangan aktifkan NEXT_PUBLIC_API_BASE_URL sebelum backend dan akun admin siap.
-- Gunakan data fiktif. Data demo tersimpan di browser masing-masing.
-- Backend masih fondasi; API seluruh menu belum selesai.
-- ZIP tidak berisi node_modules, .env pribadi, atau hasil build.
-- Pada Windows jika npm.ps1 diblokir, gunakan Command Prompt atau npm.cmd.
+JALANKAN LAGI
 
-PEMBARUAN FRONTEND 10 OKTOBER 2026
+   docker compose --env-file backend/.env -f compose.dev.yaml up -d --wait
 
-- Halaman Prestasi dan pengelolaannya di admin.
-- Tab Struktur Organisasi dan Daftar Guru.
-- PPDB empat langkah dengan SKL, ijazah, KK, KTP orang tua, PIP/KIP,
-  dan akta kelahiran. PDF/JPG/PNG maksimal 5 MB per berkas.
-- Ekstrakurikuler menggantikan peminatan pada formulir dan data pendaftar.
-- Detail siswa bertab, status pemeriksaan berkas, dan catatan admin.
-- Gunakan berkas dummy. File hanya berada di memori browser dan tidak
-  diunggah ke server. Pratinjau hilang setelah refresh; buka admin melalui
-  tautan pada halaman sukses di tab yang sama untuk mencoba pratinjau.
-- Backend yang disertakan tetap fondasi sebelumnya, tidak ditambah pada
-  pembaruan frontend ini.
+BERHENTI
 
-PANDUAN TIM DIPERBARUI 15 OKTOBER 2026
+   docker compose --env-file backend/.env -f compose.dev.yaml stop
 
-- Gunakan docs/README-TIM-PKM.md untuk pembagian 10 anggota dan path ADA/BARU.
-- contracts/openapi.yaml versi 1.2.0 adalah target API, bukan backend siap pakai.
-- Nama anggota, kemampuan, reviewer, dan tanggal sprint harus diisi tim.
-- PDF pembagian tugas lama dan ZIP terdahulu tetap arsip versi sebelumnya.
+SETELAH PULL PERUBAHAN
 
-BACA SELANJUTNYA
+   docker compose --env-file backend/.env -f compose.dev.yaml up --build -d --force-recreate --wait
 
-docs/PANDUAN-ANGGOTA.md
-  Titik mulai pemula, latihan setiap anggota, penjelasan API, dan cara review.
+ATURAN TIM
 
-PANDUAN-INSTALASI.md
-  Tutorial lengkap Windows/macOS, backend opsional, dan troubleshooting.
+- Gunakan Docker untuk menjalankan project; tidak perlu npm ci di host.
+- Kerjakan pada branch sendiri, periksa hasil, lalu push dan buat pull request.
+- Jangan kirim .env, password, node_modules, atau data pribadi ke GitHub.
+- Jangan gunakan down -v karena menghapus volume database.
+- Database setiap anggota terpisah. Git membawa schema, bukan isi database.
+- Backend seluruh menu belum selesai. Tersedianya tabel bukan berarti
+  seluruh fitur sudah terhubung ke database.
 
-docs/README-TIM-PKM.md
-  Pembagian 10 anggota, path source, checklist, dan folder yang direncanakan.
+PANDUAN LENGKAP
 
-artifacts/Panduan-Kerja-Tim-PKM-SMP-Nurul-Huda.pdf
-  Versi PDF pembagian tugas. Dokumen ini disusun 25 September 2026;
-  untuk perintah instalasi terbaru gunakan PANDUAN-INSTALASI.md.
-
-Kerjakan perubahan pada branch masing-masing di repository tim setelah
-koordinator menyiapkannya. Jangan mengirim .env atau data pribadi ke grup.
+PANDUAN-INSTALASI.md: instalasi, update, pengujian, dan troubleshooting.
+docs/README-TIM-PKM.md: pembagian anggota, path source, dan checklist.
+Dokumen PDF/ZIP lama adalah arsip; gunakan panduan instalasi di repository.

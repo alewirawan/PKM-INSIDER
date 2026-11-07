@@ -2,8 +2,9 @@
 
 Project dipisahkan agar pengembangan frontend dan backend tidak saling mengganggu.
 
-Pertama kali menerima ZIP? Ikuti [Panduan Instalasi](PANDUAN-INSTALASI.md), mulai
-dari demo frontend tanpa database, atau baca `MULAI-DISINI.txt` untuk langkah cepat.
+Jalur resmi tim menggunakan Docker untuk frontend, backend, dan PostgreSQL.
+Ikuti [Panduan Instalasi Docker](PANDUAN-INSTALASI.md), termasuk setup awal,
+akun admin, menjalankan ulang, pull, dan push.
 
 Baru mulai mengerjakan project? Baca [Panduan Anggota](docs/PANDUAN-ANGGOTA.md):
 latihan pertama untuk 10 anggota, penjelasan API, cara membagi tugas kecil,
@@ -27,17 +28,17 @@ project-k/
 └── package.json   # Perintah workspace frontend dan backend
 ```
 
-## Menjalankan frontend
+## Menjalankan seluruh aplikasi
 
-Dari root project:
+Dari root project, setelah Docker Desktop aktif dan POSTGRES_PASSWORD pada
+backend/.env diisi sesuai panduan:
 
 ```bash
-npm ci
-npm run dev
+docker compose --env-file backend/.env -f compose.dev.yaml up --build -d --wait
 ```
 
-Gunakan instalasi dari root workspace agar dependency tidak terduplikasi di
-`frontend/node_modules`.
+Dependency dipasang di image Linux. Tidak perlu npm ci atau PostgreSQL di laptop.
+Migration dan pemeriksaan 23 tabel dijalankan sebelum backend siap.
 
 - Website publik: `http://localhost:3000`
 - Dashboard admin: `http://localhost:3000/admin`
@@ -46,9 +47,8 @@ Gunakan instalasi dari root workspace agar dependency tidak terduplikasi di
 
 Schema database seluruh scope project sudah tersedia: 23 tabel PostgreSQL,
 relasi, constraint, arsip berkas, akun pendaftar, dan migration yang menjaga data
-lama. Setelah pull, jalankan `npm run db:migrate --workspace=@nurul-huda/backend`
-dan `npm run db:verify --workspace=@nurul-huda/backend` pada database lokal yang
-sudah dikonfigurasi. Lihat [diagram database](backend/database.dbml) dan
+lama. Setelah pull, rebuild/recreate container sesuai panduan; migration dan
+verifikasi dijalankan otomatis. Lihat [diagram database](backend/database.dbml) dan
 [panduan schema serta alur data](backend/README.md#schema-seluruh-project).
 Tabel siap digunakan tidak berarti seluruh endpoint menu sudah selesai.
 
@@ -67,7 +67,8 @@ Selama endpoint resource belum diintegrasikan, konten publik masih disimpan mela
 disimpan di `sessionStorage` hingga tab ditutup. Ini adapter mockup, bukan database
 production.
 
-Jalankan seluruh quality gate dengan `npm run check` (lint, typecheck, build, dan test).
+Jalankan quality gate melalui layanan checks sesuai panduan. GitHub Actions juga
+menguji startup Docker, login, artikel, frontend/API, serta persistensi database.
 
 ## Modul struktur dan guru
 

@@ -4,13 +4,17 @@ Seluruh website publik dan dashboard admin berada di folder ini. Frontend memaka
 
 ## Menjalankan dari root workspace
 
+Jalur resmi tim: Docker Desktop aktif dan backend/.env siap, mengikuti
+[Panduan Docker](../PANDUAN-INSTALASI.md).
+
 ```bash
-npm install
-npm run dev
+docker compose --env-file backend/.env -f compose.dev.yaml up --build -d --wait
 ```
 
 Website tersedia di `http://localhost:3000` dan dashboard di `http://localhost:3000/admin`.
-Gunakan `npm run check` sebelum menyerahkan perubahan.
+Gunakan layanan checks pada panduan sebelum menyerahkan perubahan.
+Compose mengatur URL API publik untuk browser dan URL internal untuk SSR.
+Konfigurasi frontend/.env.local di laptop tidak dimasukkan ke image Docker.
 
 Launcher membaca field `bin` pada package.json tool, sehingga tidak memerlukan
 entry point library Vinext untuk menjalankan CLI. Pertahankan resolusi ini saat
@@ -35,4 +39,5 @@ Saat URL API diatur, baca/tulis memakai server dan kegagalan API ditampilkan tan
 mengganti data dengan contoh. Saat `NEXT_PUBLIC_API_BASE_URL` tersedia,
 login memakai `/auth/login` dan session cookie HttpOnly sesuai kontrak OpenAPI.
 
-Salin `.env.example` menjadi `.env.local`, lalu isi `NEXT_PUBLIC_API_BASE_URL` ketika backend sudah tersedia. Jangan simpan token atau credential di repository.
+Penjelasan mode demo di atas hanya berlaku untuk jalur manual npm di luar Docker.
+Container development selalu terhubung ke API. Jangan simpan token atau credential di repository.

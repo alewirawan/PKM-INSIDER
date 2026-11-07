@@ -1,5 +1,9 @@
 # Panduan Kerja Tim PKM SMP Nurul Huda
 
+Aturan runtime tim sejak 7 November 2026: gunakan Docker untuk frontend, backend,
+dan database sesuai [Panduan Instalasi](../PANDUAN-INSTALASI.md). Schema dan data
+tetap dipisahkan; Docker tidak menggantikan pengerjaan API masing-masing anggota.
+
 Diperbarui: 6 November 2026. Tim: 10 anggota. Repository:
 https://github.com/alewirawan/PROJECT-PKM-SMP-NURUL-HUDA
 

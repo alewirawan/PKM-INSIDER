@@ -9,6 +9,6 @@ COPY --chown=node:node frontend frontend
 COPY --chown=node:node backend backend
 COPY --chown=node:node contracts contracts
 COPY --chown=node:node docker docker
-RUN mkdir -p /app/backend/uploads && chown node:node /app/backend/uploads
+RUN mkdir -p /app/backend/uploads && chown -R node:node /app/frontend /app/backend /app/contracts /app/docker
 USER node
 ENTRYPOINT ["node", "docker/entrypoint.mjs"]
