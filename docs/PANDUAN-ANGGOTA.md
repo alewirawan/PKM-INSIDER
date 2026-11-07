@@ -6,18 +6,19 @@ project untuk mengerjakan tugas pertama. Pembagian fitur tetap mengikuti
 
 ## Hari pertama
 
-1. Ikuti [instalasi lokal](../PANDUAN-INSTALASI.md). Dari folder yang berisi
-   `package.json`, jalankan `npm ci`, kemudian `npm run dev`.
-2. Buka `http://localhost:3000`, lalu `/admin` dan pilih **Masuk ke mode demo**.
+1. Ikuti [instalasi Docker](../PANDUAN-INSTALASI.md), lalu jalankan frontend,
+   backend, dan database bersama dari root project.
+2. Buka `http://localhost:3000`, lalu `/admin`. Buat akun admin lokal dengan
+   perintah pada panduan instalasi sebelum login.
 3. Coba menu milikmu dengan data fiktif. Catat satu masalah atau kebutuhan kecil.
 4. Buka file awal pada tabel di bawah. Cari teks yang terlihat pada menu untuk
    menemukan bagian tampilan yang sesuai.
 5. Bersama reviewer, pilih satu hasil yang bisa ditunjukkan. Buat kartu tugas
    sebelum mengubah kode.
 
-Demo tidak membutuhkan database. Data demo setiap komputer berbeda. Perubahan
-yang hanya tersimpan di browser belum berarti fitur sudah terhubung ke server.
-Jangan mengaktifkan URL API hanya untuk mencoba tampilan.
+Database setiap komputer berbeda. Docker menghubungkan frontend ke API secara
+otomatis. Modul yang masih berupa simulasi tetap menyimpan data di browser;
+tersedianya database tidak otomatis menyelesaikan integrasi seluruh menu.
 
 ## Latihan pertama untuk setiap anggota
 

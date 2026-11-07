@@ -31,7 +31,7 @@ try {
     assert.equal((await fetch(`${api}/posts`, { method: "POST", headers, body: JSON.stringify(article) })).status, 201);
     const options = await fetch(`${api}/posts`, { method: "OPTIONS", headers: { origin: "http://localhost:3000", "access-control-request-method": "POST", "access-control-request-headers": "content-type" } });
     assert.equal(options.headers.get("access-control-allow-origin"), "http://localhost:3000");
-    assert.equal((await fetch(`${api}/auth/logout`, { method: "POST", headers })).status, 204);
+    assert.equal((await fetch(`${api}/auth/logout`, { method: "POST", headers: { origin: "http://localhost:3000", cookie } })).status, 204);
     assert.equal((await fetch(`${api}/auth/session`, { headers: { cookie } })).status, 401);
   }
   const detail = await fetch(`${site}/blog/${slug}`);
