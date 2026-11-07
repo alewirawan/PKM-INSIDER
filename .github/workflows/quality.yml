@@ -15,3 +15,35 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run check
+      - run: npm run build --workspace=@nurul-huda/backend
+
+  docker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      POSTGRES_DB: nurul_huda_ci
+      COMPOSE_PROJECT_NAME: nurul-huda-ci
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure temporary test database password
+        run: |
+          db_password=$(openssl rand -hex 24)
+          echo "::add-mask::$db_password"
+          echo "POSTGRES_PASSWORD=$db_password" >> "$GITHUB_ENV"
+      - name: Validate and start full stack
+        run: |
+          docker compose -f compose.dev.yaml config --quiet
+          docker compose -f compose.dev.yaml up --build -d --wait --wait-timeout 300
+      - name: Test database, authentication and frontend API integration
+        run: docker compose -f compose.dev.yaml run --rm -e RUN_DOCKER_SMOKE=1 backend node docker/smoke.mjs
+      - name: Verify persistence after container recreation
+        run: |
+          docker compose -f compose.dev.yaml down
+          docker compose -f compose.dev.yaml up -d --wait --wait-timeout 300
+          docker compose -f compose.dev.yaml run --rm -e RUN_DOCKER_SMOKE=1 backend node docker/smoke.mjs --verify
+      - name: Diagnostics
+        if: failure()
+        run: docker compose -f compose.dev.yaml logs --tail=100
+      - name: Stop test stack
+        if: always()
+        run: docker compose -f compose.dev.yaml down

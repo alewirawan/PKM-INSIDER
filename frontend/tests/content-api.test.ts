@@ -9,6 +9,16 @@ const originalFetch = globalThis.fetch;
 const { listPublicPosts, listAdminPosts, getPublicPost, createPost, updatePost, removePost } = await import("../app/lib/cms/posts");
 afterEach(() => {
   globalThis.fetch = originalFetch;
+  delete process.env.API_BASE_URL;
+});
+
+test("server rendering uses the container API address", async () => {
+  process.env.API_BASE_URL = "http://backend:4000/api/v1";
+  globalThis.fetch = async (url) => {
+    assert.equal(String(url), "http://backend:4000/api/v1/posts");
+    return new Response("[]", { headers: { "Content-Type": "application/json" } });
+  };
+  assert.deepEqual(await listPublicPosts(), []);
 });
 
 test("blog uses API records, preserves dates, and exposes API errors", async () => {

@@ -19,6 +19,17 @@ export default defineConfig(async () => {
   const { cloudflare } = await import("@cloudflare/vite-plugin");
 
   return {
+    server: {
+      strictPort: true,
+      ...(process.env.DOCKER_DEV === "true" ? {
+        allowedHosts: ["frontend"],
+        watch: { usePolling: true, interval: 500 },
+      } : {}),
+    },
+    environments: {
+      rsc: { define: { "process.env.API_BASE_URL": JSON.stringify(process.env.API_BASE_URL ?? "") } },
+      ssr: { define: { "process.env.API_BASE_URL": JSON.stringify(process.env.API_BASE_URL ?? "") } },
+    },
     plugins: [
       vinext(),
       cloudflare({
