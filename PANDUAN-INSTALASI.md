@@ -330,6 +330,7 @@ Untuk aktivitas coding sehari-hari cukup `npm run dev`.
 | Port 3000 sudah dipakai                              | Buka URL yang dicetak terminal; jika memakai API, sesuaikan FRONTEND_ORIGINS dengan port tersebut                              |
 | Form admin meminta email/password padahal ingin demo | NEXT_PUBLIC_API_BASE_URL sudah diaktifkan; kosongkan lalu restart frontend                                                     |
 | Cannot find module                                   | Pastikan npm ci selesai dari root dan Node memenuhi persyaratan                                                                |
+| Cannot find package vinext/index.js dari run-cli.mjs | Pull versi terbaru, jalankan npm ci --include=dev dari root, lalu npm run dev. Launcher membaca lokasi CLI dari bin paket. Jika file CLI tetap hilang, instalasi dependency belum lengkap. |
 | docker tidak dikenali/daemon unavailable             | Docker Desktop belum terpasang atau belum berjalan; frontend demo tidak memerlukan Docker                                      |
 | Port database 5432 bentrok                           | Ada PostgreSQL lain; gunakan DB development yang sesuai, atau ubah port host di compose.dev.yaml dan DATABASE_URL bersama-sama |
 | Backend ready gagal                                  | Periksa container, DATABASE_URL, port, dan kesamaan password                                                                   |

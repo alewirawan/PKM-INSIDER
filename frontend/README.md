@@ -12,6 +12,12 @@ npm run dev
 Website tersedia di `http://localhost:3000` dan dashboard di `http://localhost:3000/admin`.
 Gunakan `npm run check` sebelum menyerahkan perubahan.
 
+Launcher membaca field `bin` pada package.json tool, sehingga tidak memerlukan
+entry point library Vinext untuk menjalankan CLI. Pertahankan resolusi ini saat
+mengubah launcher. Tes mencakup dependency di root/workspace, path dengan spasi,
+dan paket yang tidak memiliki entry point library. Uji pada Windows tetap
+diperlukan saat menyerahkan perubahan yang menyentuh launcher.
+
 ## Titik integrasi backend
 
 - `app/lib/api-client.ts`: HTTP client dan konfigurasi base URL.
