@@ -2,10 +2,10 @@
 
 import Link from "next/link";
 import { BrandMark } from "./BrandMark";
-import { useSchoolSettings } from "./SchoolSettingsProvider";
+import { useSchoolSettingsState } from "./SchoolSettingsProvider";
 
 export function SiteFooter() {
-  const settings = useSchoolSettings();
+  const { settings, status } = useSchoolSettingsState();
   return (
     <footer className="site-footer">
       <div className="footer-main">
@@ -34,11 +34,21 @@ export function SiteFooter() {
         </div>
         <div>
           <h3>Hubungi</h3>
-          <p>{settings.address}</p>
-          <a href={`mailto:${settings.email}`}>{settings.email}</a>
-          <a href={`tel:${settings.phone.replace(/[^\d+]/g, "")}`}>
-            {settings.phone}
-          </a>
+          {status === "ready" ? (
+            <>
+              <p>{settings.address}</p>
+              <a href={`mailto:${settings.email}`}>{settings.email}</a>
+              <a href={`tel:${settings.phone.replace(/[^\d+]/g, "")}`}>
+                {settings.phone}
+              </a>
+            </>
+          ) : (
+            <p role="status">
+              {status === "loading"
+                ? "Memuat kontak sekolah…"
+                : "Kontak sekolah sementara tidak dapat dimuat."}
+            </p>
+          )}
         </div>
         <div>
           <h3>Jam layanan</h3>

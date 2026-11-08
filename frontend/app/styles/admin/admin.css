@@ -1,0 +1,8 @@
+@import "./admin/shell.css";
+@import "./admin/shell-responsive.css";
+@import "./admin/cms-controls.css";
+@import "./admin/articles.css";
+@import "./admin/operations.css";
+@import "./admin/public-interactions.css";
+
+@import "./admin/settings.css";

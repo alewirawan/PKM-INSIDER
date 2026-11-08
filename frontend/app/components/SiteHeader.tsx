@@ -5,7 +5,10 @@ import { usePathname } from "next/navigation";
 import { ArrowUpRight, Menu, UserRound, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { BrandMark } from "./BrandMark";
-import { useSchoolSettings } from "./SchoolSettingsProvider";
+import {
+  describeRegistration,
+  useSchoolSettingsState,
+} from "./SchoolSettingsProvider";
 
 const items = [
   ["Beranda", "/"],
@@ -18,7 +21,9 @@ const items = [
 ] as const;
 
 export function SiteHeader({ active = "" }: { active?: string }) {
-  const settings = useSchoolSettings();
+  const settingsState = useSchoolSettingsState();
+  const settings = settingsState.settings;
+  const registration = describeRegistration(settingsState);
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -68,9 +73,13 @@ export function SiteHeader({ active = "" }: { active?: string }) {
     <>
       <div className="notice-bar">
         <span>
-          {settings.registrationOpen
-            ? `PPDB Tahun Ajaran ${settings.academicYear} telah dibuka`
-            : `PPDB Tahun Ajaran ${settings.academicYear} sedang ditutup`}
+          {registration.kind === "loading" && "Memuat informasi PPDB…"}
+          {registration.kind === "error" &&
+            "Informasi PPDB sementara tidak dapat dimuat"}
+          {registration.kind === "open" &&
+            `PPDB Tahun Ajaran ${registration.academicYear} telah dibuka`}
+          {registration.kind === "closed" &&
+            `PPDB Tahun Ajaran ${registration.academicYear} sedang ditutup`}
         </span>
         <span className="notice-actions">
           <Link href="/pendaftaran" onClick={prepareNavigation}>

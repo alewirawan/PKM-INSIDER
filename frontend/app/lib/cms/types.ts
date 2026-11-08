@@ -76,6 +76,16 @@ export type ContactMessage = {
 
 export type NewsletterSubscription = { email: string; subscribedAt: string };
 
+/** Jenis berkas yang boleh diwajibkan admin. kip/photo tidak termasuk. */
+export type RequirableDocumentKind = "skl" | "ijazah" | "kk" | "ktp" | "akta";
+
+/** Mengikuti DocumentRequirements pada contracts/openapi.yaml. */
+export type DocumentRequirements = {
+  requiredKinds: RequirableDocumentKind[];
+  requireOneGraduationDocument: boolean;
+};
+
+/** Mengikuti SchoolSettings pada contracts/openapi.yaml (kontrak v1.2.0). */
 export type SchoolSettings = {
   schoolName: string;
   tagline: string;
@@ -85,5 +95,12 @@ export type SchoolSettings = {
   whatsapp: string;
   address: string;
   academicYear: string;
+  /** Toggle manual admin; satu-satunya penentu PPDB buka/tutup. */
   registrationOpen: boolean;
+  documentRequirements: DocumentRequirements;
+  /** Informasi jadwal (ISO date-time) atau null. Bukan pembuka otomatis. */
+  registrationOpensAt: string | null;
+  registrationClosesAt: string | null;
+  /** Tetap "indefinite": tanpa penghapusan otomatis. */
+  dataRetention: "indefinite";
 };

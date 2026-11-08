@@ -350,3 +350,47 @@
   color: var(--white);
 }
 
+
+/* Status PPDB pada CTA beranda (anggota 1): tetap terbaca di 360 px. */
+.cta-section .cta-status {
+  margin: 0 auto 22px;
+  max-width: 560px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+/* Keadaan berita beranda: memuat, kosong, gagal (anggota 1). */
+.news-state {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 28px 20px;
+  border: 1px dashed #cdd6cf;
+  border-radius: 10px;
+  color: #5e7378;
+  text-align: center;
+  line-height: 1.6;
+}
+.news-state.is-error {
+  border-color: #d9a79b;
+  color: #94381e;
+}
+.news-state p {
+  margin: 0 0 12px;
+}
+.news-state p:last-child {
+  margin-bottom: 0;
+}
+
+/* Logo sekolah pada header, footer, dan admin (anggota 1). */
+.brand-logo {
+  display: block;
+  flex: none;
+  width: auto;
+  height: 46px;
+  object-fit: contain;
+}
+.admin-logo .brand-logo {
+  height: 40px;
+}

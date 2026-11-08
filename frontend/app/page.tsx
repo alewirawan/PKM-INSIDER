@@ -1,10 +1,13 @@
-import { Achievements } from "./components/Achievements";
+import { HomeAchievements } from "./components/HomeAchievements";
 import Link from "next/link";
 import Image from "next/image";
 import { SiteHeader } from "./components/SiteHeader";
 import { SiteFooter } from "./components/SiteFooter";
 import { HomeNews } from "./components/HomeNews";
+import { HomePpdbCta } from "./components/HomePpdbCta";
+import { SchoolText } from "./components/SchoolText";
 import { programs } from "./data";
+import { homeContent } from "./lib/content/home";
 
 export default function Home() {
   return (
@@ -19,10 +22,7 @@ export default function Home() {
             <h1>
               Membentuk generasi yang <em>berani bermimpi.</em>
             </h1>
-            <p className="hero-lead">
-              Lingkungan belajar hangat yang memadukan keunggulan akademik,
-              karakter, dan keterampilan masa depan untuk setiap siswa.
-            </p>
+            <p className="hero-lead">{homeContent.heroLead}</p>
             <div className="hero-actions">
               <Link className="button button-accent" href="/pendaftaran">
                 Mulai pendaftaran <span aria-hidden="true">↗</span>
@@ -38,9 +38,9 @@ export default function Home() {
                 <span>RM</span>
               </div>
               <p>
-                <strong>4,9/5</strong>
+                <strong>{homeContent.trust.score}</strong>
                 <br />
-                dari orang tua & alumni
+                {homeContent.trust.caption}
               </p>
             </div>
           </div>
@@ -54,11 +54,11 @@ export default function Home() {
               priority
             />
             <div className="hero-badge">
-              <strong>17+</strong>
+              <strong>{homeContent.badge.value}</strong>
               <span>
-                Tahun membangun
+                {homeContent.badge.lines[0]}
                 <br />
-                generasi unggul
+                {homeContent.badge.lines[1]}
               </span>
             </div>
             <div className="hero-card">
@@ -66,59 +66,36 @@ export default function Home() {
                 ✦
               </span>
               <div>
-                <small>Akreditasi Sekolah</small>
-                <strong>A — Unggul</strong>
+                <small>{homeContent.accreditation.label}</small>
+                <strong>{homeContent.accreditation.value}</strong>
               </div>
             </div>
           </div>
         </section>
 
         <section className="stats" aria-label="Statistik sekolah">
-          <div>
-            <strong>98%</strong>
-            <span>
-              Lulusan melanjutkan
-              <br />
-              ke SMA/SMK pilihan
-            </span>
-          </div>
-          <div>
-            <strong>32</strong>
-            <span>
-              Pengajar profesional
-              <br />
-              dan berdedikasi
-            </span>
-          </div>
-          <div>
-            <strong>18</strong>
-            <span>
-              Program akademik
-              <br />
-              dan ekstrakurikuler
-            </span>
-          </div>
-          <div>
-            <strong>12:1</strong>
-            <span>
-              Rasio siswa dengan
-              <br />
-              tenaga pendidik
-            </span>
-          </div>
+          {homeContent.stats.map((stat) => (
+            <div key={stat.value}>
+              <strong>{stat.value}</strong>
+              <span>
+                {stat.lines[0]}
+                <br />
+                {stat.lines[1]}
+              </span>
+            </div>
+          ))}
         </section>
 
         <section className="intro-section">
-          <p className="section-kicker">Belajar di Nurul Huda</p>
+          <p className="section-kicker">
+            Belajar di <SchoolText field="schoolName" />
+          </p>
           <h2>
             Setiap anak punya cahaya.
             <br />
             Kami membantu mereka <em>menemukannya.</em>
           </h2>
-          <p>
-            Kurikulum relevan, pendampingan personal, dan ruang eksplorasi yang
-            dirancang agar siswa tumbuh menjadi pribadi utuh.
-          </p>
+          <p>{homeContent.intro}</p>
         </section>
 
         <section className="program-section">
@@ -183,39 +160,17 @@ export default function Home() {
           <div className="experience-copy">
             <p className="section-kicker">Pengalaman yang utuh</p>
             <h2>Sekolah adalah tempat menemukan siapa dirimu.</h2>
-            <p>
-              Di Nurul Huda, proses belajar melampaui ruang kelas. Siswa bertemu
-              tantangan nyata, membangun pertemanan, dan mengenali potensi
-              terbaiknya.
-            </p>
+            <p>{homeContent.experience}</p>
             <div className="feature-list">
-              <div>
-                <b>01</b>
-                <span>
-                  <strong>Pendampingan personal</strong>
-                  <small>
-                    Wali kelas dan konselor menemani perjalanan setiap siswa.
-                  </small>
-                </span>
-              </div>
-              <div>
-                <b>02</b>
-                <span>
-                  <strong>Belajar berbasis proyek</strong>
-                  <small>
-                    Pengetahuan tumbuh melalui eksplorasi dan karya nyata.
-                  </small>
-                </span>
-              </div>
-              <div>
-                <b>03</b>
-                <span>
-                  <strong>Komunitas yang suportif</strong>
-                  <small>
-                    Budaya sekolah yang menghargai suara dan keberagaman.
-                  </small>
-                </span>
-              </div>
+              {homeContent.features.map((feature) => (
+                <div key={feature.number}>
+                  <b>{feature.number}</b>
+                  <span>
+                    <strong>{feature.title}</strong>
+                    <small>{feature.text}</small>
+                  </span>
+                </div>
+              ))}
             </div>
             <Link className="button button-dark" href="/tentang">
               Cerita tentang Nurul Huda
@@ -225,14 +180,10 @@ export default function Home() {
 
         <section className="quote-section">
           <span className="quote-mark">“</span>
-          <blockquote>
-            Nurul Huda tidak hanya membantu anak kami meraih nilai baik, tetapi
-            juga menemukan keberanian untuk menyampaikan ide dan bertanggung
-            jawab atas pilihannya.
-          </blockquote>
+          <blockquote>{homeContent.quote.text}</blockquote>
           <p>
-            <b>Ratih Andayani</b>
-            <span>Orang tua siswa kelas VIII</span>
+            <b>{homeContent.quote.author}</b>
+            <span>{homeContent.quote.role}</span>
           </p>
         </section>
 
@@ -249,27 +200,8 @@ export default function Home() {
           <HomeNews />
         </section>
 
-        <Achievements compact />
-        <section className="cta-section">
-          <p className="section-kicker">Penerimaan siswa baru</p>
-          <h2>
-            Perjalanan besar dimulai
-            <br />
-            dari satu langkah kecil.
-          </h2>
-          <p>
-            Kenali Nurul Huda lebih dekat dan temukan lingkungan belajar yang
-            tepat untuk putra-putri Anda.
-          </p>
-          <div>
-            <Link className="button button-accent" href="/pendaftaran">
-              Daftar sebagai calon siswa
-            </Link>
-            <Link className="button button-outline-light" href="/kontak">
-              Jadwalkan kunjungan
-            </Link>
-          </div>
-        </section>
+        <HomeAchievements />
+        <HomePpdbCta />
       </main>
       <SiteFooter />
     </>

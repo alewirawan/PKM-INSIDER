@@ -1,0 +1,103 @@
+/* Pengaturan sekolah (domain anggota 1): grup form, error field, status muat. */
+.settings-group {
+  min-width: 0;
+  margin: 0 0 26px;
+  padding: 0;
+  border: 0;
+}
+.settings-group + .settings-group {
+  padding-top: 22px;
+  border-top: 1px solid #e3e9e6;
+}
+.settings-group > legend {
+  padding: 0;
+  float: left;
+  width: 100%;
+}
+.settings-group > h2 {
+  clear: both;
+}
+.settings-group:disabled {
+  opacity: 0.7;
+}
+.admin-form-card .field-error,
+.field-error {
+  color: #a94b3b;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.admin-form-card [aria-invalid="true"] {
+  border-color: #a94b3b;
+}
+.field-hint {
+  margin: 0;
+  color: #5e7378;
+  font-size: 11px;
+  line-height: 1.55;
+}
+.admin-form-grid .field-hint.span-2 {
+  grid-column: span 2;
+}
+.settings-checks {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 16px;
+  margin: 18px 0 14px;
+}
+.admin-form-card .check-label {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 40px;
+  color: #33484d;
+  font-size: 12px;
+  font-weight: 600;
+}
+.admin-form-card .check-label > input {
+  width: 18px;
+  height: 18px;
+  flex: none;
+  margin: 0;
+}
+.check-label.is-fixed {
+  color: #7a8c90;
+}
+.settings-group .toggle-label {
+  margin-top: 4px;
+}
+.settings-group .toggle-label b {
+  font-size: 12px;
+}
+.settings-state {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0 32px 16px;
+  padding: 10px 14px;
+  border-radius: 6px;
+  background: #eef3f1;
+  color: #33484d;
+  font-size: 12px;
+}
+.settings-state.is-error {
+  background: #fbefeb;
+  color: #a94b3b;
+}
+.settings-form code {
+  font-size: 11px;
+}
+@media (max-width: 720px) {
+  .settings-checks {
+    grid-template-columns: 1fr;
+  }
+  .admin-form-grid .field-hint.span-2 {
+    grid-column: auto;
+  }
+  .settings-state {
+    flex-direction: column;
+    align-items: stretch;
+    margin: 0 12px 14px;
+  }
+}

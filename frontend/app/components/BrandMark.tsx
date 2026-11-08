@@ -1,8 +1,15 @@
+import Image from "next/image";
+
+
 export function BrandMark({ className = "" }: { className?: string }) {
   return (
-    <span className={`brand-symbol ${className}`.trim()} aria-hidden="true">
-      <span>N</span>
-      <i />
-    </span>
+    <Image
+      className={`brand-logo ${className}`.trim()}
+      src="/images/logo.png"
+      alt=""
+      width={37}
+      height={46}
+      priority
+    />
   );
 }
