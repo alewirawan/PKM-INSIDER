@@ -22,3 +22,12 @@ CI mengungkap dua kebutuhan runtime setelah upgrade: flag dev memakai --host,
 dan image node slim perlu paket ca-certificates untuk Workerd. Keduanya diperbaiki
 di Compose dan Dockerfile; sertifikat TLS tetap diverifikasi, tidak dinonaktifkan.
 Validasi berikutnya harus mencakup startup Linux bersih, bukan hanya build di macOS.
+
+## Fixture pagination
+
+Tes tambahan presisi timestamp sempat mencoba mengubah submitted_at, yang memang
+dilarang trigger database. Commit awal terlanjur dikirim sebelum hasil tes dibaca.
+Tidak ada data kerja/sekolah yang tersentuh; masalah hanya fixture pada database uji.
+Fixture diperbaiki dengan membuat dua record uji baru, tanpa melonggarkan trigger.
+Enam tes alur PostgreSQL kembali lulus. Guardrail pemeriksaan akhir ditambahkan
+ke panduan teknis agar push tidak berjalan bersamaan dengan tes yang belum selesai.

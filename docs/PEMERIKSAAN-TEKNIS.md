@@ -33,7 +33,7 @@ RUN_BROWSER_TESTS=1 npx playwright test
 Perintah tersebut memerlukan Node dan Chromium Playwright di mesin pengujian;
 anggota cukup menggunakan pemeriksaan Docker dan melihat hasil CI untuk workflow lengkap.
 `E2E_BASE_URL` dan `E2E_API_URL` dapat mengubah alamat uji. Jangan pakai data asli
-karena screenshot/trace kegagalan disimpan sebagai artifact CI.
+karena screenshot kegagalan disimpan sebagai artifact CI. Trace jaringan dinonaktifkan agar cookie/sesi tidak ikut disimpan.
 
 ## Versi dependency dan batas validasi
 
@@ -50,3 +50,6 @@ langkah tersendiri sebelum penggunaan publik.
 Startup Linux juga harus diuji setelah upgrade: gunakan flag `--host` yang didukung
 renderer dan pertahankan `ca-certificates` dalam image slim agar runtime dapat
 memverifikasi TLS. Jangan mengatasi error sertifikat dengan mematikan verifikasi.
+
+Tunggu dan baca hasil akhir semua tes yang diwajibkan sebelum commit/push; jangan
+menjalankan publikasi bersamaan dengan pemeriksaan terakhir yang belum selesai.

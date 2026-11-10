@@ -484,22 +484,31 @@ describe.skipIf(!url)(
       expect(uploaded.statusCode).toBe(200);
       expect(uploaded.json().hasFile).toBe(true);
       const searchName = `Pagination ${suffix}`;
-      await database.client`UPDATE applications SET student_name=${searchName}, submitted_at='2026-01-01 00:00:00.123456+00' WHERE registration_number=${offlineNumber}`;
-      await database.client`UPDATE applications SET student_name=${searchName}, submitted_at='2026-01-01 00:00:00.123123+00' WHERE registration_number=${number}`;
+      const paginationNumbers: string[] = [];
+      for (const timestamp of [
+        "2026-01-01 00:00:00.123456+00",
+        "2026-01-01 00:00:00.123123+00",
+      ]) {
+        const [inserted] =
+          await database.client`INSERT INTO applications (student_name,nisn,origin_school,birth_place,birth_date,gender,address,parent_name,parent_occupation,phone,email,academic_year,document_requirements,source,submitted_at)
+          SELECT ${searchName},nisn,origin_school,birth_place,birth_date,gender,address,parent_name,parent_occupation,phone,email,academic_year,document_requirements,source,${timestamp}::timestamptz
+          FROM applications WHERE registration_number=${offlineNumber} RETURNING registration_number`;
+        paginationNumbers.push(inserted!.registration_number);
+      }
       const filtered = (
         await app.inject({
           url: `/api/v1/applications?limit=1&search=${encodeURIComponent(searchName)}`,
           headers: headers(),
         })
       ).json();
-      expect(filtered.items[0].id).toBe(offlineNumber);
+      expect(filtered.items[0].id).toBe(paginationNumbers[0]);
       const older = (
         await app.inject({
           url: `/api/v1/applications?limit=1&search=${encodeURIComponent(searchName)}&cursor=${filtered.nextCursor}`,
           headers: headers(),
         })
       ).json();
-      expect(older.items[0].id).toBe(number);
+      expect(older.items[0].id).toBe(paginationNumbers[1]);
       const access = await app.inject({
         method: "POST",
         url: `/api/v1/applications/${offlineNumber}/access`,
