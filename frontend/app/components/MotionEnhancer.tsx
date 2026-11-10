@@ -5,47 +5,50 @@ import { useEffect } from "react";
 
 export function MotionEnhancer() {
   const pathname = usePathname();
-
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const selector = [
-      ".hero-copy > *",
-      ".hero-visual",
-      ".page-hero > *",
-      ".news-card",
-      ".program-card",
-      ".value-grid article",
-      ".step-grid article",
-      ".club-grid span",
-    ].join(",");
-    const targets = Array.from(
-      document.querySelectorAll<HTMLElement>(selector),
-    );
-    targets.forEach((element, index) => {
-      element.classList.add("reveal-ready");
-      element.style.setProperty(
-        "--reveal-delay",
-        `${Math.min(index % 5, 4) * 70}ms`,
-      );
-    });
-    if (!("IntersectionObserver" in window)) {
-      targets.forEach((element) => element.classList.add("is-visible"));
+    if (
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+      !("IntersectionObserver" in window)
+    )
       return;
-    }
+    const targets = document.querySelectorAll<HTMLElement>(
+      [
+        ".hero-copy > *",
+        ".hero-visual",
+        ".page-hero > *",
+        ".news-card",
+        ".program-card",
+        ".value-grid article",
+        ".step-grid article",
+        ".club-grid span",
+      ].join(","),
+    );
+    const animations: Animation[] = [];
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
-            observer.unobserve(entry.target);
-          }
-        });
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          const element = entry.target as HTMLElement;
+          if (typeof element.animate === "function")
+            animations.push(
+              element.animate(
+                [
+                  { opacity: 0.85, transform: "translateY(12px)" },
+                  { opacity: 1, transform: "translateY(0)" },
+                ],
+                { duration: 420, easing: "ease-out" },
+              ),
+            );
+          observer.unobserve(element);
+        }
       },
-      { threshold: 0.08, rootMargin: "0px 0px -7% 0px" },
+      { threshold: 0.08 },
     );
     targets.forEach((element) => observer.observe(element));
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      animations.forEach((animation) => animation.cancel());
+    };
   }, [pathname]);
-
   return null;
 }
