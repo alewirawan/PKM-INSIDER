@@ -6,6 +6,9 @@ Seluruh website publik dan dashboard admin berada di folder ini. Frontend memaka
 
 Jalur resmi tim: Docker Desktop aktif dan backend/.env siap, mengikuti
 [Panduan Docker](../PANDUAN-INSTALASI.md).
+Jika terminal sedang di folder frontend, jalankan `cd ..` dahulu. Root project
+harus berisi compose.dev.yaml. Tutorial setup awal dan akun admin ada di
+[README utama](../README.md); jangan memasang dependency frontend terpisah di host.
 
 ```bash
 docker compose --env-file backend/.env -f compose.dev.yaml up --build -d --wait
@@ -41,3 +44,8 @@ login memakai `/auth/login` dan session cookie HttpOnly sesuai kontrak OpenAPI.
 
 Penjelasan mode demo di atas hanya berlaku untuk jalur manual npm di luar Docker.
 Container development selalu terhubung ke API. Jangan simpan token atau credential di repository.
+
+Pada main per 10 November 2026, client Pengaturan memanggil /settings tetapi
+backend endpoint tersebut belum tersedia. Pesan pengaturan gagal dimuat atau
+prestasi belum tersedia bukan bukti instalasi Docker gagal. Lihat
+[status fitur](../PANDUAN-INSTALASI.md#fitur-yang-belum-selesai).

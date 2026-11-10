@@ -13,9 +13,9 @@ misalnya `docker compose --env-file backend/.env -f compose.dev.yaml run --rm ba
 
 ### Perbaikan integrasi 6 November 2026
 
-Blog, klub, dan agenda aktif bersamaan. Gunakan `npm run db:migrate
---workspace=@nurul-huda/backend` dari root, lalu `db:verify` dengan workspace yang
-sama. Jangan mengganti journal atau menjalankan `0001_posts.sql` secara manual.
+Blog, klub, dan agenda aktif bersamaan. Pada jalur Docker, migration dan db:verify
+dijalankan otomatis saat backend dimulai. Ikuti bagian setelah pull di bawah.
+Jangan mengganti journal atau menjalankan `0001_posts.sql` secara manual.
 Migration resmi tetap 0000 → 0001_many_colossus → 0002_chunky_scalphunter.
 
 Perintah migration juga mengenali database yang sempat memakai journal Blog
@@ -63,25 +63,24 @@ pengganti migration yang sudah direview.
 
 ### Setelah anggota melakukan pull
 
-Dari root repository, jika database lokal sudah tersedia dan DATABASE_URL pada
-`backend/.env` sudah benar:
+Dari root repository, setelah pekerjaan sendiri di-commit pada branch tugas,
+Docker Desktop aktif, dan backend/.env sudah tersedia:
 
 ```bash
-git pull --ff-only
-npm ci
-npm run db:migrate --workspace=@nurul-huda/backend
-npm run db:verify --workspace=@nurul-huda/backend
-npm run dev:backend
+docker compose --env-file backend/.env -f compose.dev.yaml stop
+git switch main
+git pull --ff-only origin main
+docker compose --env-file backend/.env -f compose.dev.yaml up --build -d --force-recreate --wait
 ```
 
-Untuk komputer baru, ikuti bagian Menjalankan lokal di bawah untuk menyiapkan
-PostgreSQL dan akun admin. Migration membuat tabel, bukan membuat server database
-atau akun admin. Jangan menimpa `.env` yang sudah dimiliki anggota.
+Untuk komputer baru, ikuti [panduan instalasi](../PANDUAN-INSTALASI.md).
+Compose menyalakan database; migration membuat tabel; akun admin dibuat terpisah
+melalui perintah interaktif pada panduan tersebut. Jangan menimpa `.env`.
 
 Data contoh bersifat opsional dan hanya untuk database development lokal:
 
 ```bash
-npm run db:seed:demo --workspace=@nurul-huda/backend -- --confirm-demo
+docker compose --env-file backend/.env -f compose.dev.yaml run --rm backend npm run db:seed:demo --workspace=@nurul-huda/backend -- --confirm-demo
 ```
 
 Seed menambahkan profil contoh, periode, klub, agenda, guru/struktur, draft artikel,
@@ -333,17 +332,10 @@ cp backend/.env.example backend/.env
 
 Ubah `DATABASE_URL` dan credential lokal. Jangan commit `.env`.
 
-Jalankan PostgreSQL melalui Compose:
-
-```bash
-docker compose --env-file backend/.env -f compose.dev.yaml up -d postgres
-```
-
-Sebelum menyalakan database pertama kali, isi `POSTGRES_PASSWORD` dan password di
-`DATABASE_URL` pada `backend/.env` dengan nilai yang sama. Compose development
-tidak membuka port PostgreSQL ke host. Jalur manual memerlukan PostgreSQL lokal
-terpisah atau override port yang direview; jangan menjalankan backend host dengan
-menganggap database container tersedia di localhost:5432. Setelah database lokal siap, jalankan:
+Jalur manual memerlukan PostgreSQL lokal terpisah yang sesuai DATABASE_URL.
+Compose development tidak membuka port PostgreSQL ke host; jangan menganggap
+database container tersedia di localhost:5432. Anggota yang mengikuti Docker
+tidak perlu menjalankan bagian alternatif ini. Setelah database lokal siap, jalankan:
 
 ```bash
 npm run db:migrate --workspace=@nurul-huda/backend

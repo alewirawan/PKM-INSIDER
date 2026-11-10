@@ -4,7 +4,7 @@ Aturan runtime tim sejak 7 November 2026: gunakan Docker untuk frontend, backend
 dan database sesuai [Panduan Instalasi](../PANDUAN-INSTALASI.md). Schema dan data
 tetap dipisahkan; Docker tidak menggantikan pengerjaan API masing-masing anggota.
 
-Diperbarui: 6 November 2026. Tim: 10 anggota. Repository:
+Diperbarui: 10 November 2026 (panduan menjalankan project). Tim: 10 anggota. Repository:
 https://github.com/alewirawan/PROJECT-PKM-SMP-NURUL-HUDA
 
 Panduan ini membagi pekerjaan berdasarkan menu dan hasil yang harus dapat
@@ -55,16 +55,18 @@ bukan seluruh daftar tugas anggota dalam satu perubahan.
 5. Buat satu issue kecil, branch, implementasi, test, lalu pull request.
 6. Mulai dari hasil pertama pada tabel, bukan mengerjakan seluruh modul sekaligus.
 
-Perintah demo dari folder yang berisi package.json:
+Setelah setup awal pada [panduan instalasi](../PANDUAN-INSTALASI.md), jalankan
+seluruh layanan dari folder yang berisi compose.dev.yaml:
 
 ```bash
-npm ci
-npm run dev
+docker compose --env-file backend/.env -f compose.dev.yaml up --build -d --wait
 ```
 
-Buka http://localhost:3000 dan /admin, lalu pilih mode demo. Demo tidak membutuhkan
-database atau konfigurasi API. Backend hanya diaktifkan oleh anggota yang mulai
-mengerjakan integrasi, mengikuti panduan instalasi. Jangan membagikan .env.
+Buka http://localhost:3000 dan /admin. Buat akun admin melalui terminal sesuai
+panduan instalasi, kemudian login dengan akun tersebut. Docker menjalankan
+database dan backend sekaligus; tidak perlu menyalakan npm dev di laptop.
+Jangan membagikan .env. Langkah pertama, menjalankan ulang, dan setelah pull
+dibedakan dalam panduan instalasi agar setup tidak diulang setiap hari.
 
 Semua path berikut relatif terhadap root repository:
 
@@ -81,7 +83,7 @@ Semua path berikut relatif terhadap root repository:
 | PPDB       | Empat langkah, pilihan ekstrakurikuler, enam jenis berkas, review                                    | Validasi server, nomor server, submit dan file nyata              |
 | Berkas     | Pemilihan/preview lokal dan catatan/status pemeriksaan simulasi                                      | Storage privat, akses berizin, pencatatan pemeriksa/waktu         |
 | Backend    | Auth, health, konfigurasi, schema awal, migration, error handler                                     | API seluruh resource sekolah, otorisasi per fitur, test integrasi |
-| Setup      | compose.dev.yaml dengan port PostgreSQL loopback sudah ada                                           | Membuktikan setup database/login di komputer anggota              |
+| Setup      | compose.dev.yaml menjalankan PostgreSQL internal, backend dan frontend; CI Docker tersedia          | Membuktikan setup database/login di komputer anggota              |
 | Git        | main mengikuti repo tim                                                                              | Issue, branch, review, dan kebiasaan kerja tim                    |
 | Production | Rancangan Compose/Docker                                                                             | Uji runtime, HTTPS, backup/restore dan izin sebelum VPS           |
 
@@ -90,8 +92,10 @@ GET /auth/session, POST /auth/logout, dengan prefix /api/v1.
 Keberadaan kode bukan bukti login/database telah diuji end-to-end.
 
 Kontrak OpenAPI 1.2.0 adalah target implementasi. Label planned tidak berarti
-endpoint sudah berjalan. Frontend masih memakai penyimpanan browser; file pilihan
-hanya berada di memori dan tidak diunggah. Gunakan data dummy.
+endpoint sudah berjalan. Modul yang belum terintegrasi masih memakai penyimpanan
+browser; berkas pilihan pada mockup belum diunggah. Auth, Blog, Klub, dan Agenda
+sudah memakai API. Frontend Pengaturan tersedia, tetapi endpoint backend /settings
+belum ada pada main saat pembaruan panduan ini. Gunakan data dummy.
 
 Scope tahap utama: informasi satu sekolah dan penerimaan calon siswa. Bukan nilai,
 absensi, pembagian kelas, atau sistem akademik siswa aktif. Newsletter, upload foto
@@ -704,9 +708,9 @@ Untuk anggota yang belum memiliki clone:
 ```bash
 git clone https://github.com/alewirawan/PROJECT-PKM-SMP-NURUL-HUDA.git
 cd PROJECT-PKM-SMP-NURUL-HUDA
-npm ci
 ```
 
+Lanjutkan setup .env dan Docker sesuai [panduan instalasi](../PANDUAN-INSTALASI.md).
 Sebelum membuat branch, pastikan git status tidak berisi perubahan yang belum
 disimpan. Jangan menjalankan clone ulang di dalam project-k yang sudah terhubung.
 
@@ -720,6 +724,10 @@ git switch -c feature/blog-public-list
 
 Setelah implementasi, review git diff dan stage file yang tepat, bukan seluruh
 folder artifacts. Commit lalu push branch sendiri dan ajukan pull request.
+Jika perintah startup, environment, atau port berubah, perbarui README utama,
+PANDUAN-INSTALASI, MULAI-DISINI, serta contoh perintah pada panduan frontend,
+backend, dan tim dalam perubahan yang sama. Panduan instalasi menjadi acuan
+runtime; contoh lama tidak boleh bertentangan dengan konfigurasi Compose aktif.
 Jangan force-push main, menghapus migration yang sudah dipakai, atau menyelesaikan
 konflik dengan membuang pekerjaan anggota lain. Koordinator mereview merge;
 aturan proteksi branch GitHub perlu dikonfigurasi terpisah bila belum ada.
@@ -760,11 +768,11 @@ Setiap fitur integrasi baru selesai bila:
 - [ ] Pemilik dapat menjelaskan dan mendemonstrasikan kode bagiannya.
 - [ ] Reviewer menyetujui; tidak ada secret, dokumen nyata, ZIP, atau cache dalam commit.
 
-Pemeriksaan kode saat implementasi:
+Pemeriksaan kode saat implementasi dari root project, dengan Docker Desktop aktif:
 
 ```bash
-npm run check
-npm run build --workspace=@nurul-huda/backend
+docker compose --env-file backend/.env -f compose.dev.yaml build checks
+docker compose --env-file backend/.env -f compose.dev.yaml run --rm checks
 ```
 
 Jika mengubah kontrak, jalankan juga pemeriksaan OpenAPI dan kasus schema

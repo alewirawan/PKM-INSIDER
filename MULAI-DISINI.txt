@@ -1,48 +1,52 @@
-PAKET TIM PKM - SMP NURUL HUDA
-7 November 2026
+SMP NURUL HUDA — MULAI DI SINI
+Diperbarui 10 November 2026
 
-JALANKAN DENGAN DOCKER
+Buka README.md untuk tutorial langkah demi langkah.
+Panduan lebih lengkap: PANDUAN-INSTALASI.md.
 
-1. Install Git dan Docker Desktop, lalu buka Docker Desktop.
-   Windows: aktifkan WSL 2 dan gunakan Linux containers.
-2. Clone repository atau buka folder project yang sudah tersedia.
-   Simpan di luar OneDrive.
-3. Salin backend/.env.example menjadi backend/.env jika belum ada.
-   Isi POSTGRES_PASSWORD. Jangan mengganti password volume database lama.
-4. Jalankan dari root project:
+PERTAMA KALI
 
+1. Install Git dan Docker Desktop. Buka Docker Desktop sampai engine siap.
+2. Clone repository atau buka folder project yang sudah ada:
+   https://github.com/alewirawan/PROJECT-PKM-SMP-NURUL-HUDA
+3. Gunakan terminal di folder berisi compose.dev.yaml, frontend, dan backend.
+   Windows: gunakan CMD, simpan project di luar OneDrive.
+4. Jika belum ada, salin backend/.env.example menjadi backend/.env.
+   Isi POSTGRES_PASSWORD. Jangan menimpa .env atau password database lama.
+5. Jalankan:
    docker compose --env-file backend/.env -f compose.dev.yaml up --build -d --wait
-
-5. Buka http://localhost:3000 atau http://localhost:3000/admin.
-   PostgreSQL, migration 23 tabel, backend, dan frontend berjalan bersama.
-6. Buat akun admin sekali dengan perintah interaktif:
-
+6. Periksa:
+   docker compose --env-file backend/.env -f compose.dev.yaml ps
+   postgres, backend, frontend harus Up (healthy).
+7. Buat akun admin sekali:
    docker compose --env-file backend/.env -f compose.dev.yaml run --rm backend npm run admin:create --workspace=@nurul-huda/backend
+   Ikuti pertanyaan terminal. Password minimal 12 karakter dan tidak tampil saat diketik.
+8. Buka http://localhost:3000 dan http://localhost:3000/admin.
 
 JALANKAN LAGI
 
+Buka Docker Desktop dan terminal di root project:
    docker compose --env-file backend/.env -f compose.dev.yaml up -d --wait
 
 BERHENTI
-
    docker compose --env-file backend/.env -f compose.dev.yaml stop
 
-SETELAH PULL PERUBAHAN
-
+SETELAH PULL
+Simpan/commit pekerjaan sendiri dahulu; ikuti alur branch pada panduan lengkap.
+Setelah mengambil update:
    docker compose --env-file backend/.env -f compose.dev.yaml up --build -d --force-recreate --wait
 
-ATURAN TIM
+JIKA GAGAL
+   docker compose --env-file backend/.env -f compose.dev.yaml ps -a
+   docker compose --env-file backend/.env -f compose.dev.yaml logs --tail=80 postgres backend frontend
 
-- Gunakan Docker untuk menjalankan project; tidak perlu npm ci di host.
-- Kerjakan pada branch sendiri, periksa hasil, lalu push dan buat pull request.
-- Jangan kirim .env, password, node_modules, atau data pribadi ke GitHub.
-- Jangan gunakan down -v karena menghapus volume database.
-- Database setiap anggota terpisah. Git membawa schema, bukan isi database.
-- Backend seluruh menu belum selesai. Tersedianya tabel bukan berarti
-  seluruh fitur sudah terhubung ke database.
+CATATAN
 
-PANDUAN LENGKAP
-
-PANDUAN-INSTALASI.md: instalasi, update, pengujian, dan troubleshooting.
-docs/README-TIM-PKM.md: pembagian anggota, path source, dan checklist.
-Dokumen PDF/ZIP lama adalah arsip; gunakan panduan instalasi di repository.
+- Tidak perlu npm install/npm run dev di laptop; semuanya berjalan lewat Docker.
+- Database 23 tabel dibuat melalui migration. Akun admin dibuat terpisah.
+- Isi database tiap anggota berbeda dan tidak ikut GitHub.
+- Jangan commit .env dan jangan gunakan down -v yang menghapus volume.
+- Pengaturan menunggu backend /settings; sebagian fitur masih belum terintegrasi.
+  Error pada fitur tersebut bukan alasan untuk install ulang Docker.
+- pgAdmin belum disertakan; akses tabel lewat terminal dijelaskan di panduan lengkap.
+- PDF/ZIP terdahulu adalah arsip; perintah terkini ada di README.md.

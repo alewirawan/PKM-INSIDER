@@ -1,85 +1,182 @@
-# SMP Nurul Huda Workspace
+# Sistem Informasi SMP Nurul Huda
 
-Project dipisahkan agar pengembangan frontend dan backend tidak saling mengganggu.
+Website informasi sekolah dan dashboard admin. Frontend memakai React/TypeScript,
+backend Fastify, dan database PostgreSQL. Jalur development tim memakai Docker.
 
-Jalur resmi tim menggunakan Docker untuk frontend, backend, dan PostgreSQL.
-Ikuti [Panduan Instalasi Docker](PANDUAN-INSTALASI.md), termasuk setup awal,
-akun admin, menjalankan ulang, pull, dan push.
+## Mulai di sini
 
-Baru mulai mengerjakan project? Baca [Panduan Anggota](docs/PANDUAN-ANGGOTA.md):
-latihan pertama untuk 10 anggota, penjelasan API, cara membagi tugas kecil,
-dan cara menyerahkan perubahan. Panduan ini tidak memerlukan pemahaman seluruh
-backend untuk memulai tugas tampilan.
+**Sudah install Docker? Lanjutkan dari langkah 2.** Semua perintah project
+dijalankan di folder utama yang berisi `compose.dev.yaml`, `frontend`, dan
+`backend`. Jangan menjalankannya dari dalam folder frontend/backend.
 
-Panduan pembagian 10 anggota PKM, path file, struktur folder yang direncanakan,
-dan urutan pengerjaan tersedia di [Panduan Kerja Tim PKM](docs/README-TIM-PKM.md).
-Gunakan revisi 15 Oktober 2026 yang mencakup Prestasi, Ekstrakurikuler, dan berkas
-PPDB. Kontrak target integrasi ada di [panduan API](contracts/README.md); endpoint
-berstatus planned masih harus dibuat tim. PDF pembagian tugas lama hanya arsip.
+| Kondisi kamu | Langkah |
+| --- | --- |
+| Pertama kali menjalankan | Ikuti langkah 1–6 di bawah. |
+| Project sudah pernah berjalan | Buka Docker Desktop, lalu [jalankan lagi](#pemakaian-sehari-hari). |
+| Baru mengambil update teman | Ikuti [setelah pull](#setelah-pull-update). |
+| Muncul error | Buka [pemecahan masalah](PANDUAN-INSTALASI.md#jika-gagal). |
 
-```text
-project-k/
-├── frontend/      # Website publik dan dashboard admin
-├── backend/       # Fastify API, PostgreSQL, dan Drizzle ORM
-├── contracts/     # Kontrak OpenAPI frontend–backend
-├── docs/          # Panduan anggota dan pembagian fitur
-├── .github/       # Pemeriksaan otomatis, template tugas, dan template PR
-├── artifacts/     # Arsip ZIP dan hasil export lama
-└── package.json   # Perintah workspace frontend dan backend
+### 1. Siapkan aplikasi
+
+Pasang Git dan Docker Desktop, lalu buka Docker Desktop sampai engine siap.
+Windows menggunakan WSL 2 dan Linux containers. Langkah pemasangannya ada di
+[panduan instalasi](PANDUAN-INSTALASI.md#1-install-git-dan-docker).
+
+Tidak perlu memasang Node.js, PostgreSQL, XAMPP, atau pgAdmin untuk menjalankan
+project. Docker memasang dependency dan menjalankan ketiga layanan.
+
+### 2. Buka project
+
+Windows: gunakan **Command Prompt (CMD)**; di terminal VS Code pilih profil
+**Command Prompt**. Simpan project di luar OneDrive, misalnya `C:\PKM`.
+
+Jika belum punya project, buka terminal di folder tempat menyimpan project:
+
+```bash
+git clone https://github.com/alewirawan/PROJECT-PKM-SMP-NURUL-HUDA.git
+cd PROJECT-PKM-SMP-NURUL-HUDA
 ```
 
-## Menjalankan seluruh aplikasi
+Jika sudah punya project, buka folder tersebut. Jalankan `git status`; bila ada
+perubahan sendiri, commit di branch tugas dahulu. Untuk mengambil versi main:
 
-Dari root project, setelah Docker Desktop aktif dan POSTGRES_PASSWORD pada
-backend/.env diisi sesuai panduan:
+```bash
+git switch main
+git pull --ff-only origin main
+```
+
+Jangan clone lagi di dalam folder project yang sudah ada.
+
+### 3. Siapkan konfigurasi sekali saja
+
+Hanya jika `backend/.env` belum ada, salin file contoh:
+
+Windows CMD:
+
+```bat
+copy backend\.env.example backend\.env
+notepad backend\.env
+```
+
+macOS/Linux:
+
+```bash
+cp -n backend/.env.example backend/.env
+```
+
+Buka `backend/.env` dengan editor. Ganti nilai `POSTGRES_PASSWORD=change-me`
+dengan password database lokal sendiri, lalu simpan. Jangan menimpa file yang
+sudah ada. Jika database pernah dibuat, gunakan password lamanya.
+
+Untuk Docker, cukup atur `POSTGRES_PASSWORD`; alamat database dan API diatur
+otomatis oleh container. Tidak perlu membuat `frontend/.env.local`.
+
+### 4. Jalankan project
+
+Hentikan server lama project di terminal lain dengan Ctrl+C jika masih memakai
+port 3000/4000, kemudian:
 
 ```bash
 docker compose --env-file backend/.env -f compose.dev.yaml up --build -d --wait
 ```
 
-Dependency dipasang di image Linux. Tidak perlu npm ci atau PostgreSQL di laptop.
-Migration dan pemeriksaan 23 tabel dijalankan sebelum backend siap.
+Build pertama memerlukan internet dan bisa beberapa menit. Tunggu sampai perintah
+selesai tanpa error, lalu periksa:
 
-- Website publik: `http://localhost:3000`
-- Dashboard admin: `http://localhost:3000/admin`
+```bash
+docker compose --env-file backend/.env -f compose.dev.yaml ps
+```
 
-## Status backend
+Layanan `postgres`, `backend`, dan `frontend` harus **Up (healthy)**.
+Docker menyalakan PostgreSQL, menjalankan migration 23 tabel, lalu backend dan
+frontend. Tidak perlu menjalankan `npm install` atau `npm run dev` di laptop.
 
-Schema database seluruh scope project sudah tersedia: 23 tabel PostgreSQL,
-relasi, constraint, arsip berkas, akun pendaftar, dan migration yang menjaga data
-lama. Setelah pull, rebuild/recreate container sesuai panduan; migration dan
-verifikasi dijalankan otomatis. Lihat [diagram database](backend/database.dbml) dan
-[panduan schema serta alur data](backend/README.md#schema-seluruh-project).
-Tabel siap digunakan tidak berarti seluruh endpoint menu sudah selesai.
+### 5. Buat akun admin sekali saja
 
-Backend foundation sudah tersedia menggunakan Fastify, TypeScript, PostgreSQL,
-dan Drizzle ORM. Fondasi ini mencakup schema awal, migration, autentikasi admin,
-health check, security middleware, test, serta Docker setup. Panduan detail ada di
-[`backend/README.md`](backend/README.md).
+```bash
+docker compose --env-file backend/.env -f compose.dev.yaml run --rm backend npm run admin:create --workspace=@nurul-huda/backend
+```
 
-Bagian anggota 2 sudah terintegrasi: pengelolaan ekstrakurikuler dan agenda,
-daftar publik terfilter, serta penyimpanan PostgreSQL. Jalankan migration
-yang tersedia dan konfigurasi URL API untuk memakai penyimpanan server.
-Tanpa URL API, mode demo browser tetap tersedia.
+Isi email, nama, role, dan password minimal 12 karakter. Untuk admin development
+dengan semua hak akses, tekan Enter pada pilihan role untuk memakai `super_admin`.
+Password tidak tampil saat diketik. Tidak ada akun admin bawaan; gunakan akun
+yang kamu buat, bukan akun GitHub atau akun Docker.
 
-Selama endpoint resource belum diintegrasikan, konten publik masih disimpan melalui
-`localStorage`, sedangkan data pribadi pendaftar, pesan, dan newsletter hanya
-disimpan di `sessionStorage` hingga tab ditutup. Ini adapter mockup, bukan database
-production.
+### 6. Buka website
 
-Jalankan quality gate melalui layanan checks sesuai panduan. GitHub Actions juga
-menguji startup Docker, login, artikel, frontend/API, serta persistensi database.
+- Website: http://localhost:3000
+- Login admin: http://localhost:3000/admin
+- Cek koneksi backend–database: http://localhost:4000/api/v1/ready
 
-## Modul struktur dan guru
+Gunakan alamat `localhost` secara konsisten. Database baru bisa masih kosong;
+[data contoh opsional](PANDUAN-INSTALASI.md#data-contoh-opsional) tersedia.
 
-Menu **Struktur & guru** pada dashboard dapat:
+## Pemakaian sehari-hari
 
-- mengubah profil pimpinan dan guru;
-- memindahkan pimpinan antara kepala sekolah, wakil kepala, dan koordinator;
-- mengubah urutan tampilan;
-- memilih contoh foto;
-- menambah atau menghapus profil.
+Buka Docker Desktop dan terminal di folder project. Untuk menjalankan lagi:
 
-Perubahan lokal langsung terlihat pada halaman publik `/struktur`.
+```bash
+docker compose --env-file backend/.env -f compose.dev.yaml up -d --wait
+```
 
-Seluruh nama, data, alamat, foto, dan statistik pada website ini bersifat fiktif.
+Untuk berhenti:
+
+```bash
+docker compose --env-file backend/.env -f compose.dev.yaml stop
+```
+
+Data tetap tersimpan. Jangan menggunakan `down -v` atau menghapus volume database.
+
+## Setelah pull update
+
+Simpan/commit pekerjaan sendiri di branch tugas terlebih dahulu. Jalankan dari root:
+
+```bash
+docker compose --env-file backend/.env -f compose.dev.yaml stop
+git switch main
+git pull --ff-only origin main
+docker compose --env-file backend/.env -f compose.dev.yaml up --build -d --force-recreate --wait
+```
+
+Perintah terakhir memperbarui image/container dan menjalankan migration yang belum
+diterapkan. Akun admin dan database lama tetap dipakai; jangan ulangi penyalinan
+.env atau membuat akun yang sama. Untuk melanjutkan branch tugas yang sudah ada,
+ikuti [alur Git pada panduan lengkap](PANDUAN-INSTALASI.md#pull-dan-pekerjaan-pada-branch).
+
+## Status fitur
+
+Per 10 November 2026, berdasarkan branch main:
+
+| Bagian | Status |
+| --- | --- |
+| PostgreSQL | Schema 23 tabel dan migration tersedia. Isi database setiap laptop terpisah. |
+| Login admin, Blog, Ekstrakurikuler, Agenda | Sudah memakai API/database. |
+| Beranda, Tentang, frontend Pengaturan | Pembaruan tampilan tersedia. Client Pengaturan menunggu backend GET/PUT /settings. |
+| Struktur/Guru, PPDB, Data siswa, Berkas, Kontak/Pesan, Prestasi | Integrasi backend belum lengkap; sebagian tampilan masih simulasi. |
+| Pengelola database lewat web | pgAdmin belum disertakan. Port 5050 belum tersedia. |
+
+Jika muncul pesan pengaturan gagal dimuat atau prestasi belum dapat ditampilkan,
+lihat [status fitur](PANDUAN-INSTALASI.md#fitur-yang-belum-selesai). Layanan healthy
+tidak berarti seluruh menu sudah selesai. Tidak perlu install ulang Docker untuk
+endpoint yang memang belum dibuat.
+
+## Struktur dan panduan lanjutan
+
+```text
+frontend/          Website publik dan dashboard admin
+backend/           API Fastify, schema PostgreSQL, dan migration
+contracts/         Kontrak API antarmodul
+docker/            Image dan startup development
+compose.dev.yaml   Menjalankan frontend, backend, dan database lokal
+docs/              Panduan kerja anggota
+```
+
+- [Panduan instalasi lengkap, database, error, dan push](PANDUAN-INSTALASI.md)
+- [Panduan mulai bekerja](docs/PANDUAN-ANGGOTA.md)
+- [Pembagian tugas 10 anggota](docs/README-TIM-PKM.md)
+- [Kontrak API](contracts/README.md)
+- [Dokumentasi backend](backend/README.md) dan [diagram database](backend/database.dbml)
+- [Dokumentasi frontend](frontend/README.md)
+
+Gunakan data fiktif untuk development. PDF/ZIP lama merupakan arsip; gunakan
+panduan pada branch main untuk perintah terbaru.
