@@ -138,7 +138,7 @@ export default function Home() {
             <Image
               className="image-main"
               src="/images/campus.jpg"
-              alt="Lingkungan kampus sekolah yang hijau"
+              alt="Ilustrasi lingkungan belajar sekolah"
               width={1600}
               height={1048}
               sizes="(max-width: 820px) 86vw, 45vw"
@@ -146,7 +146,7 @@ export default function Home() {
             <Image
               className="image-small"
               src="/images/students.jpg"
-              alt="Siswa Nurul Huda berdiskusi bersama"
+              alt="Ilustrasi siswa berdiskusi bersama"
               width={1400}
               height={933}
               sizes="(max-width: 820px) 42vw, 22vw"

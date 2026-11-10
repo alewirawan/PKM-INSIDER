@@ -160,7 +160,7 @@ export async function listApplications(db: Database, query: unknown) {
             )
           : undefined,
         cursor
-          ? sql`(${applications.submittedAt}, ${applications.id}) < (${cursor.submittedAt.toISOString()}::timestamptz, ${cursor.id}::uuid)`
+          ? sql`(${applications.submittedAt}, ${applications.id}) < (SELECT submitted_at, id FROM applications WHERE id = ${cursor.id}::uuid)`
           : undefined,
       ),
     )

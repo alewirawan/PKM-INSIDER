@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ContactInformation } from "../components/ContactInformation";
 import { ContactForm } from "../components/ContactForm";
 import { PageHero } from "../components/PageHero";
 import { SiteFooter } from "../components/SiteFooter";
@@ -32,40 +33,7 @@ export default function ContactPage() {
           <div className="contact-details">
             <p className="section-kicker">Kunjungi kampus</p>
             <h2>Rumah belajar kami terbuka untuk Anda.</h2>
-            <div className="contact-list">
-              <article>
-                <span>Alamat</span>
-                <p>
-                  Jl. Cakrawala Pendidikan No. 17
-                  <br />
-                  Bandung, Jawa Barat 40123
-                </p>
-              </article>
-              <article>
-                <span>Telepon</span>
-                <p>
-                  (022) 1234 5678
-                  <br />
-                  0812 3456 7890
-                </p>
-              </article>
-              <article>
-                <span>Email</span>
-                <p>
-                  halo@nurulhuda.sch.id
-                  <br />
-                  ppdb@nurulhuda.sch.id
-                </p>
-              </article>
-              <article>
-                <span>Jam layanan</span>
-                <p>
-                  Senin–Jumat, 07.00–16.00
-                  <br />
-                  Sabtu, 08.00–12.00
-                </p>
-              </article>
-            </div>
+            <ContactInformation />
           </div>
         </section>
         <section className="contact-form-section">
@@ -73,8 +41,8 @@ export default function ContactPage() {
             <p className="section-kicker">Kirim pesan</p>
             <h2>Ada yang ingin ditanyakan?</h2>
             <p>
-              Isi formulir berikut. Pesan demo akan langsung tersedia di
-              dashboard admin untuk ditindaklanjuti.
+              Isi formulir berikut. Pesan akan diterima pengelola sekolah untuk
+              ditindaklanjuti.
             </p>
           </div>
           <ContactForm />
@@ -86,26 +54,25 @@ export default function ContactPage() {
           </div>
           <div className="faq-list">
             <details open>
-              <summary>Apakah tersedia program beasiswa?</summary>
+              <summary>Apakah PIP/KIP wajib dilampirkan?</summary>
               <p>
-                Ya. Nurul Huda menyediakan beasiswa prestasi akademik,
-                nonakademik, dan dukungan finansial berdasarkan proses seleksi.
+                Tidak. Lampirkan jika memiliki. Berkas wajib lainnya mengikuti
+                persyaratan pada halaman Pendaftaran.
               </p>
             </details>
             <details>
-              <summary>Apakah calon siswa dapat melakukan school tour?</summary>
+              <summary>Bagaimana memperbaiki berkas pendaftaran?</summary>
               <p>
-                Bisa. Kunjungan tersedia setiap Selasa dan Kamis dengan
-                perjanjian melalui tim penerimaan siswa.
+                Masuk melalui Portal Pendaftar dengan nomor dan password. Lihat
+                catatan pemeriksaan, lalu unggah berkas pengganti yang belum
+                terverifikasi.
               </p>
             </details>
             <details>
-              <summary>
-                Apakah sekolah menyediakan layanan antar-jemput?
-              </summary>
+              <summary>Apakah bisa mendaftar langsung di sekolah?</summary>
               <p>
-                Tersedia rute terbatas untuk wilayah Bandung Utara, Tengah, dan
-                Timur. Rute final menyesuaikan jumlah peminat.
+                Bisa. Hubungi panitia untuk membuat janji dan membawa dokumen.
+                Panitia akan mencatat pendaftaran serta berkas yang diterima.
               </p>
             </details>
           </div>

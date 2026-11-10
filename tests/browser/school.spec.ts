@@ -245,6 +245,26 @@ test("admin saves offline registration, physical evidence and opens each module 
       )
       .toBeTruthy();
   }
+  await page
+    .getByLabel("Email utama", { exact: true })
+    .fill("sekolah-browser@example.test");
+  await page
+    .getByRole("textbox", { name: "Alamat", exact: true })
+    .fill("Alamat fiktif sekolah untuk pengujian");
+  const saved = page.waitForResponse(
+    (r) => r.url() === `${api}/settings` && r.request().method() === "PUT",
+  );
+  await page
+    .getByRole("button", { name: "Simpan pengaturan", exact: true })
+    .click();
+  expect((await saved).status()).toBe(200);
+  await page.goto("/kontak");
+  await expect(page.locator(".contact-list")).toContainText(
+    "sekolah-browser@example.test",
+  );
+  await expect(page.locator(".contact-list")).toContainText(
+    "Alamat fiktif sekolah untuk pengujian",
+  );
   await page.screenshot({
     path: "test-results/admin-mobile-settings.png",
     fullPage: true,

@@ -5,7 +5,7 @@ import { PageHero } from "../components/PageHero";
 import { Achievements } from "../components/Achievements";
 export const metadata: Metadata = {
   title: "Prestasi Sekolah",
-  description: "Galeri simulasi prestasi dan pencapaian SMP Nurul Huda.",
+  description: "Galeri prestasi dan pencapaian SMP Nurul Huda.",
 };
 export default function AchievementPage() {
   return (

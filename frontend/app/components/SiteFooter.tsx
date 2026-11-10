@@ -21,7 +21,7 @@ export function SiteFooter() {
             Ruang belajar yang hangat untuk generasi yang berani berpikir,
             peduli, dan berkarya.
           </p>
-          <span className="domain-chip">www.nurulhuda.sch.id</span>
+          <span className="domain-chip">Informasi dan layanan sekolah</span>
         </div>
         <div>
           <h3>Jelajahi</h3>
@@ -51,21 +51,15 @@ export function SiteFooter() {
           )}
         </div>
         <div>
-          <h3>Jam layanan</h3>
-          <p>
-            Senin–Jumat
-            <br />
-            07.00–16.00 WIB
-          </p>
-          <p>
-            Sabtu
-            <br />
-            08.00–12.00 WIB
-          </p>
+          <h3>Layanan</h3>
+          <Link href="/pendaftaran">Informasi PPDB</Link>
+          <Link href="/pendaftar">Portal pendaftar</Link>
+          <Link href="/kontak">Hubungi sekolah</Link>
+          <Link href="/admin">Login admin</Link>
         </div>
       </div>
       <div className="footer-bottom">
-        <span>© 2026 {settings.schoolName}. Website simulasi.</span>
+        <span>© 2026 {settings.schoolName}. </span>
         <span>{settings.tagline}</span>
       </div>
     </footer>

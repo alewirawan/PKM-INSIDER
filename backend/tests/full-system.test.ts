@@ -483,6 +483,23 @@ describe.skipIf(!url)(
       });
       expect(uploaded.statusCode).toBe(200);
       expect(uploaded.json().hasFile).toBe(true);
+      const searchName = `Pagination ${suffix}`;
+      await database.client`UPDATE applications SET student_name=${searchName}, submitted_at='2026-01-01 00:00:00.123456+00' WHERE registration_number=${offlineNumber}`;
+      await database.client`UPDATE applications SET student_name=${searchName}, submitted_at='2026-01-01 00:00:00.123123+00' WHERE registration_number=${number}`;
+      const filtered = (
+        await app.inject({
+          url: `/api/v1/applications?limit=1&search=${encodeURIComponent(searchName)}`,
+          headers: headers(),
+        })
+      ).json();
+      expect(filtered.items[0].id).toBe(offlineNumber);
+      const older = (
+        await app.inject({
+          url: `/api/v1/applications?limit=1&search=${encodeURIComponent(searchName)}&cursor=${filtered.nextCursor}`,
+          headers: headers(),
+        })
+      ).json();
+      expect(older.items[0].id).toBe(number);
       const access = await app.inject({
         method: "POST",
         url: `/api/v1/applications/${offlineNumber}/access`,
