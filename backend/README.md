@@ -1,6 +1,6 @@
 # Backend SMP Nurul Huda
 
-Backend dasar menggunakan Fastify, TypeScript, PostgreSQL, dan Drizzle ORM. Target
+Backend menggunakan Fastify, TypeScript, PostgreSQL, dan Drizzle ORM. Target
 deployment adalah satu VPS untuk satu sekolah.
 
 Jalur resmi development tim menggunakan [Panduan Docker](../PANDUAN-INSTALASI.md).
@@ -41,7 +41,7 @@ tanggal pencatatan sampai editor menentukan tanggal publikasinya.
 
 Database tetap PostgreSQL 17 sesuai Compose project, dengan Drizzle sebagai
 definisi tabel dan migration SQL sebagai riwayat perubahan. Schema mencakup
-23 tabel untuk seluruh fitur yang saat ini direncanakan. Tidak ada tabel kelas,
+23 tabel untuk fitur sekolah yang diimplementasikan. Tidak ada tabel kelas,
 nilai, absensi siswa, atau pembayaran karena modul tersebut belum termasuk scope.
 
 Relasi data memakai foreign key, unique index, check constraint, dan transaksi.
@@ -385,3 +385,14 @@ harus melalui endpoint terautentikasi dan authorization check.
 - gunakan password database unik;
 - backup PostgreSQL dan direktori upload ke mesin/object storage lain;
 - jalankan `npm run check` sebelum deploy.
+
+## Integrasi lengkap PKM-INSIDER
+
+Endpoint settings, directory, achievements, messages, newsletter, applications,
+applicant-auth, documents dan dashboard terdaftar di `src/app.ts`.
+Lihat [kontrak aktif](../contracts/README.md) dan [alur sistem](../docs/ALUR-SISTEM.md).
+
+Tes `tests/full-system.test.ts` memakai database PostgreSQL lokal terpisah berakhiran
+`_test`/`_ci`, bukan database kerja. Set `FULL_SYSTEM_DATABASE_URL` untuk menjalankannya.
+Pipeline Docker menyiapkan database CI, menguji alur PPDB dan memeriksa persistensi
+setelah container dibuat ulang.

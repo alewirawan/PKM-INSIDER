@@ -52,6 +52,9 @@ import type { AdminToast as Toast, AdminView as View } from "./admin/types";
 
 import { AchievementsModule } from "./admin/AchievementsModule";
 import { ClubsModule } from "./admin/ClubsModule";
+import { StudentWorkspace } from "./student-records/StudentWorkspace";
+import { LiveDashboard } from "./admin/LiveDashboard";
+import { LiveMessagesModule } from "./admin/LiveMessagesModule";
 
 const menu: { id: View; label: string; icon: LucideIcon }[] = [
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -74,10 +77,35 @@ const mobilePrimaryViews: View[] = [
 ];
 const DEMO_SESSION_KEY = "nurul_huda_admin_demo";
 
+type AdminUser = {
+  name: string;
+  role: "super_admin" | "editor" | "admin_ppdb";
+};
 export function AdminDashboard() {
+  const [user, setUser] = useState<AdminUser>({
+    name: "Admin",
+    role: "super_admin",
+  });
+  const [checking, setChecking] = useState(hasBackendApi());
+  const visibleMenu = menu.filter(
+    (item) =>
+      !hasBackendApi() ||
+      user.role === "super_admin" ||
+      (user.role === "admin_ppdb"
+        ? ["applications", "students"].includes(item.id)
+        : [
+            "directory",
+            "achievements",
+            "clubs",
+            "posts",
+            "agenda",
+            "messages",
+          ].includes(item.id)),
+  );
   const [view, setView] = useState<View>("dashboard");
-  const [applications, setApplications] =
-    useState<Application[]>(seedApplications);
+  const [applications, setApplications] = useState<Application[]>(
+    hasBackendApi() ? [] : seedApplications,
+  );
   const [posts, setPosts] = useState<CmsPost[]>([]);
   const [messages, setMessages] = useState<ContactMessage[]>([]);
   const [settings, setSettings] = useState<SchoolSettings>(() =>
@@ -86,11 +114,15 @@ export function AdminDashboard() {
   const [newsletterCount, setNewsletterCount] = useState(0);
   const [toast, setToast] = useState<Toast>(null);
   const [authenticated, setAuthenticated] = useState(false);
-  const { agenda, error: agendaError } = useAgenda(true, authenticated);
+  const { agenda, error: agendaError } = useAgenda(
+    true,
+    authenticated && user.role !== "admin_ppdb",
+  );
   const [mobileMoreOpen, setMobileMoreOpen] = useState(false);
   const [postPreset, setPostPreset] = useState<string | null>(null);
 
   function reload() {
+    if (hasBackendApi()) return;
     setApplications(getApplications());
     if (!hasBackendApi()) void listAdminPosts().then(setPosts);
     setMessages(getMessages());
@@ -102,12 +134,24 @@ export function AdminDashboard() {
     const initialize = window.setTimeout(() => {
       reload();
       if (hasBackendApi()) {
-        requestApi("/auth/session")
-          .then(() => {
+        requestApi<{ user: AdminUser }>("/auth/session")
+          .then(({ user }) => {
+            setUser(user);
             setAuthenticated(true);
-            void listAdminPosts().then(setPosts).catch(() => setPosts([]));
+            setView(
+              user.role === "admin_ppdb"
+                ? "students"
+                : user.role === "editor"
+                  ? "posts"
+                  : "dashboard",
+            );
+            if (user.role !== "admin_ppdb")
+              void listAdminPosts()
+                .then(setPosts)
+                .catch(() => setPosts([]));
           })
-          .catch(() => setAuthenticated(false));
+          .catch(() => setAuthenticated(false))
+          .finally(() => setChecking(false));
       } else {
         setAuthenticated(
           window.sessionStorage.getItem(DEMO_SESSION_KEY) === "true",
@@ -120,6 +164,25 @@ export function AdminDashboard() {
       stopListening();
     };
   }, []);
+
+  useEffect(() => {
+    if (
+      !hasBackendApi() ||
+      !authenticated ||
+      user.role !== "super_admin" ||
+      view !== "settings"
+    )
+      return;
+    let active = true;
+    requestApi<{ newsletterCount: number }>("/dashboard/summary")
+      .then((v) => {
+        if (active) setNewsletterCount(v.newsletterCount);
+      })
+      .catch(() => undefined);
+    return () => {
+      active = false;
+    };
+  }, [authenticated, user.role, view]);
 
   useEffect(() => {
     if (!toast) return;
@@ -141,22 +204,43 @@ export function AdminDashboard() {
   }
   async function logout() {
     if (hasBackendApi())
-      await requestApi("/auth/logout", { method: "POST" }).catch(
-        () => undefined,
-      );
+      try {
+        await requestApi("/auth/logout", { method: "POST" });
+      } catch {
+        notify("Keluar gagal. Coba lagi.", "warning");
+        return;
+      }
     window.sessionStorage.removeItem(DEMO_SESSION_KEY);
     setAuthenticated(false);
     setView("dashboard");
   }
-  function login(mode: "demo" | "backend") {
+  async function login(mode: "demo" | "backend") {
     if (mode === "demo") {
       window.sessionStorage.setItem(DEMO_SESSION_KEY, "true");
     } else {
-      void listAdminPosts().then(setPosts).catch(() => setPosts([]));
+      const { user } = await requestApi<{ user: AdminUser }>("/auth/session");
+      setUser(user);
+      setView(
+        user.role === "admin_ppdb"
+          ? "students"
+          : user.role === "editor"
+            ? "posts"
+            : "dashboard",
+      );
+      if (user.role !== "admin_ppdb")
+        void listAdminPosts()
+          .then(setPosts)
+          .catch(() => setPosts([]));
     }
     setAuthenticated(true);
   }
 
+  if (checking)
+    return (
+      <main className="portal-section" role="status">
+        Memeriksa sesi admin…
+      </main>
+    );
   if (!authenticated) return <AdminLogin onLogin={login} />;
 
   const unread = messages.filter((message) => message.status === "Baru").length;
@@ -180,7 +264,7 @@ export function AdminDashboard() {
           </div>
         </button>
         <nav>
-          {menu.map((item) => {
+          {visibleMenu.map((item) => {
             const Icon = item.icon;
             return (
               <button
@@ -196,10 +280,18 @@ export function AdminDashboard() {
           })}
         </nav>
         <div className="sidebar-bottom">
-          <span className="admin-avatar">RA</span>
+          <span className="admin-avatar">
+            {user.name.slice(0, 2).toUpperCase()}
+          </span>
           <div>
-            <b>Rania A.</b>
-            <small>Super Admin</small>
+            <b>{user.name}</b>
+            <small>
+              {user.role === "admin_ppdb"
+                ? "Panitia PPDB"
+                : user.role === "editor"
+                  ? "Editor"
+                  : "Super Admin"}
+            </small>
           </div>
           <button
             onClick={logout}
@@ -213,8 +305,8 @@ export function AdminDashboard() {
       <main className="admin-main">
         <header className="admin-topbar">
           <div>
-            <span className="domain-dot" /> admin.nurulhuda.sch.id{" "}
-            <em>CMS Lokal</em>
+            <span className="domain-dot" /> Panel sekolah{" "}
+            <em>{hasBackendApi() ? "Terhubung ke server" : "Mode demo"}</em>
           </div>
           <div className="admin-top-actions">
             {unread > 0 && (
@@ -232,7 +324,7 @@ export function AdminDashboard() {
           </div>
         </header>
         <nav className="admin-mobile-nav" aria-label="Navigasi admin mobile">
-          {menu
+          {visibleMenu
             .filter((item) => mobilePrimaryViews.includes(item.id))
             .map((item) => {
               const Icon = item.icon;
@@ -286,7 +378,7 @@ export function AdminDashboard() {
                   <X size={20} />
                 </button>
               </header>
-              {menu
+              {visibleMenu
                 .filter((item) => !mobilePrimaryViews.includes(item.id))
                 .map((item) => {
                   const Icon = item.icon;
@@ -325,31 +417,44 @@ export function AdminDashboard() {
             </section>
           </div>
         )}
-        {view === "dashboard" && agendaError && <p role="alert" className="admin-form-error">{agendaError}</p>}
-        {view === "dashboard" && (
-          <DashboardModule
-            applications={applications}
-            posts={posts}
-            agenda={agenda}
-            messages={messages}
-            onNavigate={navigate}
-            onCreatePost={() => startPost("Pengumuman")}
-          />
+        {view === "dashboard" && agendaError && (
+          <p role="alert" className="admin-form-error">
+            {agendaError}
+          </p>
         )}
-        {view === "applications" && (
-          <ApplicationsModule
-            applications={applications}
-            setApplications={setApplications}
-            notify={notify}
-          />
-        )}
-        {view === "students" && (
-          <StudentRecordsModule
-            applications={applications}
-            setApplications={setApplications}
-            notify={notify}
-          />
-        )}
+        {view === "dashboard" &&
+          (hasBackendApi() ? (
+            <LiveDashboard name={user.name} navigate={navigate} />
+          ) : (
+            <DashboardModule
+              applications={applications}
+              posts={posts}
+              agenda={agenda}
+              messages={messages}
+              onNavigate={navigate}
+              onCreatePost={() => startPost("Pengumuman")}
+            />
+          ))}
+        {view === "applications" &&
+          (hasBackendApi() ? (
+            <StudentWorkspace title="Pendaftar" />
+          ) : (
+            <ApplicationsModule
+              applications={applications}
+              setApplications={setApplications}
+              notify={notify}
+            />
+          ))}
+        {view === "students" &&
+          (hasBackendApi() ? (
+            <StudentWorkspace />
+          ) : (
+            <StudentRecordsModule
+              applications={applications}
+              setApplications={setApplications}
+              notify={notify}
+            />
+          ))}
         {view === "directory" && <SchoolDirectoryModule notify={notify} />}
         {view === "achievements" && <AchievementsModule notify={notify} />}
         {view === "clubs" && <ClubsModule notify={notify} />}
@@ -362,16 +467,17 @@ export function AdminDashboard() {
             notify={notify}
           />
         )}
-        {view === "agenda" && (
-          <AgendaModule notify={notify} />
-        )}
-        {view === "messages" && (
-          <MessagesModule
-            messages={messages}
-            setMessages={setMessages}
-            notify={notify}
-          />
-        )}
+        {view === "agenda" && <AgendaModule notify={notify} />}
+        {view === "messages" &&
+          (hasBackendApi() ? (
+            <LiveMessagesModule notify={notify} />
+          ) : (
+            <MessagesModule
+              messages={messages}
+              setMessages={setMessages}
+              notify={notify}
+            />
+          ))}
         {view === "settings" && (
           <SettingsModule
             settings={settings}

@@ -1,7 +1,7 @@
 "use client";
 import { useState, type FormEvent } from "react";
 import { useCatalog } from "../../lib/use-catalog";
-import { saveAchievements, type Achievement } from "../../lib/cms/catalog";
+import { storeAchievement, removeAchievement } from "../../lib/api/school";
 import { AdminPageHeader } from "./AdminUi";
 import type { AdminNotify } from "./types";
 const empty = {
@@ -15,30 +15,28 @@ const empty = {
   published: false,
 };
 export function AchievementsModule({ notify }: { notify: AdminNotify }) {
-  const { achievements } = useCatalog();
+  const { achievements, achievementsError, achievementsLoading } =
+    useCatalog(true);
+  const [saving, setSaving] = useState(false);
   const [form, setForm] = useState(empty);
   const [editing, setEditing] = useState<string | null>(null);
   const [deleting, setDeleting] = useState<string | null>(null);
-  function save(e: FormEvent) {
+  async function save(e: FormEvent) {
     e.preventDefault();
-    if (!form.title.trim() || !form.award.trim()) return;
-    const item: Achievement = {
-      ...form,
-      title: form.title.trim(),
-      award: form.award.trim(),
-      id: editing ?? crypto.randomUUID(),
-    };
+    if (saving) return;
+    setSaving(true);
     try {
-      saveAchievements(
-        editing
-          ? achievements.map((a) => (a.id === editing ? item : a))
-          : [item, ...achievements],
-      );
+      await storeAchievement(form, editing ?? undefined);
       setForm(empty);
       setEditing(null);
-      notify("Prestasi disimpan pada browser ini.");
-    } catch {
-      notify("Penyimpanan browser gagal.", "warning");
+      notify("Prestasi tersimpan.");
+    } catch (error) {
+      notify(
+        error instanceof Error ? error.message : "Penyimpanan gagal.",
+        "warning",
+      );
+    } finally {
+      setSaving(false);
     }
   }
   return (
@@ -46,8 +44,10 @@ export function AchievementsModule({ notify }: { notify: AdminNotify }) {
       <AdminPageHeader
         eyebrow="Cerita pencapaian"
         title="Prestasi sekolah"
-        description="Kelola contoh prestasi yang tampil di beranda dan galeri publik. Tidak terhubung ke backend."
+        description="Kelola cerita pencapaian sekolah. Hanya prestasi terbit yang terlihat oleh pengunjung."
       />
+      {achievementsError && <p role="alert">{achievementsError}</p>}
+      {achievementsLoading && <p role="status">Memuat prestasi…</p>}
       <div className="catalog-admin-grid">
         <form className="catalog-editor" onSubmit={save}>
           <h2>{editing ? "Edit prestasi" : "Prestasi baru"}</h2>
@@ -128,7 +128,11 @@ export function AchievementsModule({ notify }: { notify: AdminNotify }) {
             />
             Tampilkan di website
           </label>
-          <button className="button button-dark" type="submit">
+          <button
+            className="button button-dark"
+            type="submit"
+            disabled={saving}
+          >
             Simpan prestasi
           </button>
           {editing && (
@@ -167,19 +171,17 @@ export function AchievementsModule({ notify }: { notify: AdminNotify }) {
               </div>
               {deleting === a.id && (
                 <div className="delete-confirm">
-                  <p>Hapus prestasi contoh ini?</p>
+                  <p>Hapus prestasi ini?</p>
                   <button
-                    onClick={() => {
+                    onClick={async () => {
                       try {
-                        saveAchievements(
-                          achievements.filter((x) => x.id !== a.id),
-                        );
+                        await removeAchievement(a.id);
                         setDeleting(null);
                         if (editing === a.id) {
                           setEditing(null);
                           setForm(empty);
                         }
-                        notify("Prestasi dihapus dari simulasi.");
+                        notify("Prestasi dihapus.");
                       } catch {
                         notify("Penyimpanan gagal.", "warning");
                       }

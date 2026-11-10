@@ -13,6 +13,9 @@ export type StudentDocumentStatus =
   | "Belum ada";
 
 export type StudentDocument = {
+  id?: string;
+  hasFile?: boolean;
+  receivedPhysically?: boolean;
   key: "kk" | "akta" | "ijazah" | "skl" | "ktp" | "kip" | "photo";
   label: string;
   status: StudentDocumentStatus;
@@ -32,6 +35,8 @@ export type CmsPost = Post & {
 };
 
 export type Application = {
+  extracurriculars?: string[];
+  documentRequirements?: DocumentRequirements;
   id: string;
   studentName: string;
   nisn?: string;

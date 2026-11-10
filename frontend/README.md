@@ -29,7 +29,7 @@ diperlukan saat menyerahkan perubahan yang menyentuh launcher.
 
 - `app/lib/api-client.ts`: HTTP client dan konfigurasi base URL.
 - `app/lib/cms/posts.ts`: repository API artikel publik dan admin.
-- `app/lib/local-cms.ts`: adapter data lokal untuk modul mockup yang belum diintegrasikan.
+- `app/lib/local-cms.ts`: adapter simulasi jika API tidak dikonfigurasi.
 - `app/school-directory-data.ts`: tipe dan seed struktur organisasi/guru.
 - `../contracts/openapi.yaml`: kontrak endpoint yang disarankan.
 
@@ -45,7 +45,7 @@ login memakai `/auth/login` dan session cookie HttpOnly sesuai kontrak OpenAPI.
 Penjelasan mode demo di atas hanya berlaku untuk jalur manual npm di luar Docker.
 Container development selalu terhubung ke API. Jangan simpan token atau credential di repository.
 
-Pada main per 10 November 2026, client Pengaturan memanggil /settings tetapi
-backend endpoint tersebut belum tersedia. Pesan pengaturan gagal dimuat atau
-prestasi belum tersedia bukan bukti instalasi Docker gagal. Lihat
-[status fitur](../PANDUAN-INSTALASI.md#fitur-yang-belum-selesai).
+Seluruh menu utama pada mode Docker memakai API. Pendaftaran online, input offline,
+review berkas, portal pendaftar, pesan, prestasi, direktori, pengaturan, dan ringkasan
+memiliki client terpisah di `app/lib/api/` serta komponen per fitur.
+Lihat [alur sistem](../docs/ALUR-SISTEM.md) dan [kontrak](../contracts/README.md).

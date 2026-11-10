@@ -2,16 +2,24 @@
 import { useState } from "react";
 import { FileCheck2, Upload } from "lucide-react";
 import { documentLabels } from "../../lib/cms/student-documents";
-import type { StudentDocument } from "../../lib/cms/types";
+import type {
+  StudentDocument,
+  DocumentRequirements,
+} from "../../lib/cms/types";
 import { validateDemoFile } from "../../lib/registration-files";
 import { FilePreview } from "./FilePreview";
 export type SelectedFiles = Partial<Record<StudentDocument["key"], File>>;
 export function DocumentFields({
   files,
   setFiles,
+  requirements = {
+    requiredKinds: ["kk", "ktp", "akta"],
+    requireOneGraduationDocument: true,
+  },
 }: {
   files: SelectedFiles;
   setFiles: (files: SelectedFiles) => void;
+  requirements?: DocumentRequirements;
 }) {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [preview, setPreview] = useState<File | null>(null);
@@ -19,10 +27,8 @@ export function DocumentFields({
     <fieldset>
       <legend>03 - Berkas pendaftaran</legend>
       <p className="form-help">
-        Gunakan berkas dummy. PDF, JPG, atau PNG; maksimal 5 MB per berkas.
-        Dalam simulasi ini KK, KTP orang tua/wali, akta, dan salah satu
-        SKL/ijazah perlu dipilih. PIP/KIP opsional. Aturan final mengikuti
-        sekolah.
+        PDF, JPG, atau PNG; maksimal 5 MB per berkas. Lengkapi dokumen yang
+        ditandai wajib. PIP/KIP hanya dilampirkan jika memiliki.
       </p>
       <div className="registration-upload-grid">
         {documentLabels.map(({ key, label }) => (
@@ -35,11 +41,14 @@ export function DocumentFields({
               <div>
                 <h3>{label}</h3>
                 <small>
-                  {key === "skl" || key === "ijazah"
-                    ? "Pilih salah satu SKL / ijazah"
-                    : key === "kip"
-                      ? "Jika memiliki"
-                      : "Wajib pada simulasi"}
+                  {requirements.requiredKinds.some((kind) => kind === key)
+                    ? "Wajib"
+                    : requirements.requireOneGraduationDocument &&
+                        (key === "skl" || key === "ijazah")
+                      ? "Pilih salah satu SKL / ijazah"
+                      : key === "kip"
+                        ? "Jika memiliki"
+                        : "Opsional"}
                 </small>
               </div>
             </div>

@@ -73,7 +73,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="stats" aria-label="Statistik sekolah">
+        <section className="stats" aria-label="Pilar pendidikan">
           {homeContent.stats.map((stat) => (
             <div key={stat.value}>
               <strong>{stat.value}</strong>

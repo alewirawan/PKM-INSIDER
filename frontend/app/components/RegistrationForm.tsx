@@ -19,9 +19,14 @@ import {
   type SelectedFiles,
 } from "./registration/DocumentFields";
 import { RegistrationReview } from "./registration/RegistrationReview";
+import { LiveRegistrationForm } from "./registration/LiveRegistrationForm";
+import { hasBackendApi } from "../lib/api-client";
 
 const steps = ["Data siswa", "Orang tua", "Berkas", "Periksa & kirim"];
 export function RegistrationForm() {
+  return hasBackendApi() ? <LiveRegistrationForm /> : <DemoRegistrationForm />;
+}
+function DemoRegistrationForm() {
   const settings = useSchoolSettings();
   const [form, setForm] = useState(initialRegistration);
   const [files, setFiles] = useState<SelectedFiles>({});

@@ -49,6 +49,7 @@ export function useContentList<T>(
     };
   }, [refresh]);
   return {
+    setItems,
     items: enabled ? items : [],
     loading: enabled && loading,
     error: enabled ? error : "",

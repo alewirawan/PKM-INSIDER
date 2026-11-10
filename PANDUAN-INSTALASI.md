@@ -74,8 +74,8 @@ Windows CMD, contoh lokasi di luar OneDrive:
 ```bat
 mkdir C:\PKM
 cd /d C:\PKM
-git clone https://github.com/alewirawan/PROJECT-PKM-SMP-NURUL-HUDA.git
-cd PROJECT-PKM-SMP-NURUL-HUDA
+git clone https://github.com/alewirawan/PKM-INSIDER.git
+cd PKM-INSIDER
 ```
 
 Jika C:\PKM sudah ada, lewati `mkdir`.
@@ -85,8 +85,8 @@ macOS, contoh lokasi di luar iCloud:
 ```bash
 mkdir -p ~/Projects
 cd ~/Projects
-git clone https://github.com/alewirawan/PROJECT-PKM-SMP-NURUL-HUDA.git
-cd PROJECT-PKM-SMP-NURUL-HUDA
+git clone https://github.com/alewirawan/PKM-INSIDER.git
+cd PKM-INSIDER
 ```
 
 Jika GitHub meminta login atau menolak akses, gunakan akun GitHub yang diundang
@@ -98,7 +98,7 @@ Buka folder project yang sudah ada di VS Code, lalu buka terminal.
 Contoh Windows CMD untuk lokasi di atas:
 
 ```bat
-cd /d "C:\PKM\PROJECT-PKM-SMP-NURUL-HUDA"
+cd /d "C:\PKM\PKM-INSIDER"
 ```
 
 Sesuaikan path dengan lokasi sendiri. Jangan membuat clone kedua di dalam project.
@@ -192,8 +192,7 @@ Jika exited/unhealthy atau perintah sebelumnya gagal, baca [Jika gagal](#jika-ga
 | Kesiapan API dan koneksi database | http://localhost:4000/api/v1/ready |
 
 Gunakan localhost secara konsisten agar cookie login bekerja.
-Tanda healthy mengonfirmasi layanan hidup; integrasi setiap fitur memiliki
-[status sendiri](#fitur-yang-belum-selesai).
+Tanda healthy mengonfirmasi layanan hidup. Lanjutkan dengan membuat admin, mengisi konten, lalu mengatur PPDB.
 
 ## 6. Buat akun admin
 
@@ -224,8 +223,7 @@ docker compose --env-file backend/.env -f compose.dev.yaml run --rm backend npm 
 
 Seed tidak menimpa record lama, tidak membuat akun admin, pendaftar atau dokumen
 asli, dan tidak membuka PPDB otomatis. Artikel contoh berupa draft: terbitkan
-dari admin agar terlihat publik. Data seed modul yang belum terintegrasi belum
-tentu muncul di tampilan.
+dari admin agar terlihat publik. Prestasi contoh juga belum diterbitkan; aktifkan melalui menu Prestasi sekolah.
 
 ## Menjalankan lagi dan berhenti
 
@@ -245,7 +243,7 @@ docker compose --env-file backend/.env -f compose.dev.yaml stop
 
 Database dan upload memakai named volumes. stop/down tanpa penghapusan volume
 tidak menghapus data. Jangan gunakan `down -v` atau volume prune pada database kerja.
-Volume database tetap bernama `nurul-huda-local_postgres_dev_data`.
+Volume database tetap bernama `pkm-insider-local_postgres_dev_data`.
 Database PostgreSQL yang sebelumnya dipasang langsung di laptop tidak otomatis
 dipindahkan ke Docker.
 
@@ -342,26 +340,42 @@ Di prompt PostgreSQL:
 SQL seperti SELECT diakhiri titik koma. Hasil 0 rows berarti belum ada data.
 Perintah pemeriksaan ini tidak mengubah data.
 
-pgAdmin belum disertakan; http://localhost:5050 belum tersedia. PostgreSQL
-berjalan di jaringan internal Docker dan port 5432 tidak dibuka ke laptop.
-Akun admin website bukan akun akses langsung database.
+### Database lewat web (pgAdmin, opsional)
 
-## Fitur yang belum selesai
+Isi `PGADMIN_PASSWORD` pada `backend/.env` dengan password sendiri (minimal 16 karakter).
+`PGADMIN_EMAIL` default adalah `admin@example.test`; boleh diganti sebelum pertama dijalankan.
+Kemudian:
 
-Status pada main per 10 November 2026:
+```bash
+docker compose --env-file backend/.env -f compose.dev.yaml --profile database-ui up -d pgadmin
+```
 
-- Auth admin, Blog, Ekstrakurikuler, dan Agenda sudah memakai API.
-- Pembaruan Beranda/Tentang/frontend Pengaturan sudah tersedia.
-  Client memanggil GET/PUT /api/v1/settings, tetapi backend endpoint tersebut
-  belum tersedia. Di mode Docker, pengaturan gagal dimuat/disimpan dan informasi
-  status PPDB yang bergantung padanya belum siap. Ini bukan kegagalan instalasi.
-- Prestasi di beranda mode API masih menampilkan pesan belum tersedia.
-- PPDB, direktori, data siswa, berkas, pesan, dan prestasi belum terintegrasi
-  lengkap; sebagian tampilan masih simulasi browser.
+Buka http://localhost:5050 dan login memakai PGADMIN_EMAIL / PGADMIN_PASSWORD.
+Pilih **Add New Server**:
 
-Jangan menghapus database atau install ulang Docker untuk mengatasi endpoint
-yang belum dibuat. Keberadaan 23 tabel dan status healthy bukan bukti seluruh
-alur fitur selesai.
+- General → Name: `PKM lokal`
+- Connection → Host: `postgres` (bukan localhost)
+- Port: `5432`
+- Maintenance database: `nurul_huda`
+- Username: `nurul_huda`
+- Password: nilai `POSTGRES_PASSWORD` dari .env
+
+Buka **Servers → PKM lokal → Databases → nurul_huda → Schemas → public → Tables**.
+Klik kanan tabel → View/Edit Data → First 100 Rows untuk melihat isinya.
+Akun pgAdmin berbeda dari admin website dan akun PostgreSQL. Akses port 5050
+hanya tersedia dari laptop sendiri. Data tiap anggota tetap terpisah.
+
+## Setelah berhasil login
+
+1. Buka **Pengaturan**: isi identitas/kontak sekolah, tahun ajaran, dan syarat berkas.
+2. Isi **Struktur & guru**, **Ekstrakurikuler**, **Artikel & berita**, **Agenda**, dan **Prestasi sekolah**.
+3. Terbitkan artikel/prestasi agar tampil publik; agenda Internal tetap hanya untuk admin.
+4. Aktifkan **PPDB sedang dibuka** dan simpan. Tanggal hanya informasi; toggle menentukan penerimaan.
+5. Coba pendaftaran fiktif di halaman PPDB. Simpan nomor pendaftaran dan password.
+6. Periksa melalui **Pendaftar/Data siswa → Berkas**. Perbaikan dikirim pendaftar melalui portal.
+7. Atur status penerimaan melalui tab **Status**. Berkas wajib harus terverifikasi sebelum status Terverifikasi/Diterima.
+
+Lihat [alur sistem dan hak akses](docs/ALUR-SISTEM.md) untuk langkah terperinci.
 
 ## Jika gagal
 
@@ -387,9 +401,11 @@ credential. Jangan kirim .env, password, token, atau output konfigurasi berisi s
 | Migration gagal / backend exited | Baca log backend; jangan menghapus migration atau tabel untuk melewati error. |
 | npm ci gagal ketika build | Periksa pesan tahap build dan koneksi internet. Instalasi npm berlangsung di Docker. |
 | Login gagal | Pastikan akun admin dibuat, backend healthy, dan alamat browser memakai localhost. |
+| Akun pgAdmin gagal dibuat | Isi PGADMIN_PASSWORD sebelum menyalakan profile database-ui. |
+| PPDB tertutup | Login admin → Pengaturan → aktifkan PPDB sedang dibuka → Simpan. |
 | Password tidak terlihat ketika membuat admin | Normal: input password disembunyikan. Ketik, lalu Enter. |
 | Blog kosong | Database belum memiliki artikel terbit; buat artikel atau terbitkan draft seed. |
-| Pengaturan 404/gagal dimuat, prestasi belum tersedia | Lihat status fitur di atas; backend modul tersebut belum selesai. |
+| Pengaturan gagal dimuat / endpoint 404 | Pastikan memakai repo PKM-INSIDER versi terbaru; rebuild/recreate, cek log backend dan alamat API. |
 | Kode/dependency setelah pull belum sesuai | Gunakan up --build -d --force-recreate --wait dari root. |
 | git pull ditolak karena perubahan/konflik | Simpan commit pada branch tugas; koordinasikan konflik tanpa reset atau force push. |
 

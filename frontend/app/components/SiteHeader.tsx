@@ -85,6 +85,9 @@ export function SiteHeader({ active = "" }: { active?: string }) {
           <Link href="/pendaftaran" onClick={prepareNavigation}>
             Informasi PPDB <span aria-hidden="true">→</span>
           </Link>
+          <Link href="/pendaftar" onClick={prepareNavigation}>
+            Portal pendaftar
+          </Link>
           <Link href="/admin" onClick={prepareNavigation}>
             Login Admin
           </Link>
@@ -181,6 +184,9 @@ export function SiteHeader({ active = "" }: { active?: string }) {
               onClick={prepareNavigation}
             >
               Daftar calon siswa <ArrowUpRight size={16} />
+            </Link>
+            <Link href="/pendaftar" onClick={prepareNavigation}>
+              Portal pendaftar
             </Link>
             <Link href="/admin" onClick={prepareNavigation}>
               <UserRound size={16} /> Login Admin

@@ -1,9 +1,9 @@
 "use client";
 
 import { BookOpenText, Search, Sparkles } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
-import { getSchoolDirectory, listenCmsUpdates } from "../lib/local-cms";
-import { seedSchoolDirectory, type Teacher } from "../school-directory-data";
+import { useMemo, useState } from "react";
+import { useDirectory } from "../lib/use-directory";
+import { type Teacher } from "../school-directory-data";
 
 const clusters: ("Semua" | Teacher["cluster"])[] = [
   "Semua",
@@ -26,12 +26,12 @@ const portraitPositions = [
 export function TeacherDirectory() {
   const [cluster, setCluster] = useState<(typeof clusters)[number]>("Semua");
   const [query, setQuery] = useState("");
-  const [teachers, setTeachers] = useState(seedSchoolDirectory.teachers);
-  useEffect(() => {
-    const reload = () => setTeachers(getSchoolDirectory().teachers);
-    reload();
-    return listenCmsUpdates(reload);
-  }, []);
+  const {
+    directory: { teachers },
+    loading,
+    error,
+    refresh,
+  } = useDirectory();
   const visible = useMemo(
     () =>
       teachers.filter((teacher) => {
@@ -46,6 +46,12 @@ export function TeacherDirectory() {
 
   return (
     <section className="teacher-directory">
+      {loading && <p role="status">Memuat daftar guru…</p>}
+      {error && (
+        <p role="alert">
+          {error} <button onClick={() => void refresh()}>Coba lagi</button>
+        </p>
+      )}
       <header className="teacher-directory-heading">
         <div>
           <p className="section-kicker">Orang-orang di ruang belajar</p>

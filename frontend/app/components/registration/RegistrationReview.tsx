@@ -14,8 +14,8 @@ export function RegistrationReview({
     <section className="registration-review">
       <h2 tabIndex={-1}>Periksa sebelum mengirim</h2>
       <p>
-        Pastikan data contoh dan berkas sudah sesuai. Belum ada data yang
-        dikirim ke server.
+        Pastikan data dan berkas sudah sesuai. Belum ada data yang dikirim ke
+        server.
       </p>
       <article>
         <header>

@@ -14,7 +14,7 @@ const nextConfig: NextConfig = {
           "frame-src 'self' blob:",
           "script-src 'self' 'unsafe-inline'",
           "style-src 'self' 'unsafe-inline'",
-          "img-src 'self' data: blob:",
+          "img-src 'self' data: blob: https:",
           "font-src 'self' data:",
           "connect-src 'self' http://localhost:4000 https:",
         ].join("; "),
@@ -32,6 +32,10 @@ const nextConfig: NextConfig = {
       { source: "/:path*", headers: securityHeaders },
       {
         source: "/admin/:path*",
+        headers: [{ key: "Cache-Control", value: "private, no-store" }],
+      },
+      {
+        source: "/pendaftar/:path*",
         headers: [{ key: "Cache-Control", value: "private, no-store" }],
       },
     ];

@@ -14,7 +14,10 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const post = await getPublicPost(slug).catch(() => undefined);
+  const post = await getPublicPost(slug).catch((error: unknown) => {
+    if (error instanceof ApiError && error.status === 404) notFound();
+    throw error;
+  });
   if (!post)
     return {
       title: "Artikel Nurul Huda",
@@ -48,10 +51,13 @@ export default async function BlogDetail({
   return (
     <>
       <SiteHeader active="/blog" />
-      <BlogDetailView slug={slug} initialPost={await getPublicPost(slug).catch((error: unknown) => {
-        if (error instanceof ApiError && error.status === 404) notFound();
-        throw error;
-      })} />
+      <BlogDetailView
+        slug={slug}
+        initialPost={await getPublicPost(slug).catch((error: unknown) => {
+          if (error instanceof ApiError && error.status === 404) notFound();
+          throw error;
+        })}
+      />
       <SiteFooter />
     </>
   );

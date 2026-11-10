@@ -307,7 +307,9 @@ export function SettingsModule({
                 <input
                   type="datetime-local"
                   value={form.closesLocal}
-                  onChange={(event) => update("closesLocal", event.target.value)}
+                  onChange={(event) =>
+                    update("closesLocal", event.target.value)
+                  }
                   {...fieldProps("registrationClosesAt")}
                 />
                 {fieldError("registrationClosesAt")}
@@ -354,9 +356,9 @@ export function SettingsModule({
               <b>Minimal salah satu SKL atau ijazah</b>
             </label>
             <p className="field-hint" id="settings-requiredKinds-hint">
-              Perubahan syarat hanya berlaku untuk pendaftaran baru;
-              pendaftaran yang sudah masuk memakai syarat saat mereka
-              mendaftar. Data disimpan tanpa penghapusan otomatis (
+              Perubahan syarat hanya berlaku untuk pendaftaran baru; pendaftaran
+              yang sudah masuk memakai syarat saat mereka mendaftar. Data
+              disimpan tanpa penghapusan otomatis (
               <code>{form.dataRetention}</code>), tetap perlu backup.
             </p>
           </fieldset>
@@ -382,7 +384,11 @@ export function SettingsModule({
             <div>
               <small>Subscriber newsletter</small>
               <strong>{newsletterCount}</strong>
-              <p>Tersimpan pada browser lokal ini.</p>
+              <p>
+                {useApi
+                  ? "Alamat berlangganan tersimpan di database. Pengiriman email belum diaktifkan."
+                  : "Tersimpan pada browser lokal ini."}
+              </p>
             </div>
           </article>
           <article>

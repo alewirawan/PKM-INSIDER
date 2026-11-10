@@ -2,6 +2,7 @@
 
 import { ArrowUpRight, Inbox, MailOpen } from "lucide-react";
 import { useState } from "react";
+import { hasBackendApi, requestApi } from "../../lib/api-client";
 import {
   saveMessages,
   type ContactMessage,
@@ -26,21 +27,43 @@ export function MessagesModule({
     filter === "Semua"
       ? messages
       : messages.filter((item) => item.status === filter);
-  function updateStatus(id: string, status: MessageStatus) {
-    const next = messages.map((item) =>
-      item.id === id ? { ...item, status } : item,
-    );
-    setMessages(next);
-    saveMessages(next);
-    setSelected((item) => (item?.id === id ? { ...item, status } : item));
-    notify("Status pesan diperbarui.");
+  async function updateStatus(id: string, status: MessageStatus) {
+    try {
+      if (hasBackendApi())
+        await requestApi(`/messages/${id}`, {
+          method: "PATCH",
+          body: JSON.stringify({ status }),
+        });
+      const next = messages.map((item) =>
+        item.id === id ? { ...item, status } : item,
+      );
+      setMessages(next);
+      if (!hasBackendApi()) saveMessages(next);
+      setSelected((item) => (item?.id === id ? { ...item, status } : item));
+      notify("Status pesan diperbarui.");
+    } catch (error) {
+      notify(
+        error instanceof Error ? error.message : "Pesan gagal diperbarui.",
+        "warning",
+      );
+    }
   }
-  function remove(id: string) {
-    const next = messages.filter((item) => item.id !== id);
-    setMessages(next);
-    saveMessages(next);
-    if (selected?.id === id) setSelected(next[0] ?? null);
-    notify("Pesan dihapus.", "warning");
+  async function remove(id: string) {
+    if (!window.confirm("Hapus pesan ini?")) return;
+    try {
+      if (hasBackendApi())
+        await requestApi(`/messages/${id}`, { method: "DELETE" });
+      const next = messages.filter((item) => item.id !== id);
+      setMessages(next);
+      if (!hasBackendApi()) saveMessages(next);
+      if (selected?.id === id) setSelected(next[0] ?? null);
+      notify("Pesan dihapus.", "warning");
+    } catch (error) {
+      notify(
+        error instanceof Error ? error.message : "Pesan gagal dihapus.",
+        "warning",
+      );
+    }
   }
   return (
     <div className="admin-view">

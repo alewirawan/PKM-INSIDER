@@ -16,10 +16,18 @@ import { registerClubRoutes } from "./modules/clubs/club.routes.js";
 import { createAgendaRepository } from "./modules/agenda/agenda.repository.js";
 import { registerAgendaRoutes } from "./modules/agenda/agenda.routes.js";
 import { registerErrorHandlers } from "./shared/http/error-handler.js";
+import { createAccess } from "./shared/http/access.js";
+import { registerSettingsRoutes } from "./modules/settings/settings.routes.js";
+import { registerDirectoryRoutes } from "./modules/directory/directory.routes.js";
+import { registerAchievementRoutes } from "./modules/achievements/achievement.routes.js";
+import { registerMessageRoutes } from "./modules/messages/message.routes.js";
+import { registerApplicationRoutes } from "./modules/applications/application.routes.js";
+import { registerDashboardRoutes } from "./modules/dashboard/dashboard.routes.js";
 
 export async function buildApp(config: AppConfig) {
   const app = Fastify({
     logger: config.NODE_ENV === "test" ? false : { level: "info" },
+    disableRequestLogging: true,
     trustProxy: config.TRUST_PROXY,
     bodyLimit: config.MAX_UPLOAD_MB * 1024 * 1024,
   });
@@ -46,18 +54,34 @@ export async function buildApp(config: AppConfig) {
     timeWindow: "1 minute",
   });
   await app.register(multipart, {
-    limits: { files: 1, fileSize: config.MAX_UPLOAD_MB * 1024 * 1024 },
+    limits: {
+      files: 6,
+      fields: 1,
+      fieldSize: 16384,
+      parts: 7,
+      fileSize: Math.min(5, config.MAX_UPLOAD_MB) * 1024 * 1024,
+    },
   });
 
   registerErrorHandlers(app);
   await app.register(
     async (api) => {
+      api.addHook("onSend", async (_request, reply) => {
+        reply.header("Cache-Control", "no-store");
+      });
+      const access = createAccess(db, config);
       await registerHealthRoutes(api);
       await registerAuthRoutes(api, config);
       const contentGuard = createContentGuard(createAuthRepository(db), config);
       await registerClubRoutes(api, createClubRepository(db), contentGuard);
       await registerAgendaRoutes(api, createAgendaRepository(db), contentGuard);
       await registerPostRoutes(api, config);
+      await registerSettingsRoutes(api, db, access);
+      await registerDirectoryRoutes(api, db, access);
+      await registerAchievementRoutes(api, db, access);
+      await registerMessageRoutes(api, db, access, config);
+      await registerApplicationRoutes(api, db, access, config);
+      await registerDashboardRoutes(api, db, access);
     },
     { prefix: "/api/v1" },
   );

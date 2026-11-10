@@ -1,22 +1,23 @@
 "use client";
-import { useEffect, useState } from "react";
-import { getAchievements, seedAchievements } from "./cms/catalog";
-import { listenCmsUpdates } from "./cms/storage";
+import { listAchievements } from "./api/school";
+import { useContentList } from "./use-content-list";
 import { useClubs } from "./use-clubs";
 
-export function useCatalog() {
-  const [achievements, setAchievements] = useState(seedAchievements);
+export function useCatalog(admin = false) {
+  const {
+    items: achievements,
+    loading: achievementsLoading,
+    error: achievementsError,
+    refresh,
+  } = useContentList(listAchievements, admin);
   const { clubs, loading: clubsLoading, error: clubsError } = useClubs();
-  useEffect(() => {
-    const refresh = () => {
-      setAchievements(getAchievements());
-    };
-    const timer = window.setTimeout(refresh, 0);
-    const stop = listenCmsUpdates(refresh);
-    return () => {
-      window.clearTimeout(timer);
-      stop();
-    };
-  }, []);
-  return { achievements, clubs, clubsLoading, clubsError };
+  return {
+    achievements,
+    achievementsLoading,
+    achievementsError,
+    refresh,
+    clubs,
+    clubsLoading,
+    clubsError,
+  };
 }

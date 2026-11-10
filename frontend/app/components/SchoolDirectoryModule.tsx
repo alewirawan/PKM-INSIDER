@@ -1,15 +1,11 @@
 "use client";
 
 import { BookOpenText, Network, Plus, UsersRound } from "lucide-react";
-import { type FormEvent, useEffect, useState } from "react";
-import {
-  getSchoolDirectory,
-  listenCmsUpdates,
-  saveSchoolDirectory,
-} from "../lib/local-cms";
+import { type FormEvent, useRef, useState } from "react";
+import { storeDirectory } from "../lib/api/school";
+import { useDirectory } from "../lib/use-directory";
 import {
   hasOtherPrincipal,
-  seedSchoolDirectory,
   type SchoolDirectory,
   type SchoolLeader,
 } from "../school-directory-data";
@@ -23,21 +19,29 @@ type Props = {
 };
 
 export function SchoolDirectoryModule({ notify }: Props) {
-  const [directory, setDirectory] =
-    useState<SchoolDirectory>(seedSchoolDirectory);
+  const resource = useDirectory();
+  const directory = resource.directory;
+  const saving = useRef(false);
   const [tab, setTab] = useState<Tab>("structure");
   const [editor, setEditor] = useState<Editor>(null);
 
-  useEffect(() => {
-    const reload = () => setDirectory(getSchoolDirectory());
-    reload();
-    return listenCmsUpdates(reload);
-  }, []);
-
-  function commit(next: SchoolDirectory, message: string) {
-    setDirectory(next);
-    saveSchoolDirectory(next);
-    notify(message);
+  async function commit(next: SchoolDirectory, message: string) {
+    if (saving.current) return false;
+    saving.current = true;
+    try {
+      const saved = await storeDirectory(next);
+      resource.setItems([saved]);
+      notify(message);
+      return true;
+    } catch (error) {
+      notify(
+        error instanceof Error ? error.message : "Direktori gagal disimpan.",
+        "warning",
+      );
+      return false;
+    } finally {
+      saving.current = false;
+    }
   }
 
   function moveLeader(id: string, direction: -1 | 1) {
@@ -97,9 +101,10 @@ export function SchoolDirectoryModule({ notify }: Props) {
     commit(next, "Profil dihapus dari direktori.");
   }
 
-  function saveEditor(event: FormEvent<HTMLFormElement>) {
+  async function saveEditor(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!editor) return;
+    let saved = false;
     if (editor.kind === "leader") {
       const value = {
         ...editor.value,
@@ -117,7 +122,7 @@ export function SchoolDirectoryModule({ notify }: Props) {
         : directory.leaders.map((item) =>
             item.id === value.id ? value : item,
           );
-      commit(
+      saved = await commit(
         { ...directory, leaders },
         editor.isNew
           ? "Jabatan baru ditambahkan."
@@ -133,14 +138,14 @@ export function SchoolDirectoryModule({ notify }: Props) {
         : directory.teachers.map((item) =>
             item.id === value.id ? value : item,
           );
-      commit(
+      saved = await commit(
         { ...directory, teachers },
         editor.isNew
           ? "Guru baru ditambahkan."
           : "Profil guru berhasil diperbarui.",
       );
     }
-    setEditor(null);
+    if (saved) setEditor(null);
   }
 
   function newLeader() {
@@ -179,6 +184,13 @@ export function SchoolDirectoryModule({ notify }: Props) {
 
   return (
     <div className="admin-view directory-admin-view">
+      {resource.error && (
+        <p role="alert">
+          {resource.error}{" "}
+          <button onClick={() => void resource.refresh()}>Coba lagi</button>
+        </p>
+      )}
+      {resource.loading && <p role="status">Memuat direktori…</p>}
       <header className="admin-page-header directory-page-header">
         <div>
           <p className="admin-eyebrow">Direktori sekolah</p>

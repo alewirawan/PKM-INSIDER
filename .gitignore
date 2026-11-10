@@ -43,3 +43,9 @@ yarn-error.log*
 # local backend data
 backend/uploads/
 backups/
+
+*.tsbuildinfo
+playwright-report/
+test-results/
+
+/artifacts/

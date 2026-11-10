@@ -6,7 +6,8 @@ import { ArrowUpRight, Trophy } from "lucide-react";
 import { useCatalog } from "../lib/use-catalog";
 
 export function Achievements({ compact = false }: { compact?: boolean }) {
-  const { achievements } = useCatalog();
+  const { achievements, achievementsLoading, achievementsError, refresh } =
+    useCatalog();
   const [category, setCategory] = useState("Semua");
   const [year, setYear] = useState("Semua");
   const published = achievements
@@ -36,10 +37,13 @@ export function Achievements({ compact = false }: { compact?: boolean }) {
           </Link>
         )}
       </header>
-      <p className="demo-caption">
-        Seluruh prestasi di sini adalah data simulasi. Foto merupakan ilustrasi,
-        bukan dokumentasi penghargaan sekolah.
-      </p>
+      {achievementsLoading && <p role="status">Memuat prestasi…</p>}
+      {achievementsError && (
+        <p role="alert">
+          {achievementsError}{" "}
+          <button onClick={() => void refresh()}>Coba lagi</button>
+        </p>
+      )}
       {!compact && (
         <div className="achievement-filters">
           <label>

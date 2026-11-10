@@ -1,0 +1,76 @@
+.portal-section {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+}
+.portal-login {
+  max-width: 680px;
+  margin: auto;
+}
+.portal-login .button {
+  margin: 24px 0;
+}
+.portal-record-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 28px 0;
+  border-bottom: 1px solid var(--line, #ddd);
+}
+.portal-record-heading h2 {
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  margin: 12px 0;
+}
+.portal-record-heading > div:last-child {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.portal-record .registration-review {
+  padding: 28px 0;
+}
+.portal-record .upload-card {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.portal-record input[type="file"] {
+  max-width: 100%;
+}
+.portal-record .inline-success {
+  margin: 20px 0;
+}
+.document-review-note {
+  padding: 12px;
+  background: #fff3d8;
+  border-radius: 8px;
+}
+.admission-guide li small {
+  display: block;
+  margin-top: 4px;
+}
+.portal-record .upload-card button {
+  margin: 8px 0;
+  text-decoration: underline;
+}
+.portal-record-heading .status-badge {
+  padding: 10px 16px;
+  background: #e8f0e8;
+  border-radius: 24px;
+}
+@media (max-width: 640px) {
+  .portal-section {
+    padding: 24px 16px 48px;
+  }
+  .portal-record-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .portal-record-heading > div:last-child {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .portal-login {
+    padding: 24px 18px;
+  }
+}

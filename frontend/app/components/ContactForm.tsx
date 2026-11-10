@@ -2,26 +2,44 @@
 
 import { FormEvent, useState } from "react";
 import { addMessage } from "../lib/local-cms";
+import { hasBackendApi, requestApi } from "../lib/api-client";
 
 const initial = { name: "", email: "", topic: "Informasi PPDB", message: "" };
 
 export function ContactForm() {
   const [form, setForm] = useState(initial);
   const [done, setDone] = useState(false);
+  const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
 
   function update(key: keyof typeof initial, value: string) {
     setForm((current) => ({ ...current, [key]: value }));
   }
-  function submit(event: FormEvent<HTMLFormElement>) {
+  async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    addMessage({
-      id: `MSG-${Date.now()}`,
-      ...form,
-      status: "Baru",
-      submittedAt: new Date().toISOString(),
-    });
-    setForm(initial);
-    setDone(true);
+    if (busy) return;
+    setBusy(true);
+    setError("");
+    try {
+      if (hasBackendApi())
+        await requestApi("/messages", {
+          method: "POST",
+          body: JSON.stringify(form),
+        });
+      else
+        addMessage({
+          id: crypto.randomUUID(),
+          ...form,
+          status: "Baru",
+          submittedAt: new Date().toISOString(),
+        });
+      setForm(initial);
+      setDone(true);
+    } catch (error) {
+      setError(error instanceof Error ? error.message : "Pesan gagal dikirim.");
+    } finally {
+      setBusy(false);
+    }
   }
 
   if (done)
@@ -30,8 +48,8 @@ export function ContactForm() {
         <span>✓</span>
         <h3>Pesan sudah diterima.</h3>
         <p>
-          Pesan demo tersimpan dan langsung muncul di menu Pesan masuk pada
-          dashboard admin.
+          Terima kasih telah menghubungi sekolah. Panitia akan meninjau pesan
+          Anda.
         </p>
         <button className="button button-dark" onClick={() => setDone(false)}>
           Kirim pesan lain
@@ -41,6 +59,7 @@ export function ContactForm() {
 
   return (
     <form onSubmit={submit}>
+      {error && <p role="alert">{error}</p>}
       <label>
         Nama lengkap
         <input
@@ -78,14 +97,16 @@ export function ContactForm() {
           required
           value={form.message}
           onChange={(event) => update("message", event.target.value)}
+          minLength={10}
+          maxLength={3000}
           rows={5}
           placeholder="Tuliskan pertanyaan Anda..."
         />
       </label>
-      <button className="button button-dark" type="submit">
+      <button className="button button-dark" type="submit" disabled={busy}>
         Kirim pesan →
       </button>
-      <small>Mode demo lokal — pesan tidak dikirim ke internet.</small>
+      <small>Pesan hanya dapat dibaca oleh pengelola sekolah.</small>
     </form>
   );
 }

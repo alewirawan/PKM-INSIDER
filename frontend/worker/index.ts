@@ -38,7 +38,7 @@ const contentSecurityPolicy = [
   "frame-src 'self' blob:",
   "script-src 'self' 'unsafe-inline'",
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob:",
+  "img-src 'self' data: blob: https:",
   "font-src 'self' data:",
   "connect-src 'self' http://localhost:4000 https:",
 ].join("; ");
@@ -50,7 +50,11 @@ function withSecurityHeaders(response: Response, pathname: string) {
   headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
   headers.set("X-Content-Type-Options", "nosniff");
   headers.set("X-Frame-Options", "DENY");
-  if (pathname === "/admin" || pathname.startsWith("/admin/")) {
+  if (
+    pathname === "/admin" ||
+    pathname.startsWith("/admin/") ||
+    pathname === "/pendaftar"
+  ) {
     headers.set("Cache-Control", "private, no-store");
   }
   return new Response(response.body, {

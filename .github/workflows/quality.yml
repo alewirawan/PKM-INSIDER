@@ -19,7 +19,7 @@ jobs:
 
   docker:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     env:
       POSTGRES_DB: nurul_huda_ci
       COMPOSE_PROJECT_NAME: nurul-huda-ci
@@ -38,6 +38,28 @@ jobs:
         run: docker compose -f compose.dev.yaml run --rm -e RUN_DOCKER_SMOKE=1 backend node docker/smoke.mjs
       - name: Run team checks inside Docker
         run: docker compose -f compose.dev.yaml run --rm checks
+      - name: Test complete admission and administration workflows
+        run: docker compose -f compose.dev.yaml run --rm -e RUN_FULL_SYSTEM_TESTS=1 backend npm test --workspace=@nurul-huda/backend -- --run tests/full-system.test.ts
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install browser test runner
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+      - name: Prepare isolated browser fixtures
+        run: docker compose -f compose.dev.yaml run --rm -e RUN_BROWSER_TESTS=1 backend node docker/prepare-browser-test.mjs
+      - name: Test browser admission workflow and responsive pages
+        env:
+          RUN_BROWSER_TESTS: "1"
+        run: npx playwright test
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: browser-test-results
+          path: test-results/
+          retention-days: 3
       - name: Verify persistence after container recreation
         run: |
           docker compose -f compose.dev.yaml down

@@ -19,15 +19,36 @@ export function hasBackendApi() {
   return Boolean(API_BASE_URL);
 }
 
+export async function downloadApi(path: string, name: string) {
+  if (!API_BASE_URL) throw new ApiError(0, "Backend belum dikonfigurasi.");
+  const response = await fetch(`${API_BASE_URL}${path}`, {
+    credentials: "include",
+  });
+  if (!response.ok)
+    throw new ApiError(
+      response.status,
+      "Berkas tidak dapat diunduh. Periksa sesi dan hak akses.",
+    );
+  const url = URL.createObjectURL(await response.blob());
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = name;
+  document.body.append(link);
+  link.click();
+  link.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
 export async function requestApi<T>(
   path: string,
   init: RequestInit & { timeoutMs?: number } = {},
 ): Promise<T> {
   if (!API_BASE_URL)
     throw new ApiError(0, "NEXT_PUBLIC_API_BASE_URL belum dikonfigurasi.");
-  const requestBase = typeof window === "undefined"
-    ? process.env.API_BASE_URL?.replace(/\/$/, "") || API_BASE_URL
-    : API_BASE_URL;
+  const requestBase =
+    typeof window === "undefined"
+      ? process.env.API_BASE_URL?.replace(/\/$/, "") || API_BASE_URL
+      : API_BASE_URL;
   const { timeoutMs = 12_000, ...requestInit } = init;
   const controller = new AbortController();
   const timeout = globalThis.setTimeout(() => controller.abort(), timeoutMs);

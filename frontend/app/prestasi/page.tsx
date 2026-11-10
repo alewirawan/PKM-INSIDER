@@ -15,7 +15,7 @@ export default function AchievementPage() {
         <PageHero
           eyebrow="Prestasi sekolah"
           title="Bukan sekadar piala. Ini cerita tentang usaha."
-          description="Kenali perjalanan belajar, keberanian mencoba, dan kerja sama di balik pencapaian siswa. Halaman ini menggunakan data contoh."
+          description="Kenali perjalanan belajar, keberanian mencoba, dan kerja sama di balik pencapaian siswa."
         />
         <Achievements />
       </main>

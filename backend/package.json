@@ -14,9 +14,9 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "admin:create": "tsx --env-file-if-exists=.env src/scripts/create-admin.ts",
-    "db:generate": "node --env-file-if-exists=.env ./node_modules/drizzle-kit/bin.cjs generate",
+    "db:generate": "node --env-file-if-exists=.env scripts/run-drizzle.mjs generate",
     "db:migrate": "tsx --env-file-if-exists=.env src/scripts/migrate.ts",
-    "db:studio": "node --env-file-if-exists=.env ./node_modules/drizzle-kit/bin.cjs studio",
+    "db:studio": "node --env-file-if-exists=.env scripts/run-drizzle.mjs studio",
     "db:seed:demo": "tsx --env-file-if-exists=.env src/scripts/seed-demo.ts",
     "db:verify": "tsx --env-file-if-exists=.env src/scripts/verify-database.ts",
     "db:diagram": "tsx src/scripts/print-dbml.ts"

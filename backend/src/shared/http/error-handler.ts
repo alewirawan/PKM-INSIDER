@@ -1,5 +1,6 @@
 import type { FastifyInstance } from "fastify";
 import { AppError } from "../errors/app-error.js";
+import { ZodError } from "zod";
 
 type ValidationIssue = {
   instancePath?: string;
@@ -17,6 +18,14 @@ export function registerErrorHandlers(app: FastifyInstance) {
   });
 
   app.setErrorHandler((error, request, reply) => {
+    if (error instanceof ZodError)
+      return reply.code(422).send({
+        message: error.issues
+          .map((i) => `${i.path.join(".")}: ${i.message}`)
+          .join("; "),
+        code: "VALIDATION_ERROR",
+        requestId: request.id,
+      });
     if (error instanceof AppError) {
       return reply.code(error.statusCode).send({
         message: error.message,
@@ -44,7 +53,22 @@ export function registerErrorHandlers(app: FastifyInstance) {
       });
     }
 
-    request.log.error({ err: error }, "Unhandled request error");
+    const httpStatus = (error as { statusCode?: number }).statusCode;
+    if (httpStatus && httpStatus >= 400 && httpStatus < 500)
+      return reply
+        .code(httpStatus)
+        .send({
+          message:
+            httpStatus === 413
+              ? "Ukuran atau jumlah berkas melebihi batas."
+              : "Permintaan tidak valid.",
+          code: "BAD_REQUEST",
+          requestId: request.id,
+        });
+    request.log.error(
+      { errorType: error instanceof Error ? error.name : "UnknownError" },
+      "Unhandled request error",
+    );
     return reply.code(500).send({
       message: "Terjadi kesalahan pada server.",
       code: "INTERNAL_SERVER_ERROR",

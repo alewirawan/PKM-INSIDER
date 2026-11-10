@@ -18,8 +18,14 @@ type Props = {
   form: RegistrationValues;
   update: (key: keyof RegistrationValues, value: string) => void;
   parent?: boolean;
+  hideActivities?: boolean;
 };
-export function StudentFields({ form, update, parent = false }: Props) {
+export function StudentFields({
+  form,
+  update,
+  parent = false,
+  hideActivities = false,
+}: Props) {
   const { clubs } = useCatalog();
   const fields: Array<{
     key: keyof RegistrationValues;
@@ -49,7 +55,7 @@ export function StudentFields({ form, update, parent = false }: Props) {
           <label key={key}>
             {label}
             <input
-              required
+              required={key !== "parentOccupation"}
               name={key}
               type={type ?? "text"}
               value={form[key]}
@@ -106,27 +112,29 @@ export function StudentFields({ form, update, parent = false }: Props) {
                 onChange={(e) => update("address", e.target.value)}
               />
             </label>
-            <label className="span-2">
-              Ekstrakurikuler yang diminati
-              <select
-                value={form.extracurricular}
-                onChange={(e) => update("extracurricular", e.target.value)}
-              >
-                <option>Belum menentukan</option>
-                {clubs
-                  .filter((c) => c.active)
-                  .map((c) => (
-                    <option key={c.id}>{c.name}</option>
-                  ))}
-                {form.extracurricular !== "Belum menentukan" &&
-                  !clubs.some(
-                    (c) => c.active && c.name === form.extracurricular,
-                  ) && <option>{form.extracurricular}</option>}
-              </select>
-              <small>
-                Pilihan awal, bukan penempatan final. Kegiatan masih contoh.
-              </small>
-            </label>
+            {!hideActivities && (
+              <label className="span-2">
+                Ekstrakurikuler yang diminati
+                <select
+                  value={form.extracurricular}
+                  onChange={(e) => update("extracurricular", e.target.value)}
+                >
+                  <option>Belum menentukan</option>
+                  {clubs
+                    .filter((c) => c.active)
+                    .map((c) => (
+                      <option key={c.id}>{c.name}</option>
+                    ))}
+                  {form.extracurricular !== "Belum menentukan" &&
+                    !clubs.some(
+                      (c) => c.active && c.name === form.extracurricular,
+                    ) && <option>{form.extracurricular}</option>}
+                </select>
+                <small>
+                  Pilihan awal, bukan penempatan final. Kegiatan masih contoh.
+                </small>
+              </label>
+            )}
           </>
         )}
       </div>

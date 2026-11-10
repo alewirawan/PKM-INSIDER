@@ -71,7 +71,7 @@ test("renders public modules and a seeded article", async () => {
   for (const [path, marker] of [
     ["/blog", "Cerita Nurul Huda"],
     ["/struktur", "Struktur organisasi"],
-    ["/prestasi", "Ide kecil, perubahan besar"],
+    ["/prestasi", "Setiap pencapaian punya cerita"],
     ["/pendaftaran", "Formulir PPDB"],
     ["/kontak", "Kirim pesan"],
     ["/blog/festival-inovasi-sains-2026", "Festival Inovasi Sains 2026"],
@@ -91,7 +91,10 @@ test("PPDB and directory expose their new navigation and demo boundaries", async
   assert.match(directory, /role="tablist"/);
   assert.match(directory, /Daftar Guru/);
   const prestasi = await (await render("/prestasi")).text();
-  assert.match(prestasi, /ilustrasi/i);
+  assert.match(prestasi, /Prestasi sekolah/i);
+  const about = await (await render("/tentang")).text();
+  assert.match(about, /Pendidikan dimulai dari kepedulian/);
+  assert.doesNotMatch(about, /Lorem ipsum/i);
 });
 
 test("missing article returns an HTTP 404", async () => {

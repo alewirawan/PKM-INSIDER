@@ -2,6 +2,7 @@ import type { FastifyInstance } from "fastify";
 import type { AppConfig } from "../../config/env.js";
 import { createAuthRepository } from "./auth.repository.js";
 import { createAuthService } from "./auth.service.js";
+import { requireOrigin } from "../../shared/http/access.js";
 
 type LoginBody = { email: string; password: string };
 
@@ -38,6 +39,7 @@ export async function registerAuthRoutes(
       config: { rateLimit: { max: 5, timeWindow: "1 minute" } },
     },
     async (request, reply) => {
+      requireOrigin(request, config);
       const userAgent = request.headers["user-agent"];
       const result = await service.login({
         email: request.body.email,
@@ -55,6 +57,7 @@ export async function registerAuthRoutes(
   });
 
   app.post("/auth/logout", async (request, reply) => {
+    requireOrigin(request, config);
     await service.logout(request.cookies[config.SESSION_COOKIE_NAME]);
     reply.clearCookie(config.SESSION_COOKIE_NAME, {
       path: cookieOptions.path,

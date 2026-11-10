@@ -1,11 +1,10 @@
 "use client";
 
-import { Fragment, useEffect, useState, type CSSProperties } from "react";
-import { getSchoolDirectory, listenCmsUpdates } from "../lib/local-cms";
+import { Fragment, type CSSProperties } from "react";
+import { useDirectory } from "../lib/use-directory";
 import {
   chunkDirectoryRows,
   groupSchoolLeaders,
-  seedSchoolDirectory,
   type SchoolLeader,
 } from "../school-directory-data";
 
@@ -49,18 +48,26 @@ function LeaderCard({ person }: { person: SchoolLeader }) {
 }
 
 export function OrganizationDirectory() {
-  const [leaders, setLeaders] = useState(seedSchoolDirectory.leaders);
-
-  useEffect(() => {
-    const reload = () => setLeaders(getSchoolDirectory().leaders);
-    reload();
-    return listenCmsUpdates(reload);
-  }, []);
+  const {
+    directory: { leaders },
+    loading,
+    error,
+    refresh,
+  } = useDirectory();
 
   const groups = groupSchoolLeaders(leaders);
 
   return (
     <div className="org-chart" aria-label="Bagan struktur organisasi sekolah">
+      {loading && <p role="status">Memuat struktur organisasi…</p>}
+      {error && (
+        <p role="alert">
+          {error} <button onClick={() => void refresh()}>Coba lagi</button>
+        </p>
+      )}
+      {!loading && !error && leaders.length === 0 && (
+        <p>Struktur organisasi belum dipublikasikan.</p>
+      )}
       {groups.map((group, groupIndex) => (
         <Fragment key={group.level}>
           {groupIndex > 0 && (

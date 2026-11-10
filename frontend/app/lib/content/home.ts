@@ -1,53 +1,49 @@
-
 export const homeContent = {
-  heroLead: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
-  trust: { score: "0,0/0", caption: "lorem ipsum dolor" },
-  badge: { value: "00+", lines: ["Lorem ipsum", "dolor sit amet"] },
-  accreditation: { label: "Akreditasi Sekolah", value: "Lorem" },
+  heroLead:
+    "Ruang untuk belajar, mengembangkan bakat, dan membangun akhlak. Temukan informasi sekolah serta langkah awal menjadi bagian dari SMP Nurul Huda.",
+  trust: { score: "Tumbuh bersama", caption: "Siswa, guru, dan orang tua" },
+  badge: { value: "NH", lines: ["Belajar hari ini,", "berkarya esok hari"] },
+  accreditation: { label: "Semangat belajar", value: "Berilmu & berakhlak" },
   stats: [
-    { value: "00%", lines: ["Lorem ipsum dolor", "sit amet consectetur"] },
-    { value: "00", lines: ["Lorem ipsum dolor", "sit amet elit"] },
-    { value: "00", lines: ["Lorem ipsum dolor", "sit amet elit"] },
-    { value: "0:0", lines: ["Lorem ipsum dolor", "sit amet elit"] },
+    {
+      value: "Ilmu",
+      lines: ["Mengasah rasa ingin tahu", "melalui proses belajar"],
+    },
+    { value: "Adab", lines: ["Menumbuhkan sikap baik", "dalam keseharian"] },
+    {
+      value: "Karya",
+      lines: ["Memberi ruang bagi ide", "dan kreativitas siswa"],
+    },
+    {
+      value: "Peduli",
+      lines: ["Belajar bekerja sama", "dan menghargai sesama"],
+    },
   ],
-  programSection: {
-    kicker: "Program unggulan",
-    headingLines: ["Lorem ipsum dolor sit amet,", "consectetur adipiscing elit."],
-  },
-  programs: [
+  intro:
+    "Belajar bukan hanya tentang hasil ujian. Keberanian bertanya, kebiasaan baik, dan kesempatan mencoba membantu setiap anak mengenali kemampuannya.",
+  experience:
+    "Pelajaran di kelas dan kegiatan sekolah saling melengkapi. Siswa diajak mengembangkan pengetahuan sekaligus belajar bertanggung jawab atas pilihan dan tindakannya.",
+  features: [
     {
       number: "01",
-      title: "Lorem Ipsum",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
-      subjects: ["Lorem", "Ipsum", "Dolor"],
+      title: "Belajar dengan rasa ingin tahu",
+      text: "Menghubungkan pelajaran dengan kehidupan sehari-hari.",
     },
     {
       number: "02",
-      title: "Dolor Sit",
-      description:
-        "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo.",
-      subjects: ["Amet", "Elit", "Tempor"],
+      title: "Ruang untuk mengembangkan minat",
+      text: "Pilihan ekstrakurikuler dapat dilihat melalui halaman Program.",
     },
     {
       number: "03",
-      title: "Amet Elit",
-      description:
-        "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla.",
-      subjects: ["Labore", "Magna", "Aliqua"],
+      title: "Komunikasi yang terbuka",
+      text: "Informasi sekolah dan pendaftaran dapat diakses bersama.",
     },
   ],
-  intro: "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.",
-  experience: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
-  features: [
-    { number: "01", title: "Lorem ipsum dolor", text: "Lorem ipsum dolor sit amet consectetur." },
-    { number: "02", title: "Sit amet elit", text: "Sed do eiusmod tempor incididunt ut labore." },
-    { number: "03", title: "Consectetur adipiscing", text: "Ut enim ad minim veniam quis nostrud." },
-  ],
   quote: {
-    text: "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.",
-    author: "Lorem Ipsum",
-    role: "Lorem ipsum dolor sit amet",
+    text: "Setiap langkah kecil dalam belajar adalah bagian dari perjalanan yang berarti.",
+    author: "Semangat Nurul Huda",
+    role: "Belajar, tumbuh, dan berkarya",
   },
-  cta: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
+  cta: "Kenali alur pendaftaran dan persyaratan berkas, kemudian isi formulir saat periode penerimaan dibuka.",
 } as const;

@@ -9,7 +9,7 @@ import { BrandMark } from "../BrandMark";
 export function AdminLogin({
   onLogin,
 }: {
-  onLogin: (mode: "demo" | "backend") => void;
+  onLogin: (mode: "demo" | "backend") => void | Promise<void>;
 }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -27,7 +27,7 @@ export function AdminLogin({
         method: "POST",
         body: JSON.stringify({ email, password }),
       });
-      onLogin("backend");
+      await onLogin("backend");
     } catch (loginError) {
       setError(
         loginError instanceof Error
@@ -49,7 +49,9 @@ export function AdminLogin({
               <small>Admin Sekolah</small>
             </div>
           </div>
-          <span className="mockup-badge">Prototype</span>
+          <span className="mockup-badge">
+            {backendAvailable ? "Administrasi" : "Prototype"}
+          </span>
         </div>
         <p className="section-kicker">Portal administrasi sekolah</p>
         <h1>Selamat datang kembali.</h1>
@@ -100,11 +102,13 @@ export function AdminLogin({
               </div>
             </label>
             <div className="login-options">
-              <span>Sesi login dikelola backend dengan cookie aman.</span>
+              <span>Gunakan akun yang diberikan pengelola sekolah.</span>
               <button
                 type="button"
                 onClick={() =>
-                  setError("Hubungi pengelola backend untuk reset password.")
+                  setError(
+                    "Hubungi pengelola sistem sekolah untuk memulihkan password.",
+                  )
                 }
               >
                 Lupa password?
@@ -144,8 +148,12 @@ export function AdminLogin({
       </section>
       <aside>
         <div className="login-aside-top">
-          <span>admin.nurulhuda.sch.id</span>
-          <em>Mockup interaktif lokal</em>
+          <span>Administrasi SMP Nurul Huda</span>
+          <em>
+            {backendAvailable
+              ? "Informasi dan layanan sekolah"
+              : "Mockup interaktif lokal"}
+          </em>
         </div>
         <blockquote>
           “Satu ruang kerja untuk menjaga cerita dan layanan sekolah tetap

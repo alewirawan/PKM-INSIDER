@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import { PageHero } from "../components/PageHero";
+import { AdmissionInformation } from "../components/registration/AdmissionInformation";
 import { RegistrationForm } from "../components/RegistrationForm";
 import { SiteFooter } from "../components/SiteFooter";
 import { SiteHeader } from "../components/SiteHeader";
 
 export const metadata: Metadata = {
   title: "Pendaftaran Siswa",
-  description:
-    "Informasi dan formulir simulasi PPDB SMP Nurul Huda tahun ajaran 2026/2027.",
+  description: "Informasi dan formulir PPDB SMP Nurul Huda.",
 };
 
 export default function RegistrationPage() {
@@ -16,57 +16,12 @@ export default function RegistrationPage() {
       <SiteHeader />
       <main>
         <PageHero
-          eyebrow="PPDB 2026/2027"
+          eyebrow="Penerimaan peserta didik baru"
           title="Satu langkah menuju perjalanan yang berarti."
           description="Temukan alur, jadwal, persyaratan, dan isi formulir pendaftaran calon siswa SMP Nurul Huda."
         />
-        <section className="admission-summary">
-          <article>
-            <span>Gelombang 01</span>
-            <strong>1 Sep–30 Nov 2026</strong>
-            <small>Kuota 120 siswa</small>
-          </article>
-          <article>
-            <span>Tes potensi</span>
-            <strong>6 Desember 2026</strong>
-            <small>On-site di kampus</small>
-          </article>
-          <article>
-            <span>Pengumuman</span>
-            <strong>12 Desember 2026</strong>
-            <small>Melalui portal calon siswa</small>
-          </article>
-        </section>
         <section className="admission-content">
-          <aside className="admission-guide">
-            <p className="section-kicker">Sebelum mendaftar</p>
-            <h2>Siapkan dokumen berikut.</h2>
-            <ul>
-              {[
-                "SKL atau ijazah (salah satu)",
-                "Kartu Keluarga",
-                "KTP orang tua/wali",
-                "PIP/KIP (jika memiliki)",
-                "Akta kelahiran",
-              ].map((label, index) => (
-                <li key={label}>
-                  <b>0{index + 1}</b>
-                  <span>{label}</span>
-                </li>
-              ))}
-            </ul>
-            <p className="form-help">
-              PDF, JPG, PNG; maksimal 5 MB per berkas. Ini persyaratan contoh
-              untuk simulasi, bukan pengumuman resmi sekolah.
-            </p>
-            <div className="help-card">
-              <b>Butuh bantuan?</b>
-              <p>
-                Tim PPDB siap membantu setiap hari kerja pukul 08.00–15.00 WIB.
-              </p>
-              <a href="tel:+622212345678">(022) 1234 5678 →</a>
-            </div>
-          </aside>
+          <AdmissionInformation />
           <RegistrationForm />
         </section>
         <section className="admission-steps">
@@ -87,8 +42,8 @@ export default function RegistrationPage() {
             </article>
             <article>
               <b>03</b>
-              <h3>Tes & wawancara</h3>
-              <p>Kenali potensi dan cerita calon siswa.</p>
+              <h3>Tindak lanjut</h3>
+              <p>Ikuti arahan panitia dan perbaiki berkas jika diperlukan.</p>
             </article>
             <article>
               <b>04</b>

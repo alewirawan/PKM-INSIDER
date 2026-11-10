@@ -33,8 +33,8 @@ Windows: gunakan **Command Prompt (CMD)**; di terminal VS Code pilih profil
 Jika belum punya project, buka terminal di folder tempat menyimpan project:
 
 ```bash
-git clone https://github.com/alewirawan/PROJECT-PKM-SMP-NURUL-HUDA.git
-cd PROJECT-PKM-SMP-NURUL-HUDA
+git clone https://github.com/alewirawan/PKM-INSIDER.git
+cd PKM-INSIDER
 ```
 
 Jika sudah punya project, buka folder tersebut. Jalankan `git status`; bila ada
@@ -106,6 +106,7 @@ yang kamu buat, bukan akun GitHub atau akun Docker.
 
 - Website: http://localhost:3000
 - Login admin: http://localhost:3000/admin
+- Portal pendaftar: http://localhost:3000/pendaftar
 - Cek koneksi backend–database: http://localhost:4000/api/v1/ready
 
 Gunakan alamat `localhost` secara konsisten. Database baru bisa masih kosong;
@@ -143,22 +144,27 @@ diterapkan. Akun admin dan database lama tetap dipakai; jangan ulangi penyalinan
 .env atau membuat akun yang sama. Untuk melanjutkan branch tugas yang sudah ada,
 ikuti [alur Git pada panduan lengkap](PANDUAN-INSTALASI.md#pull-dan-pekerjaan-pada-branch).
 
-## Status fitur
+## Fitur yang tersedia
 
-Per 10 November 2026, berdasarkan branch main:
-
-| Bagian | Status |
+| Bagian | Alur |
 | --- | --- |
-| PostgreSQL | Schema 23 tabel dan migration tersedia. Isi database setiap laptop terpisah. |
-| Login admin, Blog, Ekstrakurikuler, Agenda | Sudah memakai API/database. |
-| Beranda, Tentang, frontend Pengaturan | Pembaruan tampilan tersedia. Client Pengaturan menunggu backend GET/PUT /settings. |
-| Struktur/Guru, PPDB, Data siswa, Berkas, Kontak/Pesan, Prestasi | Integrasi backend belum lengkap; sebagian tampilan masih simulasi. |
-| Pengelola database lewat web | pgAdmin belum disertakan. Port 5050 belum tersedia. |
+| Website publik | Beranda, Tentang, Struktur & Guru, Program, Prestasi, Blog, Kontak, PPDB dan Portal Pendaftar. |
+| Admin | Login akun PostgreSQL, sesi cookie HttpOnly, hak akses super_admin/editor/admin_ppdb. |
+| Konten | Kelola artikel, agenda, ekstrakurikuler, prestasi, guru, dan struktur organisasi. |
+| PPDB | Pendaftaran online dengan enam jenis berkas; input offline, pencarian, detail, ekspor halaman, dan verifikasi. |
+| Portal pendaftar | Login nomor pendaftaran + password, pantau status, unduh berkas sendiri, dan kirim perbaikan. |
+| Pengaturan | Profil, kontak, periode manual, persyaratan berkas dan buka/tutup PPDB. PIP/KIP selalu opsional. |
+| Pesan & dashboard | Pesan kontak, pencatatan subscriber, ringkasan pendaftaran dan berkas dari database. |
+| Database | PostgreSQL 17, 23 tabel, migration otomatis, upload privat persisten; pgAdmin web opsional. |
 
-Jika muncul pesan pengaturan gagal dimuat atau prestasi belum dapat ditampilkan,
-lihat [status fitur](PANDUAN-INSTALASI.md#fitur-yang-belum-selesai). Layanan healthy
-tidak berarti seluruh menu sudah selesai. Tidak perlu install ulang Docker untuk
-endpoint yang memang belum dibuat.
+Tidak ada admin bawaan. Data contoh hanya dimuat jika diminta melalui seed.
+PPDB awalnya ditutup: buka melalui **Pengaturan** setelah persyaratan diperiksa.
+Panduan penggunaan setiap menu ada di [alur sistem](docs/ALUR-SISTEM.md).
+
+Repository ini salinan terpisah dari project tim. Branch
+`backup/2026-11-10-original` menyimpan kondisi awal. Volume database memakai
+nama `pkm-insider-local`, sehingga tidak memakai database project lama.
+Jangan menyalakan keduanya bersamaan pada port 3000/4000.
 
 ## Struktur dan panduan lanjutan
 
