@@ -46,3 +46,7 @@ Dependency tooling masih dapat memiliki advisory tingkat moderate. Periksa
 Compose development hanya bind frontend/backend/pgAdmin ke localhost. Deployment
 VPS, HTTPS, pengelolaan secret, kebijakan privasi sekolah dan uji restore merupakan
 langkah tersendiri sebelum penggunaan publik.
+
+Startup Linux juga harus diuji setelah upgrade: gunakan flag `--host` yang didukung
+renderer dan pertahankan `ca-certificates` dalam image slim agar runtime dapat
+memverifikasi TLS. Jangan mengatasi error sertifikat dengan mematikan verifikasi.

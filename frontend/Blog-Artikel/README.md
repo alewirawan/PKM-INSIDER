@@ -1,4 +1,8 @@
-# Blog dan Artikel — Anggota 04
+# Arsip prototype Blog — Anggota 04
+
+Versi ini disimpan sebagai riwayat pekerjaan awal dan tidak dijalankan oleh Docker.
+Blog aktif ada di `frontend/app/` dan `backend/src/modules/posts/`.
+Untuk menjalankan sistem lengkap, ikuti [panduan utama](../../README.md).
 
 Prototype mandiri untuk fitur Blog dan Artikel SMP Nurul Huda, mengikuti kontrak pada PDF tugas.
 

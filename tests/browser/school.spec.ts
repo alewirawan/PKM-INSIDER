@@ -177,12 +177,10 @@ test("public pages fit mobile and desktop and About differs from Home", async ({
 test("admin saves offline registration, physical evidence and opens each module on mobile", async ({
   page,
 }) => {
-  await page
-    .context()
-    .request.post(`${api}/auth/login`, {
-      headers: { origin },
-      data: { email: "browser-test@example.test", password },
-    });
+  await page.context().request.post(`${api}/auth/login`, {
+    headers: { origin },
+    data: { email: "browser-test@example.test", password },
+  });
   await page.goto("/admin");
   await page
     .getByRole("button", { name: "Data siswa", exact: true })
@@ -211,19 +209,15 @@ test("admin saves offline registration, physical evidence and opens each module 
     .click();
   await expect(page.getByRole("heading", { name, exact: true })).toBeVisible();
   await page.getByRole("button", { name: "berkas", exact: true }).click();
-  const kk = page
-    .locator(".live-document-card")
-    .filter({
-      has: page.getByRole("heading", { name: "Kartu Keluarga", exact: true }),
-    });
+  const kk = page.locator(".live-document-card").filter({
+    has: page.getByRole("heading", { name: "Kartu Keluarga", exact: true }),
+  });
   await expect(kk.getByRole("checkbox")).toBeChecked();
-  await kk
-    .locator('input[type="file"]')
-    .setInputFiles({
-      name: "kk-offline.pdf",
-      mimeType: "application/pdf",
-      buffer: Buffer.from("%PDF-1.4\nOffline browser fixture"),
-    });
+  await kk.locator('input[type="file"]').setInputFiles({
+    name: "kk-offline.pdf",
+    mimeType: "application/pdf",
+    buffer: Buffer.from("%PDF-1.4\nOffline browser fixture"),
+  });
   await expect(kk).toContainText("kk-offline.pdf");
   await page.getByRole("button", { name: "Tutup", exact: true }).click();
   await page.setViewportSize({ width: 390, height: 844 });
@@ -237,10 +231,10 @@ test("admin saves offline registration, physical evidence and opens each module 
   ]) {
     await page.getByRole("button", { name: "Lainnya", exact: true }).click();
     await page
-      .getByRole("button", { name: label, exact: true })
-      .filter({ visible: true })
+      .locator(".admin-mobile-more")
+      .getByRole("button", { name: label })
       .click();
-    await expect(page.locator(".admin-view")).toBeVisible();
+    await expect(page.locator(".admin-mobile-more")).toHaveCount(0);
     await expect
       .poll(
         () =>
