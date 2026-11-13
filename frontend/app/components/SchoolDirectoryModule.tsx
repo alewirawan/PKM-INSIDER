@@ -82,7 +82,7 @@ export function SchoolDirectoryModule({ notify }: Props) {
     );
     commit(
       { ...directory, leaders: next },
-      "Posisi hierarki berhasil dipindahkan.",
+      "Kategori jabatan diperbarui. Hubungan bagan dapat diatur melalui Edit profil.",
     );
   }
 
@@ -92,7 +92,13 @@ export function SchoolDirectoryModule({ notify }: Props) {
       kind === "leader"
         ? {
             ...directory,
-            leaders: directory.leaders.filter((person) => person.id !== id),
+            leaders: directory.leaders
+              .filter((person) => person.id !== id)
+              .map((person) =>
+                person.parentId === id
+                  ? { ...person, parentId: null, coordination: false }
+                  : person,
+              ),
           }
         : {
             ...directory,
@@ -161,6 +167,8 @@ export function SchoolDirectoryModule({ notify }: Props) {
         tone: "sage",
         level: "support",
         portraitIndex: directory.leaders.length % 8,
+        parentId: null,
+        coordination: false,
       },
     });
   }
@@ -173,8 +181,8 @@ export function SchoolDirectoryModule({ notify }: Props) {
         name: "",
         initials: "",
         subject: "",
-        cluster: "Sains",
-        years: 1,
+        cluster: null,
+        years: null,
         note: "",
         tone: "sage",
         portraitIndex: directory.teachers.length % 8,
@@ -226,8 +234,8 @@ export function SchoolDirectoryModule({ notify }: Props) {
         <aside>
           <b>Perubahan langsung tersinkron ke halaman publik</b>
           <span>
-            Sementara tersimpan di browser lokal; siap diganti dengan API
-            backend.
+            Atur atasan dan hubungan koordinasi melalui Edit profil. Mata
+            pelajaran dapat dilengkapi setelah datanya tersedia.
           </span>
         </aside>
       </section>

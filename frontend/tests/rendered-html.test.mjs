@@ -59,11 +59,11 @@ test("renders the finished public homepage", async () => {
   assert.equal(response.status, 200);
   const html = await response.text();
   assert.match(html, /SMP Nurul Huda/);
-  assert.match(html, /Membentuk generasi/);
+  assert.match(html, /Kesempatan belajar/);
   assert.match(html, /Kabar dari Nurul Huda/);
   assert.match(html, /Login Admin/);
   assert.match(html, /site-navigation-shell/);
-  assert.match(html, /og\.jpg/);
+  assert.match(html, /gedung-sekolah\.jpeg/);
   assert.doesNotMatch(html, /SkeletonPreview|Your site is taking shape/);
 });
 
@@ -74,7 +74,7 @@ test("renders public modules and a seeded article", async () => {
     ["/prestasi", "Setiap pencapaian punya cerita"],
     ["/pendaftaran", "Formulir PPDB"],
     ["/kontak", "Kirim pesan"],
-    ["/blog/festival-inovasi-sains-2026", "Festival Inovasi Sains 2026"],
+    ["/blog/semangat-kemerdekaan-17-agustus", "Merah Putih dan Kebersamaan"],
   ]) {
     const response = await render(path);
     assert.equal(response.status, 200, path);
@@ -93,7 +93,7 @@ test("PPDB and directory expose their new navigation and demo boundaries", async
   const prestasi = await (await render("/prestasi")).text();
   assert.match(prestasi, /Prestasi sekolah/i);
   const about = await (await render("/tentang")).text();
-  assert.match(about, /Pendidikan dimulai dari kepedulian/);
+  assert.match(about, /Sebidang kebun/);
   assert.doesNotMatch(about, /Lorem ipsum/i);
 });
 
@@ -151,7 +151,7 @@ test("renders the safe local admin entry point", async () => {
   ]) {
     assert.match(html, new RegExp(marker));
   }
-  assert.doesNotMatch(html, /nurulhuda123/);
+  assert.doesNotMatch(html, /<input[^>]*type="password"[^>]*value="[^"]+"/);
   assert.doesNotMatch(html, /Selamat pagi, Rania/);
   assert.match(html, /noindex, nofollow/);
 });
@@ -162,7 +162,7 @@ test("publishes SEO support routes", async () => {
     render("/robots.txt"),
   ]);
   assert.equal(sitemap.status, 200);
-  assert.match(await sitemap.text(), /festival-inovasi-sains-2026/);
+  assert.match(await sitemap.text(), /semangat-kemerdekaan-17-agustus/);
   assert.equal(robots.status, 200);
   assert.match(await robots.text(), /Disallow: \/admin/);
 });

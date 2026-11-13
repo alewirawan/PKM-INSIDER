@@ -1,7 +1,7 @@
 /* Inner pages */
 .page-hero {
   padding: 105px max(22px, 12vw) 115px;
-  background: #e3e8e2;
+  background: var(--surface-blue);
   text-align: center;
 }
 .page-hero h1 {
@@ -112,7 +112,7 @@
   border-bottom: 1px solid var(--line);
 }
 .value-grid b {
-  color: #b46330;
+  color: var(--brand-blue);
   font-family: Georgia, serif;
 }
 .value-grid h3 {
@@ -129,7 +129,7 @@
 .principal-section {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  background: #dfe7e2;
+  background: var(--surface-blue);
 }
 .principal-section > div {
   min-height: 590px;
@@ -148,7 +148,7 @@
   padding: 70px clamp(35px, 7vw, 100px);
 }
 .principal-section blockquote > span {
-  color: #b46330;
+  color: var(--brand-blue);
   font-family: Georgia, serif;
   font-size: 82px;
   line-height: 0.5;

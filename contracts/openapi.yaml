@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: SMP Nurul Huda API
-  version: 1.3.0
+  version: 1.5.0
   description: >-
     Kontrak implementasi PKM-INSIDER. Frontend dan backend terhubung ke PostgreSQL; mutasi memeriksa
     Origin dan role. PPDB manual dengan berkas privat, persyaratan tersimpan saat pendaftaran, serta
@@ -1753,6 +1753,8 @@ components:
         - ktp
         - kip
         - akta
+        - rapor
+        - pasfoto
         - photo
       description: photo hanya untuk membaca metadata lama. Upload baru memakai UploadDocumentKind.
     StudentDocument:
@@ -2200,6 +2202,15 @@ components:
         - level
         - portraitIndex
       properties:
+        parentId:
+          type: [string, 'null']
+          minLength: 1
+          maxLength: 120
+          description: ID jabatan induk; null atau tidak diisi untuk posisi paling atas. Hubungan tidak boleh bersiklus.
+        coordination:
+          type: boolean
+          default: false
+          description: Hubungan koordinasi dengan parentId, ditampilkan sebagai garis putus-putus.
         id:
           type: string
         name:
@@ -2260,14 +2271,15 @@ components:
           minLength: 2
           maxLength: 120
         cluster:
-          type: string
+          type: [string, "null"]
           enum:
             - Sains
             - Bahasa
             - Sosial
             - Kreatif & Karakter
+            - null
         years:
-          type: integer
+          type: [integer, "null"]
           minimum: 0
           maximum: 60
         note:
@@ -2498,12 +2510,12 @@ components:
           format: email
         phone:
           type: string
-          minLength: 8
           maxLength: 30
+          pattern: ^(.{8,30})?$
         whatsapp:
           type: string
-          minLength: 8
           maxLength: 30
+          pattern: ^(.{8,30})?$
         address:
           type: string
           minLength: 10
@@ -2560,6 +2572,8 @@ components:
         - ktp
         - kip
         - akta
+        - rapor
+        - pasfoto
     DocumentStatus:
       type: string
       enum:
@@ -2616,6 +2630,22 @@ components:
           minLength: 1
           x-max-bytes: 5242880
         akta:
+          type: string
+          format: binary
+          description: >-
+            PDF/JPG/PNG maksimum 5 MiB (5242880 byte). Server memeriksa signature file, bukan
+            ekstensi saja.
+          minLength: 1
+          x-max-bytes: 5242880
+        rapor:
+          type: string
+          format: binary
+          description: >-
+            PDF/JPG/PNG maksimum 5 MiB (5242880 byte). Server memeriksa signature file, bukan
+            ekstensi saja.
+          minLength: 1
+          x-max-bytes: 5242880
+        pasfoto:
           type: string
           format: binary
           description: >-
@@ -2691,7 +2721,7 @@ components:
           uniqueItems: true
           items:
             $ref: '#/components/schemas/UploadDocumentKind'
-          maxItems: 6
+          maxItems: 8
         extracurriculars:
           $ref: '#/components/schemas/ExtracurricularSelections'
       description: >-
@@ -3072,6 +3102,8 @@ components:
               - kk
               - ktp
               - akta
+              - rapor
+              - pasfoto
           default: []
         requireOneGraduationDocument:
           type: boolean

@@ -20,10 +20,10 @@ export default function AboutPage() {
         <section className="about-story">
           <div className="about-image">
             <Image
-              src="/images/campus.jpg"
-              alt="Ilustrasi lingkungan belajar sekolah"
+              src="/images/sekolah/halaman-sekolah.jpeg"
+              alt="Gedung dan halaman SMP Nurul Huda Cisoka"
               width={1600}
-              height={1048}
+              height={1200}
               sizes="(max-width: 820px) 100vw, 50vw"
             />
             <span>{content.story.badge}</span>
@@ -39,20 +39,33 @@ export default function AboutPage() {
             </Link>
           </div>
         </section>
-        <section className="vision-grid" aria-label="Arah pendidikan">
+        <section className="school-timeline" aria-label="Perjalanan sekolah">
+          {content.timeline.map((item) => (
+            <article key={item.year}>
+              <b>{item.year}</b>
+              <h3>{item.title}</h3>
+              <p>{item.text}</p>
+            </article>
+          ))}
+        </section>
+        <section className="vision-grid" aria-label="Visi dan misi sekolah">
           <article>
             <span>01</span>
-            <p className="section-kicker">Arah pendidikan</p>
+            <p className="section-kicker">Visi sekolah</p>
             <h2>{content.vision}</h2>
           </article>
           <article>
             <span>02</span>
-            <p className="section-kicker">Semangat pembelajaran</p>
-            <h2>{content.mission}</h2>
+            <p className="section-kicker">Misi sekolah</p>
+            <ol className="school-missions">
+              {content.missions.map((mission) => (
+                <li key={mission}>{mission}</li>
+              ))}
+            </ol>
           </article>
         </section>
         <section className="intro-section">
-          <p className="section-kicker">Nilai yang kami jaga</p>
+          <p className="section-kicker">Tujuan & karakter lulusan</p>
           <h2>
             Bekal untuk hari ini.
             <br />

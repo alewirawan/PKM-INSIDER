@@ -55,10 +55,10 @@ export async function buildApp(config: AppConfig) {
   });
   await app.register(multipart, {
     limits: {
-      files: 6,
+      files: 8,
       fields: 1,
       fieldSize: 16384,
-      parts: 7,
+      parts: 9,
       fileSize: Math.min(5, config.MAX_UPLOAD_MB) * 1024 * 1024,
     },
   });

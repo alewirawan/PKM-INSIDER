@@ -22,7 +22,7 @@
 }
 .editor-heading p {
   margin: 0 0 5px;
-  color: #a75e35;
+  color: var(--brand-blue);
   font-size: 8px;
   font-weight: 800;
   text-transform: uppercase;

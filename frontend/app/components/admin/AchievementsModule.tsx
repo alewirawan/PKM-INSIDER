@@ -1,4 +1,6 @@
 "use client";
+
+import { schoolImageOptions } from "../../data";
 import { useState, type FormEvent } from "react";
 import { useCatalog } from "../../lib/use-catalog";
 import { storeAchievement, removeAchievement } from "../../lib/api/school";
@@ -11,7 +13,7 @@ const empty = {
   year: "2026",
   category: "Akademik",
   description: "",
-  image: "/images/science.jpg",
+  image: "/images/sekolah/gedung-sekolah.jpeg",
   published: false,
 };
 export function AchievementsModule({ notify }: { notify: AdminNotify }) {
@@ -112,10 +114,11 @@ export function AchievementsModule({ notify }: { notify: AdminNotify }) {
               value={form.image}
               onChange={(e) => setForm({ ...form, image: e.target.value })}
             >
-              <option value="/images/science.jpg">Kegiatan sains</option>
-              <option value="/images/students.jpg">Kegiatan siswa</option>
-              <option value="/images/library.jpg">Perpustakaan</option>
-              <option value="/images/campus.jpg">Sekolah</option>
+              {schoolImageOptions.map((image) => (
+                <option key={image.value} value={image.value}>
+                  {image.label}
+                </option>
+              ))}
             </select>
           </label>
           <label className="catalog-checkbox">

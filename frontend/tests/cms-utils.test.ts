@@ -36,8 +36,44 @@ import {
   chunkDirectoryRows,
   groupSchoolLeaders,
   hasOtherPrincipal,
-  seedSchoolDirectory,
+  type SchoolDirectory,
 } from "../app/school-directory-data";
+
+const seedSchoolDirectory: SchoolDirectory = {
+  leaders: [
+    {
+      id: "leader-principal",
+      name: "Kepala Uji",
+      role: "Kepala Sekolah",
+      initials: "KU",
+      focus: "Kepemimpinan",
+      tone: "sage",
+      level: "principal",
+      portraitIndex: 0,
+    },
+    {
+      id: "leader-academic",
+      name: "Wakil Uji",
+      role: "Wakil Kepala",
+      initials: "WU",
+      focus: "Akademik",
+      tone: "sage",
+      level: "leadership",
+      portraitIndex: 0,
+    },
+    {
+      id: "leader-support",
+      name: "Staf Uji",
+      role: "Koordinator",
+      initials: "SU",
+      focus: "Administrasi",
+      tone: "sage",
+      level: "support",
+      portraitIndex: 0,
+    },
+  ],
+  teachers: [],
+};
 
 class MemoryStorage {
   private values = new Map<string, string>();
@@ -88,10 +124,10 @@ beforeEach(() => {
   sessionStorage.clear();
 });
 
-test("PPDB exposes six document types and preserves legacy photo metadata", () => {
+test("PPDB exposes eight document types and preserves legacy photo metadata", () => {
   assert.deepEqual(
     documentLabels.map((d) => d.key),
-    ["skl", "ijazah", "kk", "ktp", "kip", "akta"],
+    ["skl", "ijazah", "kk", "ktp", "kip", "akta", "rapor", "pasfoto"],
   );
   const normalized = normalizeDocuments([
     {
@@ -102,7 +138,7 @@ test("PPDB exposes six document types and preserves legacy photo metadata", () =
     },
     { key: "kk", label: "KK", status: "Diunggah", fileName: "kk.pdf" },
   ]);
-  assert.equal(normalized.length, 7);
+  assert.equal(normalized.length, 9);
   assert.equal(
     normalized.find((d) => d.key === "kk")?.status,
     "Menunggu pemeriksaan",
@@ -242,6 +278,7 @@ test("empty collections stay empty instead of restoring demo records", () => {
 });
 
 test("school hierarchy and teacher order can be persisted for the public directory", () => {
+  saveSchoolDirectory(seedSchoolDirectory);
   const directory = getSchoolDirectory();
   const moved = { ...directory.leaders[1], level: "support" as const };
   saveSchoolDirectory({

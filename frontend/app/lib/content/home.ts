@@ -1,49 +1,43 @@
 export const homeContent = {
   heroLead:
-    "Ruang untuk belajar, mengembangkan bakat, dan membangun akhlak. Temukan informasi sekolah serta langkah awal menjadi bagian dari SMP Nurul Huda.",
-  trust: { score: "Tumbuh bersama", caption: "Siswa, guru, dan orang tua" },
-  badge: { value: "NH", lines: ["Belajar hari ini,", "berkarya esok hari"] },
-  accreditation: { label: "Semangat belajar", value: "Berilmu & berakhlak" },
+    "Berawal dari kepedulian, tumbuh untuk membuka kesempatan. Sejak 2008, SMP Nurul Huda Cisoka menghadirkan pendidikan tanpa SPP bulanan bagi anak-anak di lingkungan sekitar.",
+  trust: {
+    score: "Tanpa SPP bulanan",
+    caption: "Sejak pertama menerima siswa pada 2008",
+  },
+  badge: { value: "2008", lines: ["Awal perjalanan", "bersama siswa"] },
+  accreditation: { label: "Akreditasi sekolah", value: "Terakreditasi B" },
   stats: [
-    {
-      value: "Ilmu",
-      lines: ["Mengasah rasa ingin tahu", "melalui proses belajar"],
-    },
-    { value: "Adab", lines: ["Menumbuhkan sikap baik", "dalam keseharian"] },
-    {
-      value: "Karya",
-      lines: ["Memberi ruang bagi ide", "dan kreativitas siswa"],
-    },
-    {
-      value: "Peduli",
-      lines: ["Belajar bekerja sama", "dan menghargai sesama"],
-    },
+    { value: "2008", lines: ["Mulai menerima", "peserta didik"] },
+    { value: "B", lines: ["Status akreditasi", "sekolah"] },
+    { value: "4.000 m²", lines: ["Lahan wakaf", "untuk pendidikan"] },
+    { value: "Bebas SPP", lines: ["Tanpa biaya", "SPP bulanan"] },
   ],
   intro:
-    "Belajar bukan hanya tentang hasil ujian. Keberanian bertanya, kebiasaan baik, dan kesempatan mencoba membantu setiap anak mengenali kemampuannya.",
+    "Di atas lahan kebun yang diwakafkan pendiri, lahir sebuah ikhtiar agar anak-anak dapat melanjutkan sekolah setelah SD. Semangat itu tetap menjadi dasar pelayanan SMP Nurul Huda hingga hari ini.",
   experience:
-    "Pelajaran di kelas dan kegiatan sekolah saling melengkapi. Siswa diajak mengembangkan pengetahuan sekaligus belajar bertanggung jawab atas pilihan dan tindakannya.",
+    "Gedung dan halaman sekolah menjadi ruang belajar, beraktivitas, dan membangun kebersamaan. Kehadiran serta kedisiplinan siswa menjadi perhatian agar setiap proses belajar dapat diikuti dengan baik.",
   features: [
     {
       number: "01",
-      title: "Belajar dengan rasa ingin tahu",
-      text: "Menghubungkan pelajaran dengan kehidupan sehari-hari.",
+      title: "Pendidikan yang terjangkau",
+      text: "Tidak ada uang gedung dan SPP bulanan. Biaya awal untuk seragam serta atribut sekolah.",
     },
     {
       number: "02",
-      title: "Ruang untuk mengembangkan minat",
-      text: "Pilihan ekstrakurikuler dapat dilihat melalui halaman Program.",
+      title: "Disiplin dalam keseharian",
+      text: "Mengutamakan kehadiran siswa agar pembelajaran dapat dipahami secara maksimal.",
     },
     {
       number: "03",
-      title: "Komunikasi yang terbuka",
-      text: "Informasi sekolah dan pendaftaran dapat diakses bersama.",
+      title: "Minat yang mendapat ruang",
+      text: "Tujuh pilihan ekstrakurikuler, dari musik dan keterampilan hingga olahraga serta PMR.",
     },
   ],
   quote: {
-    text: "Setiap langkah kecil dalam belajar adalah bagian dari perjalanan yang berarti.",
-    author: "Semangat Nurul Huda",
-    role: "Belajar, tumbuh, dan berkarya",
+    text: "Pendidikan berawal dari kepedulian. Setiap anak berhak mendapat kesempatan untuk melanjutkan sekolah.",
+    author: "Semangat pendirian Nurul Huda",
+    role: "Mengabdi melalui pendidikan sejak 2008",
   },
-  cta: "Kenali alur pendaftaran dan persyaratan berkas, kemudian isi formulir saat periode penerimaan dibuka.",
+  cta: "Pendaftaran dilayani sepanjang tahun ajaran. Siapkan berkas calon siswa dan hubungi Pak Humaidi atau Bu Jannah untuk informasi seragam serta atribut sekolah.",
 } as const;

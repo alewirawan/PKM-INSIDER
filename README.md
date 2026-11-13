@@ -1,5 +1,7 @@
 # Sistem Informasi SMP Nurul Huda
 
+Panduan langkah demi langkah: [Cara menjalankan project](docs/PANDUAN-MENJALANKAN.md), termasuk Mac yang sudah disiapkan dan komputer anggota baru.
+
 Website informasi sekolah dan dashboard admin. Frontend memakai React/TypeScript,
 backend Fastify, dan database PostgreSQL. Jalur development tim memakai Docker.
 
@@ -109,8 +111,9 @@ yang kamu buat, bukan akun GitHub atau akun Docker.
 - Portal pendaftar: http://localhost:3000/pendaftar
 - Cek koneksi backend–database: http://localhost:4000/api/v1/ready
 
-Gunakan alamat `localhost` secara konsisten. Database baru bisa masih kosong;
-[data contoh opsional](PANDUAN-INSTALASI.md#data-contoh-opsional) tersedia.
+Gunakan alamat `localhost` secara konsisten. Docker mengisi profil sekolah,
+16 guru, tujuh ekstrakurikuler, dan artikel 17 Agustus saat inisialisasi pertama.
+Lihat [panduan konten sekolah](docs/KONTEN-SEKOLAH.md) untuk lokasi sumber dan cara mengubahnya.
 
 ## Pemakaian sehari-hari
 
@@ -157,7 +160,8 @@ ikuti [alur Git pada panduan lengkap](PANDUAN-INSTALASI.md#pull-dan-pekerjaan-pa
 | Pesan & dashboard | Pesan kontak, pencatatan subscriber, ringkasan pendaftaran dan berkas dari database. |
 | Database | PostgreSQL 17, 23 tabel, migration otomatis, upload privat persisten; pgAdmin web opsional. |
 
-Tidak ada admin bawaan. Data contoh hanya dimuat jika diminta melalui seed.
+Tidak ada admin atau pendaftar bawaan. Konten sekolah dimuat sekali; perubahan admin
+tidak ditimpa saat restart. Data simulasi terpisah hanya dimuat jika diminta melalui seed demo.
 PPDB awalnya ditutup: buka melalui **Pengaturan** setelah persyaratan diperiksa.
 Panduan penggunaan setiap menu ada di [alur sistem](docs/ALUR-SISTEM.md).
 

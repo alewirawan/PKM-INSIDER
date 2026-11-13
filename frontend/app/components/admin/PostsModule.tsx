@@ -1,5 +1,7 @@
 "use client";
 
+import { schoolImageOptions } from "../../data";
+
 import Image from "next/image";
 import Link from "next/link";
 import { FileQuestion, PenLine, Search } from "lucide-react";
@@ -34,7 +36,7 @@ const blankPost: PostForm = {
   slug: "",
   category: "Pengumuman",
   date: new Date(Date.now() + 7 * 60 * 60 * 1000).toISOString().slice(0, 10),
-  image: "/images/campus.jpg",
+  image: "/images/sekolah/gedung-sekolah.jpeg",
   excerpt: "",
   content: "",
   author: "Tim Komunikasi Nurul Huda",
@@ -66,10 +68,19 @@ export function PostsModule({
   const [loadError, setLoadError] = useState("");
   useEffect(() => {
     let active = true;
-    listAdminPosts().then((items) => { if (active) setPosts(items); }).catch((error) => {
-      if (active) setLoadError(error instanceof Error ? error.message : "Artikel gagal dimuat.");
-    });
-    return () => { active = false; };
+    listAdminPosts()
+      .then((items) => {
+        if (active) setPosts(items);
+      })
+      .catch((error) => {
+        if (active)
+          setLoadError(
+            error instanceof Error ? error.message : "Artikel gagal dimuat.",
+          );
+      });
+    return () => {
+      active = false;
+    };
   }, [setPosts]);
   useEffect(() => {
     if (!preset) return;
@@ -136,13 +147,20 @@ export function PostsModule({
         ? await updatePost(editing, payload)
         : await createPost(payload);
       const next = editing
-        ? posts.map((item) => item.id === saved.id ? saved : item)
+        ? posts.map((item) => (item.id === saved.id ? saved : item))
         : [saved, ...posts];
       setPosts(next);
-      notify(saved.status === "Terbit" ? "Artikel berhasil diterbitkan." : "Draft artikel berhasil disimpan.");
+      notify(
+        saved.status === "Terbit"
+          ? "Artikel berhasil diterbitkan."
+          : "Draft artikel berhasil disimpan.",
+      );
       reset();
     } catch (error) {
-      notify(error instanceof Error ? error.message : "Gagal menyimpan artikel.", "warning");
+      notify(
+        error instanceof Error ? error.message : "Gagal menyimpan artikel.",
+        "warning",
+      );
     } finally {
       setSaving(false);
     }
@@ -155,7 +173,10 @@ export function PostsModule({
       setPosts(posts.filter((item) => item.id !== post.id));
       notify("Artikel berhasil dihapus.", "warning");
     } catch (error) {
-      notify(error instanceof Error ? error.message : "Gagal menghapus artikel.", "warning");
+      notify(
+        error instanceof Error ? error.message : "Gagal menghapus artikel.",
+        "warning",
+      );
     }
   }
 
@@ -172,15 +193,28 @@ export function PostsModule({
         status: post.status === "Terbit" ? "Draft" : "Terbit",
         publishedAt: post.publishedAt,
       });
-      setPosts(posts.map((item) => item.id === updated.id ? updated : item));
-      notify(updated.status === "Terbit" ? "Artikel dipublikasikan." : "Artikel dipindahkan ke draft.");
+      setPosts(posts.map((item) => (item.id === updated.id ? updated : item)));
+      notify(
+        updated.status === "Terbit"
+          ? "Artikel dipublikasikan."
+          : "Artikel dipindahkan ke draft.",
+      );
     } catch (error) {
-      notify(error instanceof Error ? error.message : "Gagal mengubah status artikel.", "warning");
+      notify(
+        error instanceof Error
+          ? error.message
+          : "Gagal mengubah status artikel.",
+        "warning",
+      );
     }
   }
   return (
     <div className="admin-view">
-      {loadError && <p role="alert" className="admin-form-error">{loadError}</p>}
+      {loadError && (
+        <p role="alert" className="admin-form-error">
+          {loadError}
+        </p>
+      )}
       <AdminPageHeader
         eyebrow="Pengelolaan konten"
         title="Artikel & berita"
@@ -268,15 +302,11 @@ export function PostsModule({
                   value={form.image}
                   onChange={(event) => update("image", event.target.value)}
                 >
-                  <option value="/images/campus.jpg">Kampus Nurul Huda</option>
-                  <option value="/images/hero-classroom.jpg">
-                    Kegiatan kelas
-                  </option>
-                  <option value="/images/science.jpg">
-                    Sains & laboratorium
-                  </option>
-                  <option value="/images/library.jpg">Perpustakaan</option>
-                  <option value="/images/students.jpg">Kolaborasi siswa</option>
+                  {schoolImageOptions.map((image) => (
+                    <option key={image.value} value={image.value}>
+                      {image.label}
+                    </option>
+                  ))}
                 </select>
               </label>
               <label className="span-2">
@@ -328,10 +358,16 @@ export function PostsModule({
               >
                 Batal
               </button>
-              <button className="button button-accent" type="submit" disabled={saving}>
-                {saving ? "Menyimpan…" : form.status === "Terbit"
-                  ? "Terbitkan artikel"
-                  : "Simpan draft"}{" "}
+              <button
+                className="button button-accent"
+                type="submit"
+                disabled={saving}
+              >
+                {saving
+                  ? "Menyimpan…"
+                  : form.status === "Terbit"
+                    ? "Terbitkan artikel"
+                    : "Simpan draft"}{" "}
                 →
               </button>
             </div>

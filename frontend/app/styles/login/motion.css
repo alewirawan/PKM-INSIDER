@@ -39,7 +39,7 @@
 }
 .text-link:hover,
 .read-link:hover {
-  color: #b46330;
+  color: var(--brand-blue);
 }
 .read-link:hover {
   gap: 30px;

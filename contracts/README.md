@@ -1,6 +1,6 @@
 # Kontrak API SMP Nurul Huda
 
-Versi **1.3.0**, PKM-INSIDER. [openapi.yaml](openapi.yaml) mencatat endpoint yang
+Versi **1.5.0**, PKM-INSIDER. [openapi.yaml](openapi.yaml) mencatat endpoint yang
 terpasang pada backend. Base URL lokal: `http://localhost:4000/api/v1`.
 
 ## Pemakaian client
@@ -33,10 +33,10 @@ Server memeriksa sesi dan role, bukan hanya menyembunyikan tombol frontend.
 ## Pendaftaran dan dokumen
 
 `POST /applications` menerima multipart `data` (teks JSON), serta file bernama
-`skl`, `ijazah`, `kk`, `ktp`, `kip`, `akta`. JSON memuat biodata,
+`skl`, `ijazah`, `kk`, `ktp`, `kip`, `akta`, `rapor`, `pasfoto`. JSON memuat biodata,
 `extracurriculars: string[]`, `password` minimal 12 karakter, dan `consent: true`.
 Browser menetapkan Content-Type beserta boundary; jangan menulis header multipart sendiri.
-Maksimal enam berkas, masing-masing 5 MiB, PDF/JPG/PNG dengan signature sesuai ekstensi dan MIME.
+Maksimal delapan berkas, masing-masing 5 MiB, PDF/JPG/PNG dengan signature sesuai ekstensi dan MIME.
 
 Kirim `Idempotency-Key` UUID. Retry dengan isi sama menghasilkan receipt yang sama;
 isi berbeda dengan key sama ditolak 409. Receipt berisi `id`, `status`, `submittedAt`.
@@ -73,6 +73,11 @@ Aktivasi sekali pakai mengubah password dan membatalkan sesi lama. Membuat tauta
 membatalkan tautan yang belum dipakai. Tidak ada pengiriman email otomatis.
 
 ## Struktur implementasi
+
+Jabatan memiliki `parentId?: string | null` dan `coordination?: boolean`.
+`parentId` menunjuk jabatan di array yang sama; hubungan berputar atau ID tujuan
+yang tidak ada ditolak. `coordination: true` berarti hubungan koordinasi, bukan
+atasan–bawahan. `level` tetap kategori jabatan untuk editor dan kompatibilitas.
 
 - `backend/src/modules/`: handler, validasi, service/repository per fitur.
 - `backend/src/shared/http/access.ts`: sesi, role dan pemeriksaan Origin.

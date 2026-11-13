@@ -1,12 +1,14 @@
 import { sql } from "drizzle-orm";
 import {
   check,
+  boolean,
   index,
   integer,
   pgEnum,
   pgTable,
   uniqueIndex,
   varchar,
+  type AnyPgColumn,
 } from "drizzle-orm/pg-core";
 import { timestamps } from "./common.js";
 
@@ -29,8 +31,8 @@ export const teachers = pgTable(
     name: varchar("name", { length: 120 }).notNull(),
     initials: varchar("initials", { length: 3 }).notNull(),
     subject: varchar("subject", { length: 120 }).notNull(),
-    cluster: teacherCluster("cluster").notNull(),
-    years: integer("years").notNull(),
+    cluster: teacherCluster("cluster"),
+    years: integer("years"),
     note: varchar("note", { length: 300 }).notNull(),
     tone: varchar("tone", { length: 30 }).notNull(),
     portraitIndex: integer("portrait_index").notNull(),
@@ -54,6 +56,11 @@ export const schoolLeaders = pgTable(
   "school_leaders",
   {
     id: varchar("id", { length: 120 }).primaryKey(),
+    parentId: varchar("parent_id", { length: 120 }).references(
+      (): AnyPgColumn => schoolLeaders.id,
+      { onDelete: "set null" },
+    ),
+    coordination: boolean("coordination").notNull().default(false),
     teacherId: varchar("teacher_id", { length: 120 }).references(
       () => teachers.id,
       { onDelete: "set null" },

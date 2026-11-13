@@ -4,17 +4,12 @@ import { Save, X } from "lucide-react";
 import type { FormEventHandler } from "react";
 import {
   hasOtherPrincipal,
+  isDescendant,
   type SchoolLeader,
   type Teacher,
 } from "../../school-directory-data";
 import { DialogPortal } from "../DialogPortal";
-import {
-  clusters,
-  levels,
-  portraitPositions,
-  tones,
-  type Editor,
-} from "./shared";
+import { clusters, levels, tones, type Editor } from "./shared";
 
 export function DirectoryEditor({
   editor,
@@ -53,37 +48,9 @@ export function DirectoryEditor({
           </button>
         </header>
         <div className="directory-editor-body">
-          <div className="directory-photo-choice">
-            <span
-              className={`directory-editor-portrait ${editor.kind}`}
-              style={{
-                backgroundPosition:
-                  portraitPositions[editor.value.portraitIndex % 8],
-              }}
-            />
-            <div>
-              <b>Pilih contoh foto</b>
-              <div>
-                {portraitPositions.map((position, index) => (
-                  <button
-                    type="button"
-                    className={
-                      editor.value.portraitIndex === index ? "active" : ""
-                    }
-                    onClick={() =>
-                      setEditor({
-                        ...editor,
-                        value: { ...editor.value, portraitIndex: index },
-                      } as Editor)
-                    }
-                    key={position}
-                  >
-                    {index + 1}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
+          <p className="field-hint">
+            Profil memakai inisial nama agar tidak menampilkan foto orang lain.
+          </p>
           <div className="admin-form-grid">
             <label className="span-2">
               Nama lengkap
@@ -150,7 +117,7 @@ export function DirectoryEditor({
                   />
                 </label>
                 <label>
-                  Level struktur
+                  Kategori jabatan
                   <select
                     value={editor.value.level}
                     onChange={(event) =>
@@ -175,6 +142,59 @@ export function DirectoryEditor({
                         {level.label}
                       </option>
                     ))}
+                  </select>
+                </label>
+                <label className="span-2">
+                  Terhubung ke jabatan
+                  <select
+                    value={editor.value.parentId ?? ""}
+                    onChange={(event) =>
+                      setEditor({
+                        ...editor,
+                        value: {
+                          ...editor.value,
+                          parentId: event.target.value || null,
+                          coordination: event.target.value
+                            ? editor.value.coordination
+                            : false,
+                        },
+                      })
+                    }
+                  >
+                    <option value="">Posisi paling atas</option>
+                    {leaders
+                      .filter(
+                        (person) =>
+                          !isDescendant(leaders, person.id, editor.value.id),
+                      )
+                      .map((person) => (
+                        <option key={person.id} value={person.id}>
+                          {person.role} — {person.name}
+                        </option>
+                      ))}
+                  </select>
+                </label>
+                <label className="span-2">
+                  Jenis hubungan
+                  <select
+                    value={
+                      editor.value.coordination ? "coordination" : "reporting"
+                    }
+                    disabled={!editor.value.parentId}
+                    onChange={(event) =>
+                      setEditor({
+                        ...editor,
+                        value: {
+                          ...editor.value,
+                          coordination: event.target.value === "coordination",
+                        },
+                      })
+                    }
+                  >
+                    <option value="reporting">Di bawah jabatan tersebut</option>
+                    <option value="coordination">
+                      Koordinasi (garis putus-putus)
+                    </option>
                   </select>
                 </label>
                 <label className="span-2">
@@ -215,17 +235,19 @@ export function DirectoryEditor({
                 <label>
                   Rumpun
                   <select
-                    value={editor.value.cluster}
+                    value={editor.value.cluster ?? ""}
                     onChange={(event) =>
                       setEditor({
                         ...editor,
                         value: {
                           ...editor.value,
-                          cluster: event.target.value as Teacher["cluster"],
+                          cluster: (event.target.value ||
+                            null) as Teacher["cluster"],
                         },
                       })
                     }
                   >
+                    <option value="">Belum ditentukan</option>
                     {clusters.map((cluster) => (
                       <option key={cluster}>{cluster}</option>
                     ))}
@@ -234,17 +256,19 @@ export function DirectoryEditor({
                 <label>
                   Pengalaman (tahun)
                   <input
-                    required
                     type="number"
                     min="0"
                     max="60"
-                    value={editor.value.years}
+                    value={editor.value.years ?? ""}
                     onChange={(event) =>
                       setEditor({
                         ...editor,
                         value: {
                           ...editor.value,
-                          years: Number(event.target.value),
+                          years:
+                            event.target.value === ""
+                              ? null
+                              : Number(event.target.value),
                         },
                       })
                     }

@@ -1,11 +1,16 @@
 :root {
-  --ink: #102f3c;
-  --ink-soft: #36515d;
-  --paper: #f6f3eb;
-  --paper-deep: #eae7de;
-  --accent: #f5ad45;
-  --white: #fffdf8;
-  --line: rgba(16, 47, 60, 0.14);
+  --ink: #142f59;
+  --ink-soft: #4b607d;
+  --paper: #f7faff;
+  --paper-deep: #e9f1fc;
+  --accent: #b9dcff;
+  --white: #ffffff;
+  --line: rgba(33, 77, 137, 0.15);
+  --brand-blue: #1859c9;
+  --brand-hover: #1048a8;
+  --brand-navy: #102b55;
+  --surface-blue: #eaf2ff;
+  --border-blue: #d3e1f5;
 }
 
 * {
@@ -117,8 +122,8 @@ a {
   border-color: var(--ink);
 }
 .site-header nav a.active {
-  color: #b46330;
-  border-color: #b46330;
+  color: var(--brand-blue);
+  border-color: var(--brand-blue);
 }
 .site-header > .button {
   justify-self: end;
@@ -246,7 +251,7 @@ a {
 }
 .hero h1 em,
 .intro-section h2 em {
-  color: #ca7338;
+  color: var(--brand-blue);
   font-weight: 400;
 }
 .hero-lead {
@@ -430,7 +435,7 @@ a {
   text-align: center;
 }
 .section-kicker {
-  color: #b46330;
+  color: var(--brand-blue);
 }
 .intro-section h2 {
   margin: 18px 0 20px;

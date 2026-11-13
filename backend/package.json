@@ -19,7 +19,8 @@
     "db:studio": "node --env-file-if-exists=.env scripts/run-drizzle.mjs studio",
     "db:seed:demo": "tsx --env-file-if-exists=.env src/scripts/seed-demo.ts",
     "db:verify": "tsx --env-file-if-exists=.env src/scripts/verify-database.ts",
-    "db:diagram": "tsx src/scripts/print-dbml.ts"
+    "db:diagram": "tsx src/scripts/print-dbml.ts",
+    "db:seed:school": "tsx --env-file-if-exists=.env src/scripts/seed-school.ts"
   },
   "dependencies": {
     "@fastify/cookie": "^11.1.2",

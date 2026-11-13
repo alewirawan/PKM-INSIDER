@@ -1,6 +1,6 @@
 import { ArrowDown, ArrowUp, Edit3, Trash2 } from "lucide-react";
 import type { Teacher } from "../../school-directory-data";
-import { portraitPositions, type Editor } from "./shared";
+import { type Editor } from "./shared";
 
 export function DirectoryTeachersTab({
   teachers,
@@ -25,18 +25,17 @@ export function DirectoryTeachersTab({
       <div className="directory-teacher-grid">
         {teachers.map((teacher, index) => (
           <article key={teacher.id}>
-            <span
-              className="directory-mini-portrait teacher"
-              style={{
-                backgroundPosition:
-                  portraitPositions[teacher.portraitIndex % 8],
-              }}
-            />
+            <span className="directory-mini-portrait teacher">
+              {teacher.initials}
+            </span>
             <div>
               <small>{teacher.subject}</small>
               <h3>{teacher.name}</h3>
               <p>
-                {teacher.cluster} · {teacher.years} tahun mengajar
+                {teacher.cluster ?? "Mata pelajaran belum ditentukan"}
+                {teacher.years !== null
+                  ? ` · ${teacher.years} tahun mengajar`
+                  : ""}
               </p>
             </div>
             <footer>

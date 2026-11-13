@@ -1,21 +1,15 @@
+import school from "../../../../contracts/school-profile.json";
 import { posts } from "../../data";
 import { KEYS, readJson, writeJson } from "./storage";
 import type { CmsPost } from "./types";
 
-const seedDates = [
-  "2026-09-12T08:00:00.000Z",
-  "2026-09-05T08:00:00.000Z",
-  "2026-08-28T08:00:00.000Z",
-  "2026-08-20T08:00:00.000Z",
-];
-
-export const seedCmsPosts: CmsPost[] = posts.map((post, index) => ({
+export const seedCmsPosts: CmsPost[] = posts.map((post) => ({
   ...post,
-  id: `post-${post.slug}`,
+  id: school.event.id,
   status: "Terbit",
-  author: index === 0 ? "Nadia Prameswari" : "Tim Komunikasi Nurul Huda",
-  updatedAt: seedDates[index] ?? seedDates[0],
-  publishedAt: seedDates[index] ?? seedDates[0],
+  author: school.event.author,
+  updatedAt: school.event.publishedAt,
+  publishedAt: school.event.publishedAt,
 }));
 
 function migratePostBrand(post: CmsPost): CmsPost {

@@ -1,6 +1,8 @@
 # Panduan menjalankan project SMP Nurul Huda
 
-Diperbarui 10 November 2026. Panduan ini untuk development lokal.
+Panduan langkah demi langkah: [Cara menjalankan project](docs/PANDUAN-MENJALANKAN.md), termasuk Mac yang sudah disiapkan dan komputer anggota baru.
+
+Diperbarui 13 November 2026. Panduan ini untuk development lokal.
 Docker Compose menjalankan PostgreSQL, backend, dan frontend bersama.
 `compose.dev.yaml` adalah file yang digunakan tim; `compose.yaml` adalah rancangan
 deployment terpisah.
@@ -214,8 +216,13 @@ Jika email sudah terdaftar, gunakan akun yang sebelumnya dibuat.
 
 ## Data contoh opsional
 
-Database baru tidak otomatis memiliki artikel/kegiatan/pendaftar.
-Jika ingin contoh lokal:
+Docker menjalankan migration dan mengisi konten sekolah sekali: profil, 16 guru,
+tujuh ekstrakurikuler, serta satu artikel 17 Agustus. PPDB awal dibuka tanpa batas
+tanggal dan dapat ditutup melalui Pengaturan. Tidak ada akun admin atau pendaftar
+bawaan. Restart tidak menimpa perubahan admin. Rincian: [konten sekolah](docs/KONTEN-SEKOLAH.md).
+
+Seed demo berikut hanya untuk percobaan lokal terpisah; tidak diperlukan untuk
+menampilkan konten sekolah dan akan menambahkan data fiktif:
 
 ```bash
 docker compose --env-file backend/.env -f compose.dev.yaml run --rm backend npm run db:seed:demo --workspace=@nurul-huda/backend -- --confirm-demo

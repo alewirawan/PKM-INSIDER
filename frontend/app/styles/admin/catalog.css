@@ -52,7 +52,7 @@
   border: 1px solid #dbe4dc;
   border-radius: 12px;
   padding: 24px;
-  background: #fffdf8;
+  background: var(--white);
   overflow-wrap: anywhere;
 }
 .catalog-records small {

@@ -1,0 +1,405 @@
+.skip-to-content {
+  position: fixed;
+  top: 10px;
+  left: 12px;
+  z-index: 1000;
+  padding: 14px 20px;
+  transform: translateY(-160%);
+  background: #123569;
+  color: white;
+  border-radius: 8px;
+}
+.skip-to-content:focus {
+  transform: translateY(0);
+}
+.admission-quicklinks {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: -16px auto 36px;
+  padding: 0 24px;
+  width: min(1240px, 100%);
+  position: relative;
+}
+.admission-quicklinks a {
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+  min-height: 46px;
+  border-radius: 10px;
+  padding: 12px 18px;
+  font-size: 14px;
+  font-weight: 650;
+  background: white;
+  color: #234b86;
+  border: 1px solid #cfddf0;
+}
+.admission-quicklinks a:first-child {
+  background: var(--brand-blue);
+  color: white;
+  border-color: var(--brand-blue);
+}
+.admission-quicklinks a:last-child {
+  margin-left: auto;
+  border-color: transparent;
+  background: transparent;
+}
+.admission-page .school-admission-facts {
+  width: min(1240px, 100%);
+  margin: 0 auto 24px;
+  padding: 0 24px;
+  gap: 20px;
+}
+.admission-page .school-admission-facts article {
+  padding: 28px;
+  background: #edf4ff;
+  border: 1px solid #d2e1f6;
+  border-radius: 16px;
+}
+.admission-page .school-admission-facts h2 {
+  font-size: clamp(23px, 2.5vw, 30px);
+}
+.admission-page .school-admission-facts p {
+  font-size: 14px;
+  line-height: 1.7;
+}
+.admission-page .admission-content {
+  width: min(1240px, 100%);
+  margin: auto;
+  padding: 24px 24px 72px;
+  grid-template-columns: minmax(240px, 0.7fr) minmax(0, 1.3fr);
+  gap: 28px;
+}
+.admission-page .admission-guide {
+  position: static;
+  padding: 28px;
+  border: 1px solid #d4e2f4;
+  border-radius: 16px;
+  background: #f1f6fe;
+}
+.admission-guide h2 {
+  font-size: 32px;
+  margin: 12px 0 20px;
+}
+.admission-guide > p {
+  font-size: 14px;
+  line-height: 1.7;
+  color: #415b7c;
+}
+.admission-status {
+  display: inline-block;
+  border-radius: 8px;
+  padding: 7px 12px;
+  background: #e4eaf3;
+  color: #41536e;
+  margin: 0;
+}
+.admission-status.is-open {
+  color: #145b42;
+  background: #deefe7;
+}
+.admission-start {
+  margin: 10px 0 24px;
+  width: 100%;
+  font-size: 14px;
+  min-height: 48px;
+}
+.admission-requirements {
+  border-block: 1px solid #cbdcf3;
+  padding: 4px 0;
+}
+.admission-requirements summary {
+  cursor: pointer;
+  padding: 16px 0;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1.6;
+}
+.admission-requirements summary span {
+  display: block;
+  margin-left: 20px;
+  font-size: 12px;
+  font-weight: 400;
+  color: #4b607d;
+}
+.admission-requirements ul {
+  border-top: 0;
+}
+.admission-requirements li {
+  padding: 13px 0;
+  gap: 14px;
+  font-size: 14px;
+}
+.admission-requirements li:last-child {
+  border-bottom: 0;
+}
+.admission-requirements li small {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: #4b607d;
+}
+.admission-guide .help-card {
+  background: white;
+  border: 1px solid #d2e1f6;
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 24px;
+}
+.admission-guide .help-card a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: 14px;
+}
+.admission-form-anchor,
+#persyaratan-ppdb,
+#alur-ppdb {
+  min-width: 0;
+  scroll-margin-top: 110px;
+}
+.admission-page .registration-form {
+  border: 1px solid #d4e2f4;
+  border-radius: 18px;
+  padding: clamp(22px, 3vw, 36px);
+  box-shadow: 0 12px 40px #173e7610;
+}
+.registration-form fieldset {
+  min-width: 0;
+}
+.registration-form .form-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.registration-form label {
+  color: #304e74;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.registration-form legend {
+  color: #3d5c84;
+  font-size: 12px;
+  line-height: 1.6;
+  letter-spacing: 0.04em;
+}
+.registration-form input:not([type="checkbox"]):not([type="radio"]),
+.registration-form select,
+.registration-form textarea {
+  border-radius: 9px;
+  background: #fbfcff;
+  border-color: #becfe6;
+  font-size: 16px;
+  min-width: 0;
+}
+.registration-form input[type="checkbox"],
+.registration-form input[type="radio"],
+.extracurricular-picker input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  min-height: 18px;
+  flex: 0 0 18px;
+  padding: 0;
+  margin: 3px 0;
+  accent-color: var(--brand-blue);
+  box-shadow: none;
+}
+.registration-form .consent {
+  align-items: flex-start;
+  gap: 12px;
+  font-weight: 400;
+  line-height: 1.7;
+}
+.registration-form .consent input {
+  flex-shrink: 0;
+}
+.extracurricular-picker > p {
+  color: #4b607d;
+  font-size: 13px;
+  line-height: 1.7;
+  margin: 0 0 16px;
+}
+.extracurricular-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.extracurricular-options > label {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px;
+  min-height: 54px;
+  border: 1px solid #c9d8ec;
+  border-radius: 10px;
+  background: #fbfcff;
+  color: #304e74;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.6;
+  cursor: pointer;
+}
+.extracurricular-options > label:hover {
+  border-color: #6e9bdb;
+}
+.extracurricular-options > label.is-selected {
+  background: #eaf2ff;
+  border-color: #3474ce;
+  color: #174888;
+}
+.extracurricular-options > label:focus-within {
+  outline: 2px solid #1859c9;
+  outline-offset: 2px;
+}
+.extracurricular-options small {
+  display: block;
+  font-size: 12px;
+}
+.extracurricular-picker > .extracurricular-count {
+  margin: 12px 0 0;
+  font-size: 12px;
+}
+.wizard-progress {
+  gap: 8px;
+}
+.wizard-progress li {
+  color: #4b607d;
+  font-size: 12px;
+}
+.wizard-progress li[aria-current="step"] {
+  border-color: #1859c9;
+  font-weight: 700;
+}
+.wizard-progress b {
+  font-family: inherit;
+  font-size: 17px;
+}
+.wizard-step-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 26px 0 8px;
+  font-size: 23px;
+  font-family: Georgia, serif;
+  font-weight: 400;
+}
+.wizard-step-title small {
+  font-size: 12px;
+  font-family: var(--font-geist-sans), sans-serif;
+  color: #4b607d;
+}
+.wizard-step-hint {
+  color: #4b607d;
+  font-size: 13px;
+  line-height: 1.7;
+  margin: 0 0 24px;
+}
+.registration-form-actions:has(> :only-child) {
+  grid-template-columns: 1fr;
+}
+.registration-form-actions .button {
+  min-height: 48px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.registration-form .file-actions button {
+  min-height: 44px;
+}
+.registration-form .upload-card {
+  background: #fafcff;
+  border-color: #cbdcf0;
+}
+.registration-form .upload-card.has-file {
+  background: #f0f8f3;
+  border-color: #89b59a;
+}
+.registration-form .upload-card small {
+  color: #415b70;
+}
+.registration-form .form-help {
+  color: #4b607d;
+}
+.teacher-toolbar input {
+  font-size: 16px;
+}
+.teacher-toolbar button {
+  min-height: 44px;
+}
+@media (max-width: 980px) {
+  .admission-page .admission-content {
+    grid-template-columns: 1fr;
+  }
+  .admission-page .admission-guide {
+    display: block;
+  }
+  .admission-quicklinks a:last-child {
+    margin-left: 0;
+  }
+  .admission-guide .help-card {
+    margin-top: 18px;
+  }
+}
+@media (max-width: 620px) {
+  .admission-quicklinks {
+    padding: 0 18px;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+  .admission-quicklinks a {
+    font-size: 13px;
+    padding: 10px 13px;
+  }
+  .admission-page .school-admission-facts {
+    padding: 0 18px;
+    gap: 14px;
+  }
+  .admission-page .school-admission-facts article {
+    padding: 22px;
+  }
+  .admission-page .admission-content {
+    padding: 6px 18px 44px;
+    gap: 20px;
+  }
+  .admission-page .admission-guide {
+    padding: 22px;
+  }
+  .admission-page .registration-form {
+    padding: 22px 18px;
+  }
+  .registration-form .form-grid,
+  .extracurricular-options {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .registration-form .form-grid .span-2 {
+    grid-column: auto;
+  }
+  .wizard-progress li {
+    font-size: 11px;
+  }
+  .registration-form .form-heading {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .registration-form .form-heading span {
+    font-size: 24px;
+  }
+  .registration-form-actions {
+    grid-template-columns: 1fr;
+  }
+  .registration-form-actions .registration-back {
+    order: 2;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

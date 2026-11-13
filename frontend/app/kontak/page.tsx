@@ -4,6 +4,7 @@ import { ContactForm } from "../components/ContactForm";
 import { PageHero } from "../components/PageHero";
 import { SiteFooter } from "../components/SiteFooter";
 import { SiteHeader } from "../components/SiteHeader";
+import { SchoolMap } from "../components/SchoolMap";
 
 export const metadata: Metadata = {
   title: "Kontak",
@@ -21,17 +22,9 @@ export default function ContactPage() {
           description="Tanyakan program belajar, proses pendaftaran, atau jadwalkan kunjungan untuk merasakan langsung suasana Nurul Huda."
         />
         <section className="contact-layout">
-          <div className="contact-map">
-            <div className="map-grid" />
-            <span className="map-road one" />
-            <span className="map-road two" />
-            <div className="map-pin">
-              <b>N</b>
-              <span>SMP Nurul Huda</span>
-            </div>
-          </div>
+          <SchoolMap />
           <div className="contact-details">
-            <p className="section-kicker">Kunjungi kampus</p>
+            <p className="section-kicker">Temui kami di Cisoka</p>
             <h2>Rumah belajar kami terbuka untuk Anda.</h2>
             <ContactInformation />
           </div>
@@ -53,6 +46,22 @@ export default function ContactPage() {
             <h2>Informasi yang sering dicari.</h2>
           </div>
           <div className="faq-list">
+            <details open>
+              <summary>Apakah ada SPP bulanan dan uang gedung?</summary>
+              <p>
+                Tidak ada SPP bulanan maupun uang gedung. Biaya awal masuk
+                digunakan untuk seragam dan atribut sekolah. Hubungi panitia
+                PPDB untuk rinciannya.
+              </p>
+            </details>
+            <details>
+              <summary>Kapan pendaftaran dibuka?</summary>
+              <p>
+                Pendaftaran dilayani sepanjang tahun ajaran. Status formulir
+                online dapat dilihat pada halaman Pendaftaran; Pak Humaidi dan
+                Bu Jannah dapat dihubungi melalui kontak sekolah.
+              </p>
+            </details>
             <details open>
               <summary>Apakah PIP/KIP wajib dilampirkan?</summary>
               <p>

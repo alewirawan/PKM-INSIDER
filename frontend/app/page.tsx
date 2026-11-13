@@ -17,10 +17,12 @@ export default function Home() {
         <section className="hero">
           <div className="hero-copy">
             <p className="eyebrow">
-              <span /> Pendidikan yang tumbuh bersama zaman
+              <span /> SMP Nurul Huda · Cisoka, Tangerang
             </p>
             <h1>
-              Membentuk generasi yang <em>berani bermimpi.</em>
+              Kesempatan belajar.
+              <br />
+              <em>Harapan yang tumbuh.</em>
             </h1>
             <p className="hero-lead">{homeContent.heroLead}</p>
             <div className="hero-actions">
@@ -32,11 +34,9 @@ export default function Home() {
               </Link>
             </div>
             <div className="hero-trust">
-              <div className="avatar-stack" aria-hidden="true">
-                <span>AN</span>
-                <span>KS</span>
-                <span>RM</span>
-              </div>
+              <span className="school-trust-mark" aria-hidden="true">
+                ✦
+              </span>
               <p>
                 <strong>{homeContent.trust.score}</strong>
                 <br />
@@ -46,10 +46,10 @@ export default function Home() {
           </div>
           <div className="hero-visual">
             <Image
-              src="/images/hero-classroom.jpg"
-              alt="Guru dan siswa belajar bersama di ruang kelas"
-              width={1800}
-              height={1120}
+              src="/images/sekolah/gedung-sekolah.jpeg"
+              alt="Gedung dua lantai SMP Nurul Huda Cisoka dengan halaman dan pepohonan"
+              width={1600}
+              height={1200}
               sizes="(max-width: 820px) 100vw, 50vw"
               priority
             />
@@ -73,7 +73,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="stats" aria-label="Pilar pendidikan">
+        <section className="stats" aria-label="Mengenal SMP Nurul Huda">
           {homeContent.stats.map((stat) => (
             <div key={stat.value}>
               <strong>{stat.value}</strong>
@@ -101,7 +101,7 @@ export default function Home() {
         <section className="program-section">
           <div className="section-heading horizontal">
             <div>
-              <p className="section-kicker">Program unggulan</p>
+              <p className="section-kicker">Minat & ekstrakurikuler</p>
               <h2>
                 Belajar dengan arah,
                 <br />
@@ -137,18 +137,18 @@ export default function Home() {
           <div className="experience-images">
             <Image
               className="image-main"
-              src="/images/campus.jpg"
-              alt="Ilustrasi lingkungan belajar sekolah"
+              src="/images/sekolah/halaman-sekolah.jpeg"
+              alt="Halaman dan deretan ruang kelas SMP Nurul Huda Cisoka"
               width={1600}
-              height={1048}
+              height={1200}
               sizes="(max-width: 820px) 86vw, 45vw"
             />
             <Image
               className="image-small"
-              src="/images/students.jpg"
-              alt="Ilustrasi siswa berdiskusi bersama"
-              width={1400}
-              height={933}
+              src="/images/sekolah/warga-sekolah.jpeg"
+              alt="Foto bersama warga sekolah di halaman SMP Nurul Huda"
+              width={1200}
+              height={576}
               sizes="(max-width: 820px) 42vw, 22vw"
             />
             <span className="round-label">

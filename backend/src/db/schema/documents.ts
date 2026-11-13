@@ -30,6 +30,8 @@ export const documentKind = pgEnum("document_kind", [
   "kip",
   "akta",
   "photo",
+  "rapor",
+  "pasfoto",
 ]);
 export const documentReviewStatus = pgEnum("document_review_status", [
   "missing",

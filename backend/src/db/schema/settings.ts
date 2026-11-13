@@ -73,7 +73,7 @@ export const schoolSettings = pgTable(
     ),
     check(
       "school_settings_text_ck",
-      sql`length(btrim(${table.schoolName})) >= 2 AND length(btrim(${table.tagline})) >= 2 AND length(btrim(${table.address})) >= 10 AND length(${table.phone}) >= 8 AND length(${table.whatsapp}) >= 8`,
+      sql`length(btrim(${table.schoolName})) >= 2 AND length(btrim(${table.tagline})) >= 2 AND length(btrim(${table.address})) >= 10 AND (${table.phone} = '' OR length(${table.phone}) BETWEEN 8 AND 30) AND (${table.whatsapp} = '' OR length(${table.whatsapp}) BETWEEN 8 AND 30)`,
     ),
   ],
 );

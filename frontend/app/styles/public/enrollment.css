@@ -21,7 +21,7 @@
   line-height: 1.5;
 }
 .wizard-progress li.active {
-  border-color: #b56a36;
+  border-color: var(--brand-blue);
   color: var(--ink);
 }
 .wizard-progress b {
@@ -51,7 +51,7 @@
   border: 1px solid #d9e0d9;
   border-radius: 12px;
   padding: 20px;
-  background: #fcfbf7;
+  background: var(--white);
   min-width: 0;
 }
 .upload-card.has-file {
@@ -110,7 +110,7 @@
   padding: 9px 12px;
   border: 1px solid #c7d3ca;
   color: var(--ink);
-  background: #fffdf8;
+  background: var(--white);
   border-radius: 6px;
   font: inherit;
   font-size: 12px;
@@ -166,7 +166,7 @@
   max-height: 90dvh;
   overflow: auto;
   padding: 24px;
-  background: #fffdf8;
+  background: var(--white);
   border-radius: 16px;
   min-width: 0;
 }
@@ -226,7 +226,7 @@
 }
 .profile-tabbar button[aria-selected="true"],
 .directory-tabbar button[aria-selected="true"] {
-  border-bottom-color: #b86b3d;
+  border-bottom-color: var(--brand-blue);
   color: var(--ink);
   font-weight: 700;
 }

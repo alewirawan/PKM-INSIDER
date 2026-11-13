@@ -38,7 +38,7 @@
   margin: auto;
 }
 .achievement-card {
-  background: #fffdf8;
+  background: var(--white);
   border: 1px solid #dfdfd3;
   border-radius: 3px 3px 18px 3px;
   overflow: hidden;
@@ -59,7 +59,7 @@
   position: absolute;
   left: 18px;
   bottom: 16px;
-  background: #fffdf8;
+  background: var(--white);
   padding: 8px 12px;
   font-size: 11px;
 }
@@ -115,7 +115,7 @@
   min-height: 44px;
   min-width: 150px;
   padding: 10px;
-  background: #fffdf8;
+  background: var(--white);
   color: var(--ink);
   border: 1px solid #cad3c7;
   font: inherit;

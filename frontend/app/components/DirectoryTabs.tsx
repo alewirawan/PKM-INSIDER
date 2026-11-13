@@ -38,7 +38,7 @@ export function DirectoryTabs() {
         ))}
       </div>
       <p className="directory-demo-note">
-        Profil dan foto pendidik merupakan contoh untuk simulasi website.
+        Kenali tenaga pendidik dan pengelola SMP Nurul Huda Cisoka.
       </p>
       <div
         role="tabpanel"
@@ -50,15 +50,11 @@ export function DirectoryTabs() {
           <header className="organization-intro">
             <div>
               <p className="section-kicker">Struktur organisasi</p>
-              <h2>
-                Satu tujuan,
-                <br />
-                peran yang saling melengkapi.
-              </h2>
+              <h2>Kenali peran di sekolah.</h2>
             </div>
             <p>
-              Susunan kepemimpinan mengikuti data pada dashboard. Posisi kosong
-              tidak ditampilkan; profil dapat ditambah, dipindah, atau dihapus.
+              Setiap peran mendukung pelayanan pendidikan, kedisiplinan, dan
+              pendampingan siswa di SMP Nurul Huda.
             </p>
           </header>
           <OrganizationDirectory />

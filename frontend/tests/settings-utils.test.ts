@@ -3,9 +3,8 @@ import { afterEach, test } from "node:test";
 
 process.env.NEXT_PUBLIC_API_BASE_URL = "http://api.test/api/v1";
 
-const { defaultSettings, getSchoolSettings } = await import(
-  "../app/lib/cms/school"
-);
+const { defaultSettings, getSchoolSettings } =
+  await import("../app/lib/cms/school");
 const {
   fromLocalDateTimeInput,
   getSettings,
@@ -34,10 +33,16 @@ function mockFetch(status: number, body?: unknown) {
   return calls;
 }
 
-test("pengaturan default lolos validasi dan memuat field kontrak v1.2.0", () => {
+test("pengaturan sekolah lolos validasi dan memuat persyaratan PPDB", () => {
   assert.deepEqual(validateSettings(valid), {});
   assert.equal(valid.dataRetention, "indefinite");
-  assert.deepEqual(valid.documentRequirements.requiredKinds, []);
+  assert.deepEqual(valid.documentRequirements.requiredKinds, [
+    "skl",
+    "rapor",
+    "akta",
+    "kk",
+    "ktp",
+  ]);
   assert.equal(valid.registrationOpensAt, null);
   assert.equal(getSchoolSettings().dataRetention, "indefinite");
 });

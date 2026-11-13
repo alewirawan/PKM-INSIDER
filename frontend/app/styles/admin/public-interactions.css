@@ -32,7 +32,7 @@
   margin-left: auto;
   border: 0;
   background: transparent;
-  color: #a75e35;
+  color: var(--brand-blue);
   font-size: 9px;
   cursor: pointer;
 }

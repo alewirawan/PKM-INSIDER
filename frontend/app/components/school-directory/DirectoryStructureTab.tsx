@@ -3,7 +3,7 @@ import {
   hasOtherPrincipal,
   type SchoolLeader,
 } from "../../school-directory-data";
-import { levels, portraitPositions, type Editor } from "./shared";
+import { levels, type Editor } from "./shared";
 
 export function DirectoryStructureTab({
   leaders,
@@ -36,7 +36,7 @@ export function DirectoryStructureTab({
                 </span>
                 <div>
                   <h2>{level.label}</h2>
-                  <p>{people.length} posisi pada level ini</p>
+                  <p>{people.length} posisi pada kategori ini</p>
                 </div>
               </div>
               <button onClick={newLeader}>
@@ -46,20 +46,20 @@ export function DirectoryStructureTab({
             <div className="directory-person-list">
               {people.map((person, index) => (
                 <div className="directory-person-row" key={person.id}>
-                  <span
-                    className="directory-mini-portrait organization"
-                    style={{
-                      backgroundPosition:
-                        portraitPositions[person.portraitIndex % 8],
-                    }}
-                  />
+                  <span className="directory-mini-portrait organization">
+                    {person.initials}
+                  </span>
                   <div>
                     <b>{person.name}</b>
                     <small>{person.role}</small>
-                    <em>{person.focus}</em>
+                    <em>
+                      {person.parentId
+                        ? `${person.coordination ? "Koordinasi dengan" : "Di bawah"} ${leaders.find((item) => item.id === person.parentId)?.role ?? "jabatan terkait"}`
+                        : "Posisi paling atas"}
+                    </em>
                   </div>
                   <label>
-                    Level
+                    Kategori
                     <select
                       value={person.level}
                       onChange={(event) =>

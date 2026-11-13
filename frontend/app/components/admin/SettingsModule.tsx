@@ -227,7 +227,6 @@ export function SettingsModule({
               <label>
                 Telepon
                 <input
-                  required
                   value={form.phone}
                   onChange={(event) => update("phone", event.target.value)}
                   {...fieldProps("phone")}
@@ -237,7 +236,6 @@ export function SettingsModule({
               <label>
                 WhatsApp
                 <input
-                  required
                   value={form.whatsapp}
                   onChange={(event) => update("whatsapp", event.target.value)}
                   {...fieldProps("whatsapp")}

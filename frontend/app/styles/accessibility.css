@@ -5,7 +5,7 @@ input:focus-visible,
 select:focus-visible,
 textarea:focus-visible,
 summary:focus-visible {
-  outline: 3px solid #d58a3f !important;
+  outline: 3px solid var(--brand-blue) !important;
   outline-offset: 3px;
 }
 .admin-shell button:focus-visible,
@@ -16,7 +16,7 @@ summary:focus-visible {
 .admin-login-page button:focus-visible,
 .admin-login-page a:focus-visible,
 .admin-login-page input:focus-visible {
-  outline-color: #e5a34f !important;
+  outline-color: #6aa9ff !important;
 }
 .sidebar-bottom > button,
 .admin-top-actions > button {

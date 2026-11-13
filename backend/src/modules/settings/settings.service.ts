@@ -1,25 +1,31 @@
+import { schoolProfile as school } from "../../config/school-profile.js";
 import { eq } from "drizzle-orm";
 import type { Database } from "../../db/client.js";
 import { admissionPeriods, schoolSettings } from "../../db/schema/settings.js";
 import { settingsInput } from "./settings.schema.js";
 
-export const initialSettings = {
-  schoolName: "SMP Nurul Huda",
-  tagline: "Berilmu, berakhlak, dan tumbuh bersama",
-  email: "sekolah@example.test",
-  ppdbEmail: "ppdb@example.test",
-  phone: "081200000001",
-  whatsapp: "081200000001",
-  address: "Alamat sekolah belum diatur. Silakan perbarui melalui Pengaturan.",
+const schoolDefaults = settingsInput.parse({
+  schoolName: school.schoolName,
+  tagline: school.tagline,
+  email: school.email,
+  ppdbEmail: school.email,
+  phone: "",
+  whatsapp: "",
+  address: school.address,
   academicYear: "2026/2027",
-  registrationOpen: false,
+  registrationOpen: true,
   registrationOpensAt: null,
   registrationClosesAt: null,
   documentRequirements: {
-    requiredKinds: [],
+    requiredKinds: ["skl", "rapor", "akta", "kk", "ktp"],
     requireOneGraduationDocument: false,
   },
   dataRetention: "indefinite" as const,
+});
+export const initialSettings = {
+  ...schoolDefaults,
+  registrationOpensAt: null,
+  registrationClosesAt: null,
 };
 export async function ensureSettings(db: Database) {
   await db.transaction(async (tx) => {

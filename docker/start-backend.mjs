@@ -15,6 +15,7 @@ function run(args) {
 try {
   await run(["run", "db:migrate", "--workspace=@nurul-huda/backend"]);
   await run(["run", "db:verify", "--workspace=@nurul-huda/backend"]);
+  await run(["run", "db:seed:school", "--workspace=@nurul-huda/backend"]);
   await run(["run", "dev:backend"]);
 } catch {
   console.error("Backend berhenti. Periksa log migration atau proses API di atas.");

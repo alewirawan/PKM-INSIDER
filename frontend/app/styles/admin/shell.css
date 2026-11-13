@@ -371,7 +371,7 @@
   font-size: 9px;
 }
 .panel-heading a {
-  color: #b46330;
+  color: var(--brand-blue);
   font-size: 9px;
   font-weight: 700;
 }
@@ -477,7 +477,7 @@
   font-size: 17px;
 }
 .agenda-item time span {
-  color: #b46330;
+  color: var(--brand-blue);
   font-size: 7px;
   font-weight: 800;
 }
@@ -496,7 +496,7 @@
 .agenda-panel > a {
   display: inline-block;
   margin-top: 18px;
-  color: #b46330;
+  color: var(--brand-blue);
   font-size: 9px;
   font-weight: 700;
 }

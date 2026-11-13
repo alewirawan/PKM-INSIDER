@@ -22,7 +22,7 @@
   display: block;
 }
 .admission-summary span {
-  color: #b46330;
+  color: var(--brand-blue);
   font-size: 9px;
   font-weight: 800;
   text-transform: uppercase;
@@ -66,13 +66,13 @@
   border-bottom: 1px solid var(--line);
 }
 .admission-guide li b {
-  color: #b46330;
+  color: var(--brand-blue);
   font-family: Georgia, serif;
 }
 .help-card {
   margin-top: 32px;
   padding: 26px;
-  background: #dfe7e2;
+  background: var(--surface-blue);
 }
 .help-card p {
   color: var(--ink-soft);
@@ -80,7 +80,7 @@
   line-height: 1.6;
 }
 .help-card a {
-  color: #b46330;
+  color: var(--brand-blue);
   font-size: 12px;
   font-weight: 800;
 }
@@ -101,7 +101,7 @@
   font-size: 27px;
 }
 .form-heading strong {
-  color: #b46330;
+  color: var(--brand-blue);
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -189,10 +189,10 @@
   font-size: 11px;
   font-weight: 700;
 }
-.registration-form input,
+.registration-form input:not([type="checkbox"]):not([type="radio"]),
 .registration-form select,
 .registration-form textarea,
-.contact-form-section input,
+.contact-form-section input:not([type="checkbox"]):not([type="radio"]),
 .contact-form-section select,
 .contact-form-section textarea {
   width: 100%;
@@ -210,7 +210,7 @@
 .registration-form textarea:focus,
 .contact-form-section input:focus,
 .contact-form-section textarea:focus {
-  border-color: #b46330;
+  border-color: var(--brand-blue);
   box-shadow: 0 0 0 3px rgba(180, 99, 48, 0.08);
 }
 .consent {
@@ -280,7 +280,7 @@
   cursor: pointer;
 }
 .admission-steps {
-  background: #dfe7e2;
+  background: var(--surface-blue);
 }
 .step-grid {
   display: grid;
@@ -298,7 +298,7 @@
   border-right: 1px solid rgba(16, 47, 60, 0.13);
 }
 .step-grid b {
-  color: #b46330;
+  color: var(--brand-blue);
   font-family: Georgia, serif;
 }
 .step-grid h3 {

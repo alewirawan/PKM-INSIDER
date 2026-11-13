@@ -18,10 +18,10 @@ export const tones = [
 ];
 export const levels: Array<{ value: SchoolLeader["level"]; label: string }> = [
   { value: "principal", label: "Kepala sekolah" },
-  { value: "leadership", label: "Wakil kepala" },
-  { value: "support", label: "Koordinator" },
+  { value: "leadership", label: "Wakil kepala & bidang" },
+  { value: "support", label: "Yayasan, komite & pendukung" },
 ];
-export const clusters: Teacher["cluster"][] = [
+export const clusters: NonNullable<Teacher["cluster"]>[] = [
   "Sains",
   "Bahasa",
   "Sosial",

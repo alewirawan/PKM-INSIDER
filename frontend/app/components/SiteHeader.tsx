@@ -26,14 +26,20 @@ export function SiteHeader({ active = "" }: { active?: string }) {
   const registration = describeRegistration(settingsState);
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [menuReady, setMenuReady] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Separate enter/exit thresholds avoid toggling on tiny trackpad movements.
     const handleScroll = () =>
       setScrolled((current) => window.scrollY > (current ? 8 : 24));
-    const frame = window.requestAnimationFrame(handleScroll);
+    const frame = window.requestAnimationFrame(() => {
+      handleScroll();
+      setMenuReady(true);
+    });
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => {
       window.cancelAnimationFrame(frame);
@@ -51,15 +57,52 @@ export function SiteHeader({ active = "" }: { active?: string }) {
   useEffect(() => {
     if (!menuOpen) return;
     const previousOverflow = document.body.style.overflow;
+    const trigger = menuButtonRef.current;
     document.body.style.overflow = "hidden";
     closeButtonRef.current?.focus();
+    const background: Array<[HTMLElement, boolean]> = [];
+    let branch: HTMLElement | null = menuRef.current;
+    while (branch?.parentElement) {
+      for (const sibling of Array.from(branch.parentElement.children)) {
+        if (sibling !== branch && sibling instanceof HTMLElement) {
+          background.push([sibling, sibling.inert]);
+          sibling.inert = true;
+        }
+      }
+      branch = branch.parentElement;
+      if (branch === document.body) break;
+    }
+    const desktop = window.matchMedia("(min-width: 1181px)");
+    const onDesktop = () => {
+      if (desktop.matches) setMenuOpen(false);
+    };
+    desktop.addEventListener("change", onDesktop);
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") setMenuOpen(false);
+      if (event.key === "Tab") {
+        const elements = menuRef.current?.querySelectorAll<HTMLElement>(
+          "a[href], button:not([disabled])",
+        );
+        const first = elements?.[0],
+          last = elements?.[elements.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last?.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first?.focus();
+        }
+      }
     };
     document.addEventListener("keydown", handleEscape);
     return () => {
       document.removeEventListener("keydown", handleEscape);
       document.body.style.overflow = previousOverflow;
+      background.forEach(([element, inert]) => {
+        element.inert = inert;
+      });
+      desktop.removeEventListener("change", onDesktop);
+      trigger?.focus({ preventScroll: true });
     };
   }, [menuOpen]);
 
@@ -71,6 +114,20 @@ export function SiteHeader({ active = "" }: { active?: string }) {
 
   return (
     <>
+      <a
+        className="skip-to-content"
+        href="#school-main-content"
+        onClick={() => {
+          const main = document.querySelector("main");
+          if (main) {
+            main.id = "school-main-content";
+            main.tabIndex = -1;
+            main.focus();
+          }
+        }}
+      >
+        Lewati navigasi
+      </a>
       <div className="notice-bar">
         <span>
           {registration.kind === "loading" && "Memuat informasi PPDB…"}
@@ -110,7 +167,10 @@ export function SiteHeader({ active = "" }: { active?: string }) {
           <nav aria-label="Navigasi utama">
             {items.map(([label, href]) => (
               <Link
-                className={active === href ? "active" : ""}
+                className={(active || pathname) === href ? "active" : ""}
+                aria-current={
+                  (active || pathname) === href ? "page" : undefined
+                }
                 key={href}
                 href={href}
                 onClick={prepareNavigation}
@@ -128,6 +188,8 @@ export function SiteHeader({ active = "" }: { active?: string }) {
           </Link>
           <button
             className="mobile-menu-trigger"
+            ref={menuButtonRef}
+            disabled={!menuReady}
             type="button"
             aria-expanded={menuOpen}
             aria-controls="mobile-navigation"
@@ -141,6 +203,7 @@ export function SiteHeader({ active = "" }: { active?: string }) {
       {menuOpen && (
         <div
           className="mobile-nav-panel open"
+          ref={menuRef}
           id="mobile-navigation"
           role="dialog"
           aria-modal="true"
@@ -166,7 +229,10 @@ export function SiteHeader({ active = "" }: { active?: string }) {
           <nav aria-label="Navigasi mobile">
             {items.map(([label, href], index) => (
               <Link
-                className={active === href ? "active" : ""}
+                className={(active || pathname) === href ? "active" : ""}
+                aria-current={
+                  (active || pathname) === href ? "page" : undefined
+                }
                 key={href}
                 href={href}
                 onClick={prepareNavigation}

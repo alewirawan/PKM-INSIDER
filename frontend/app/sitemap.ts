@@ -39,14 +39,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     ...pages.map((path) => ({
       url: `${base}${path}`,
-      lastModified: new Date("2026-09-18"),
+      lastModified: new Date("2026-11-13"),
       changeFrequency:
         path === "/blog" ? ("weekly" as const) : ("monthly" as const),
       priority: path === "" ? 1 : 0.8,
     })),
     ...publishedPosts.map((post) => ({
       url: `${base}/blog/${post.slug}`,
-      lastModified: new Date(post.updatedAt ?? "2026-09-18"),
+      lastModified: new Date(post.updatedAt ?? "2026-11-13"),
       changeFrequency: "monthly" as const,
       priority: 0.7,
     })),

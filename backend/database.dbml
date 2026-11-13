@@ -58,6 +58,8 @@ Enum document_kind {
   "kip"
   "akta"
   "photo"
+  "rapor"
+  "pasfoto"
 }
 
 Enum document_review_status {
@@ -383,6 +385,8 @@ Table posts {
 
 Table school_leaders {
   id "varchar(120)" [pk, not null]
+  parent_id "varchar(120)"
+  coordination "boolean" [not null]
   teacher_id "varchar(120)"
   name "varchar(120)" [not null]
   role "varchar(120)" [not null]
@@ -436,8 +440,8 @@ Table teachers {
   name "varchar(120)" [not null]
   initials "varchar(3)" [not null]
   subject "varchar(120)" [not null]
-  cluster "teacher_cluster" [not null]
-  years "integer" [not null]
+  cluster "teacher_cluster"
+  years "integer"
   note "varchar(300)" [not null]
   tone "varchar(30)" [not null]
   portrait_index "integer" [not null]
@@ -471,6 +475,7 @@ Ref: document_reviews.slot_id > application_document_slots.id [delete: restrict]
 Ref: document_reviews.reviewed_by > admins.id [delete: set null]
 Ref: document_reviews.(version_id, slot_id) > application_documents.(id, slot_id) [delete: restrict]
 Ref: posts.created_by > admins.id [delete: set null]
+Ref: school_leaders.parent_id > school_leaders.id [delete: set null]
 Ref: school_leaders.teacher_id > teachers.id [delete: set null]
 Ref: school_settings.academic_year > admission_periods.academic_year [delete: restrict]
 Ref: submission_requests.application_id > applications.id [delete: restrict]

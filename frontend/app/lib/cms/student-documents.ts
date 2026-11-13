@@ -11,6 +11,8 @@ export const documentLabels: Array<Pick<StudentDocument, "key" | "label">> = [
   { key: "ktp", label: "KTP orang tua/wali" },
   { key: "kip", label: "PIP / KIP (opsional)" },
   { key: "akta", label: "Akta Kelahiran" },
+  { key: "rapor", label: "Rapor" },
+  { key: "pasfoto", label: "Pas foto 3×4" },
 ];
 
 export function createStudentDocuments(

@@ -217,11 +217,11 @@
 }
 .directory-mini-portrait.organization {
   width: 49px;
-  background-image: url("/images/organization-portraits-v1.webp");
+  background-image: none;
 }
 .directory-mini-portrait.teacher {
   width: 88px;
-  background-image: url("/images/teacher-portraits-v1.webp");
+  background-image: none;
 }
 .directory-row-actions {
   display: flex;
@@ -436,10 +436,10 @@
   box-shadow: 0 7px 16px rgba(19, 49, 58, 0.14);
 }
 .directory-editor-portrait.leader {
-  background-image: url("/images/organization-portraits-v1.webp");
+  background-image: none;
 }
 .directory-editor-portrait.teacher {
-  background-image: url("/images/teacher-portraits-v1.webp");
+  background-image: none;
 }
 .directory-editor .admin-form-grid label {
   display: grid;

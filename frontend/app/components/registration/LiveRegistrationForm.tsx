@@ -27,7 +27,8 @@ export function LiveRegistrationForm() {
     [receipt, setReceipt] = useState<string | null>(null);
   const key = useRef(""),
     lock = useRef(false),
-    formRef = useRef<HTMLFormElement>(null);
+    formRef = useRef<HTMLFormElement>(null),
+    stepHeadingRef = useRef<HTMLHeadingElement>(null);
   function update(field: keyof RegistrationValues, value: string) {
     key.current = "";
     setForm((v) => ({ ...v, [field]: value }));
@@ -35,9 +36,15 @@ export function LiveRegistrationForm() {
   function go(next: number) {
     setStep(next);
     setError("");
-    requestAnimationFrame(() =>
-      formRef.current?.scrollIntoView({ block: "start", behavior: "smooth" }),
-    );
+    requestAnimationFrame(() => {
+      stepHeadingRef.current?.focus({ preventScroll: true });
+      formRef.current?.scrollIntoView({
+        block: "start",
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+          ? "instant"
+          : "smooth",
+      });
+    });
   }
   async function submit(event: FormEvent) {
     event.preventDefault();
@@ -189,6 +196,18 @@ export function LiveRegistrationForm() {
           </li>
         ))}
       </ol>
+      <h2 className="wizard-step-title" ref={stepHeadingRef} tabIndex={-1}>
+        {steps[step - 1]} <small>Langkah {step} dari 4</small>
+      </h2>
+      <p className="wizard-step-hint">
+        {step === 1
+          ? "Isi data sesuai dokumen calon siswa. Semua isian wajib, kecuali pilihan ekstrakurikuler."
+          : step === 2
+            ? "Gunakan kontak yang aktif. Pekerjaan orang tua boleh dikosongkan."
+            : step === 3
+              ? "Unggah berkas yang ditandai wajib. Kamu bisa melihat pratinjau sebelum mengirim."
+              : "Periksa kembali data dan berkas. Pendaftaran dikirim setelah kamu menyetujuinya."}
+      </p>
       {step === 1 && (
         <>
           <StudentFields form={form} update={update} hideActivities />

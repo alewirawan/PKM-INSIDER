@@ -20,6 +20,13 @@ export function Achievements({ compact = false }: { compact?: boolean }) {
           (category === "Semua" || category === item.category) &&
           (year === "Semua" || year === item.year),
       );
+  if (
+    compact &&
+    !achievementsLoading &&
+    !achievementsError &&
+    published.length === 0
+  )
+    return null;
   return (
     <section className={"achievements-section" + (compact ? " compact" : "")}>
       <header className="achievement-heading">
@@ -93,18 +100,22 @@ export function Achievements({ compact = false }: { compact?: boolean }) {
               <p>{item.description}</p>
               <footer>
                 <span>{item.category}</span>
-                <small>0{index + 1} · Contoh pencapaian</small>
+                <small>0{index + 1} · Pencapaian sekolah</small>
               </footer>
             </div>
           </article>
         ))}
       </div>
-      {!visible.length && (
+      {!achievementsLoading && !achievementsError && !visible.length && (
         <div className="catalog-empty">
           <Trophy size={32} />
           <h3>Belum ada prestasi yang ditampilkan</h3>
-          <p>Coba filter lain atau tambahkan prestasi melalui admin lokal.</p>
-          {!compact && (
+          <p>
+            {published.length
+              ? "Coba kategori atau tahun lainnya."
+              : "Cerita pencapaian siswa akan dibagikan di halaman ini."}
+          </p>
+          {!compact && published.length > 0 && (
             <button
               type="button"
               onClick={() => {

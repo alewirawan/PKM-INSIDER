@@ -9,6 +9,7 @@ import { createDatabase } from "../src/db/client.js";
 import { admins } from "../src/db/schema/auth.js";
 import { migrateSchoolDatabase } from "../src/db/migrate.js";
 import { testConfig } from "./content-fixture.js";
+import { schoolProfile } from "../src/config/school-profile.js";
 
 const url =
   process.env.FULL_SYSTEM_DATABASE_URL ??
@@ -312,7 +313,7 @@ describe.skipIf(!url)(
         })
       ).json();
       slot = record.documents.find((d: { kind: string }) => d.kind === "kk").id;
-      expect(record.documents.length).toBe(6);
+      expect(record.documents.length).toBe(8);
       expect(JSON.stringify(record)).not.toMatch(/storageKey|passwordHash/);
       expect(
         (
@@ -339,6 +340,116 @@ describe.skipIf(!url)(
           })
         ).body,
       ).toContain("%PDF");
+    });
+    it("accepts all eight document kinds in one online submission", async () => {
+      const kinds = [
+        "skl",
+        "ijazah",
+        "kk",
+        "ktp",
+        "kip",
+        "akta",
+        "rapor",
+        "pasfoto",
+      ];
+      const boundary = `test-${randomUUID()}`;
+      const data = { ...biodata, nisn: "9876543211", password, consent: true };
+      const body =
+        `--${boundary}\r\nContent-Disposition: form-data; name="data"\r\n\r\n${JSON.stringify(data)}\r\n` +
+        kinds
+          .map(
+            (kind) =>
+              `--${boundary}\r\nContent-Disposition: form-data; name="${kind}"; filename="${kind}.pdf"\r\nContent-Type: application/pdf\r\n\r\n%PDF-1.4\nfixture\r\n`,
+          )
+          .join("") +
+        `--${boundary}--\r\n`;
+      const response = await app.inject({
+        method: "POST",
+        url: "/api/v1/applications",
+        headers: {
+          origin,
+          "content-type": `multipart/form-data; boundary=${boundary}`,
+          "idempotency-key": randomUUID(),
+        },
+        payload: body,
+      });
+      expect(response.statusCode).toBe(201);
+      const record = (
+        await app.inject({
+          url: `/api/v1/applications/${response.json().id}`,
+          headers: headers(),
+        })
+      ).json();
+      expect(record.documents).toHaveLength(8);
+      for (const kind of ["rapor", "pasfoto"]) {
+        const document = record.documents.find(
+          (item: { kind: string }) => item.kind === kind,
+        );
+        const download = await app.inject({
+          url: `/api/v1/applications/${response.json().id}/documents/${document.id}/download`,
+          headers: headers(),
+        });
+        expect(download.statusCode).toBe(200);
+        expect(download.body).toContain("%PDF");
+      }
+    });
+    it("persists organization edges and rejects invalid hierarchies without altering saved data", async () => {
+      const current = (await app.inject("/api/v1/directory")).json();
+      const input = { ...current, leaders: schoolProfile.leaders };
+      const saved = await app.inject({
+        method: "PUT",
+        url: "/api/v1/directory",
+        headers: headers(),
+        payload: input,
+      });
+      expect(saved.statusCode).toBe(200);
+      expect(
+        saved
+          .json()
+          .leaders.find((person: { id: string }) => person.id === "org-komite"),
+      ).toMatchObject({ parentId: "org-kepala", coordination: true });
+      const invalid = {
+        ...input,
+        leaders: input.leaders.filter(
+          (person: { id: string }) => person.id !== "org-wakil",
+        ),
+      };
+      expect(
+        (
+          await app.inject({
+            method: "PUT",
+            url: "/api/v1/directory",
+            headers: headers(),
+            payload: invalid,
+          })
+        ).statusCode,
+      ).toBe(422);
+      expect(
+        (await app.inject("/api/v1/directory")).json().leaders,
+      ).toHaveLength(13);
+      const moved = {
+        ...input,
+        leaders: input.leaders
+          .filter((person: { id: string }) => person.id !== "org-wakil")
+          .map((person: { parentId?: string | null }) =>
+            person.parentId === "org-wakil"
+              ? { ...person, parentId: "org-kepala" }
+              : person,
+          ),
+      };
+      expect(
+        (
+          await app.inject({
+            method: "PUT",
+            url: "/api/v1/directory",
+            headers: headers(),
+            payload: moved,
+          })
+        ).statusCode,
+      ).toBe(200);
+      expect(
+        (await app.inject("/api/v1/directory")).json().leaders,
+      ).toHaveLength(12);
     });
     it("supports applicant corrections, verification and admission history", async () => {
       const login = await app.inject({

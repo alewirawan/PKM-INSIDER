@@ -120,7 +120,7 @@
   color: #31505b;
 }
 .mobile-nav-panel > nav a small {
-  color: #b86b3d;
+  color: var(--brand-blue);
   font-size: 9px;
   letter-spacing: 0.08em;
 }
@@ -129,7 +129,7 @@
   font-size: clamp(28px, 9vw, 42px);
 }
 .mobile-nav-panel > nav a.active span {
-  color: #bd6d3d;
+  color: var(--brand-blue);
   font-style: italic;
 }
 .mobile-nav-panel > footer {

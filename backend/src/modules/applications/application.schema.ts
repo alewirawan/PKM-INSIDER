@@ -6,6 +6,8 @@ export const uploadKinds = [
   "ktp",
   "kip",
   "akta",
+  "rapor",
+  "pasfoto",
 ] as const;
 export const documentKindInput = z.enum(uploadKinds);
 export const applicationStatuses = [
@@ -69,7 +71,7 @@ export const offlineInput = applicationInput.extend({
   notes: z.string().max(1000).default(""),
   receivedDocumentKinds: z
     .array(documentKindInput)
-    .max(6)
+    .max(8)
     .default([])
     .refine((a) => new Set(a).size === a.length),
 });

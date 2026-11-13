@@ -1,8 +1,5 @@
 import { ApiError, requestApi } from "../api-client";
-import type {
-  RequirableDocumentKind,
-  SchoolSettings,
-} from "../cms/types";
+import type { RequirableDocumentKind, SchoolSettings } from "../cms/types";
 
 /**
  * Client Pengaturan sekolah (anggota 1). Backend GET/PUT /settings milik anggota 9.
@@ -19,6 +16,8 @@ export const REQUIRABLE_DOCUMENT_KINDS: ReadonlyArray<{
   { kind: "kk", label: "Kartu Keluarga" },
   { kind: "ktp", label: "KTP orang tua/wali" },
   { kind: "akta", label: "Akta kelahiran" },
+  { kind: "rapor", label: "Rapor" },
+  { kind: "pasfoto", label: "Pas foto 3×4" },
 ];
 
 export type SettingsErrors = Partial<
@@ -59,8 +58,12 @@ export function validateSettings(value: SchoolSettings): SettingsErrors {
   const errors: SettingsErrors = {};
   errors.schoolName = lengthError(value.schoolName, 2, 120, "Nama sekolah");
   errors.tagline = lengthError(value.tagline, 2, 160, "Tagline");
-  errors.phone = lengthError(value.phone, 8, 30, "Telepon");
-  errors.whatsapp = lengthError(value.whatsapp, 8, 30, "WhatsApp");
+  errors.phone = value.phone.trim()
+    ? lengthError(value.phone, 8, 30, "Telepon")
+    : undefined;
+  errors.whatsapp = value.whatsapp.trim()
+    ? lengthError(value.whatsapp, 8, 30, "WhatsApp")
+    : undefined;
   errors.address = lengthError(value.address, 10, 500, "Alamat");
   if (!EMAIL_PATTERN.test(value.email.trim()))
     errors.email = "Format email tidak valid.";
@@ -71,7 +74,8 @@ export function validateSettings(value: SchoolSettings): SettingsErrors {
 
   const kinds = value.documentRequirements.requiredKinds as string[];
   if (kinds.some((kind) => !ALLOWED_KINDS.has(kind)))
-    errors.requiredKinds = "PIP/KIP dan pas foto tidak boleh diwajibkan.";
+    errors.requiredKinds =
+      "PIP/KIP dan jenis berkas arsip tidak boleh diwajibkan.";
   else if (new Set(kinds).size !== kinds.length)
     errors.requiredKinds = "Jenis berkas tidak boleh duplikat.";
 

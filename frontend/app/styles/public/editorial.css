@@ -182,7 +182,7 @@
   border-bottom: 1px solid var(--line);
 }
 .feature-list > div > b {
-  color: #b46330;
+  color: var(--brand-blue);
   font-family: Georgia, serif;
 }
 .feature-list strong,
@@ -200,11 +200,11 @@
 
 .quote-section {
   padding: 110px max(22px, 12vw);
-  background: #dfe7e2;
+  background: var(--surface-blue);
   text-align: center;
 }
 .quote-mark {
-  color: #b46330;
+  color: var(--brand-blue);
   font-family: Georgia, serif;
   font-size: 96px;
   line-height: 0.5;
@@ -265,7 +265,7 @@
   letter-spacing: 0.08em;
 }
 .news-meta span {
-  color: #ad5d2d;
+  color: var(--brand-blue);
   font-weight: 800;
 }
 .news-meta span::after {
@@ -304,7 +304,7 @@
   letter-spacing: 0.06em;
 }
 .read-link span {
-  color: #b46330;
+  color: var(--brand-blue);
 }
 
 .cta-section {
@@ -314,14 +314,14 @@
   text-align: center;
 }
 .cta-section.light {
-  background: #dfe7e2;
+  background: var(--surface-blue);
   color: var(--ink);
 }
 .cta-section .section-kicker {
   color: var(--accent);
 }
 .cta-section.light .section-kicker {
-  color: #b46330;
+  color: var(--brand-blue);
 }
 .cta-section h2 {
   margin: 18px 0;

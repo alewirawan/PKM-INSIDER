@@ -31,6 +31,7 @@ export async function registerDirectoryRoutes(
         tone: v.tone,
         level: v.level,
         portraitIndex: v.portraitIndex,
+        ...(v.parentId ? { parentId: v.parentId, coordination: v.coordination } : {}),
       })),
       teachers: staff.map((v) => ({
         id: v.id,

@@ -167,7 +167,7 @@ test("public pages fit mobile and desktop and About differs from Home", async ({
         .toBeTruthy();
       if (route === "/tentang")
         await expect(
-          page.getByText("Pendidikan dimulai dari kepedulian."),
+          page.getByText("Sebidang kebun. Sebuah harapan yang panjang."),
         ).toBeVisible();
     }
   }

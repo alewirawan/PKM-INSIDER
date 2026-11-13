@@ -3,28 +3,9 @@
 import { BookOpenText, Search, Sparkles } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useDirectory } from "../lib/use-directory";
-import { type Teacher } from "../school-directory-data";
-
-const clusters: ("Semua" | Teacher["cluster"])[] = [
-  "Semua",
-  "Sains",
-  "Bahasa",
-  "Sosial",
-  "Kreatif & Karakter",
-];
-const portraitPositions = [
-  "0% 0%",
-  "33.333% 0%",
-  "66.667% 0%",
-  "100% 0%",
-  "0% 100%",
-  "33.333% 100%",
-  "66.667% 100%",
-  "100% 100%",
-];
 
 export function TeacherDirectory() {
-  const [cluster, setCluster] = useState<(typeof clusters)[number]>("Semua");
+  const [cluster, setCluster] = useState<string>("Semua");
   const [query, setQuery] = useState("");
   const {
     directory: { teachers },
@@ -32,6 +13,12 @@ export function TeacherDirectory() {
     error,
     refresh,
   } = useDirectory();
+  const clusters = [
+    "Semua",
+    ...new Set(
+      teachers.flatMap((teacher) => (teacher.cluster ? [teacher.cluster] : [])),
+    ),
+  ];
   const visible = useMemo(
     () =>
       teachers.filter((teacher) => {
@@ -68,20 +55,18 @@ export function TeacherDirectory() {
           </p>
           <div>
             <span>
-              <b>{teachers.length}</b> profil pendidik
-            </span>
-            <span>
-              <b>4</b> rumpun belajar
+              <b>{teachers.length}</b> guru & tenaga kependidikan
             </span>
           </div>
         </div>
       </header>
       <div className="teacher-toolbar">
         <label>
-          <Search size={17} />
+          <Search size={17} aria-hidden="true" />
           <input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
+            aria-label="Cari nama atau mata pelajaran"
             placeholder="Cari nama atau mata pelajaran"
           />
         </label>
@@ -89,6 +74,7 @@ export function TeacherDirectory() {
           {clusters.map((item) => (
             <button
               className={cluster === item ? "active" : ""}
+              aria-pressed={cluster === item}
               onClick={() => setCluster(item)}
               key={item}
             >
@@ -98,29 +84,27 @@ export function TeacherDirectory() {
         </div>
       </div>
       <div className="teacher-grid">
-        {visible.map((teacher) => {
-          const portraitIndex = teacher.portraitIndex % 8;
+        {visible.map((teacher, index) => {
           return (
             <article
               className={`teacher-card tone-${teacher.tone}`}
               key={teacher.name}
             >
-              <div
-                className="teacher-portrait"
-                style={{ backgroundPosition: portraitPositions[portraitIndex] }}
-              >
+              <div className="teacher-portrait">
                 <span>{teacher.initials}</span>
-                <i>{String(portraitIndex + 1).padStart(2, "0")}</i>
+                <i>{String(index + 1).padStart(2, "0")}</i>
               </div>
               <div className="teacher-card-copy">
                 <span className="teacher-subject">
                   <BookOpenText size={13} /> {teacher.subject}
                 </span>
                 <h3>{teacher.name}</h3>
-                <p>“{teacher.note}”</p>
+                <p>{teacher.note}</p>
                 <footer>
-                  <span>{teacher.cluster}</span>
-                  <b>{teacher.years} tahun mengajar</b>
+                  {teacher.cluster && <span>{teacher.cluster}</span>}
+                  {teacher.years !== null && (
+                    <b>{teacher.years} tahun mengajar</b>
+                  )}
                 </footer>
               </div>
             </article>

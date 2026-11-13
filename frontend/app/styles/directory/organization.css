@@ -143,7 +143,7 @@
   aspect-ratio: 3/4;
   overflow: hidden;
   background-color: color-mix(in srgb, var(--card-tone) 22%, white);
-  background-image: url("/images/organization-portraits-v1.webp");
+  background-image: none;
   background-repeat: no-repeat;
   background-size: 400% 200%;
   box-shadow: 0 8px 18px rgba(20, 49, 58, 0.13);
@@ -266,7 +266,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: #a75e35;
+  color: var(--brand-blue);
   font-size: 11px;
   font-weight: 800;
   white-space: nowrap;

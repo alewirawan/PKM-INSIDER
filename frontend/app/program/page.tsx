@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { HomePpdbCta } from "../components/HomePpdbCta";
 import { PageHero } from "../components/PageHero";
 import { SiteFooter } from "../components/SiteFooter";
 import { SiteHeader } from "../components/SiteHeader";
@@ -20,7 +20,7 @@ export default function ProgramPage() {
         <PageHero
           eyebrow="Program belajar"
           title="Pilih jalanmu. Temukan caramu bertumbuh."
-          description="Kurikulum nasional diperkaya pengalaman lintas disiplin, proyek nyata, dan pendampingan yang membantu siswa mengenali minatnya."
+          description="Mengembangkan ilmu, iman, keterampilan, dan minat melalui kegiatan belajar serta tujuh pilihan ekstrakurikuler SMP Nurul Huda."
         />
         <section className="program-detail-list">
           {programs.map((program, index) => (
@@ -38,7 +38,7 @@ export default function ProgramPage() {
                 </ul>
               </div>
               <div className={`program-visual visual-${index + 1}`}>
-                <b>{index === 0 ? "STEM" : index === 1 ? "HUM" : "ART"}</b>
+                <b>{program.label}</b>
               </div>
             </article>
           ))}
@@ -52,26 +52,34 @@ export default function ProgramPage() {
               Siswa belajar melakukan.
             </h2>
             <p>
-              Setiap semester, siswa memilih tantangan nyata dan mengembangkan
-              solusi bersama tim. Guru berperan sebagai mentor, sementara proses
-              dan refleksi menjadi bagian penting dari penilaian.
+              Pembelajaran di SMP Nurul Huda mengutamakan kedisiplinan dan
+              kehadiran siswa. Kegiatan di luar kelas melengkapi proses belajar
+              dengan ruang untuk mengembangkan minat, kebersamaan, dan
+              kepedulian.
             </p>
           </div>
           <div className="model-steps">
             <article>
               <b>01</b>
-              <h3>Eksplorasi</h3>
-              <p>Mengenali masalah dan mengumpulkan sudut pandang.</p>
+              <h3>Kehadiran</h3>
+              <p>
+                Mengikuti pembelajaran dengan disiplin dan bertanggung jawab.
+              </p>
             </article>
             <article>
               <b>02</b>
-              <h3>Eksperimen</h3>
-              <p>Menguji ide dan belajar dari kegagalan.</p>
+              <h3>Pengembangan diri</h3>
+              <p>
+                Mengenali minat melalui kegiatan seni, keterampilan, dan
+                olahraga.
+              </p>
             </article>
             <article>
               <b>03</b>
-              <h3>Ekspresi</h3>
-              <p>Mengkomunikasikan karya kepada audiens nyata.</p>
+              <h3>Akhlak & kepedulian</h3>
+              <p>
+                Membangun kebiasaan baik, iman, dan sikap peduli kepada sesama.
+              </p>
             </article>
           </div>
         </section>
@@ -93,20 +101,7 @@ export default function ProgramPage() {
           <ClubDirectory />
         </section>
         <PublicAgenda />
-        <section className="cta-section">
-          <p className="section-kicker">Siap menemukan pilihanmu?</p>
-          <h2>
-            Mulai perjalananmu
-            <br />
-            bersama Nurul Huda.
-          </h2>
-          <p>Pendaftaran calon siswa tahun ajaran 2026/2027 sudah dibuka.</p>
-          <div>
-            <Link className="button button-accent" href="/pendaftaran">
-              Lihat alur pendaftaran
-            </Link>
-          </div>
-        </section>
+        <HomePpdbCta />
       </main>
       <SiteFooter />
     </>

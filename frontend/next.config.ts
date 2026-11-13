@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
           "form-action 'self'",
           "frame-ancestors 'none'",
           "object-src 'none'",
-          "frame-src 'self' blob:",
+          "frame-src 'self' blob: https://www.google.com",
           "script-src 'self' 'unsafe-inline'",
           "style-src 'self' 'unsafe-inline'",
           "img-src 'self' data: blob: https:",

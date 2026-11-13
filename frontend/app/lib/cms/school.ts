@@ -1,3 +1,4 @@
+import school from "../../../../contracts/school-profile.json";
 import {
   seedSchoolDirectory,
   type SchoolDirectory,
@@ -6,17 +7,17 @@ import { KEYS, readJson, writeJson } from "./storage";
 import type { SchoolSettings } from "./types";
 
 export const defaultSettings: SchoolSettings = {
-  schoolName: "SMP Nurul Huda",
-  tagline: "Berilmu, berakhlak, dan tumbuh bersama",
-  email: "sekolah@example.test",
-  ppdbEmail: "ppdb@example.test",
-  phone: "081200000001",
-  whatsapp: "081200000002",
-  address: "Alamat sekolah belum diatur. Silakan perbarui melalui Pengaturan.",
+  schoolName: school.schoolName,
+  tagline: school.tagline,
+  email: school.email,
+  ppdbEmail: school.email,
+  phone: "",
+  whatsapp: "",
+  address: school.address,
   academicYear: "2026/2027",
-  registrationOpen: false,
+  registrationOpen: true,
   documentRequirements: {
-    requiredKinds: [],
+    requiredKinds: ["skl", "rapor", "akta", "kk", "ktp"],
     requireOneGraduationDocument: false,
   },
   registrationOpensAt: null,

@@ -84,7 +84,7 @@
   border-top: 1px solid var(--line);
 }
 .contact-list article > span {
-  color: #b46330;
+  color: var(--brand-blue);
   font-size: 9px;
   font-weight: 800;
   text-transform: uppercase;
@@ -129,7 +129,7 @@
   color: #7d8d90;
 }
 .faq-section {
-  background: #dfe7e2;
+  background: var(--surface-blue);
 }
 .faq-list {
   max-width: 900px;

@@ -38,9 +38,11 @@ export function SiteFooter() {
             <>
               <p>{settings.address}</p>
               <a href={`mailto:${settings.email}`}>{settings.email}</a>
-              <a href={`tel:${settings.phone.replace(/[^\d+]/g, "")}`}>
-                {settings.phone}
-              </a>
+              {settings.phone && (
+                <a href={`tel:${settings.phone.replace(/[^\d+]/g, "")}`}>
+                  {settings.phone}
+                </a>
+              )}
             </>
           ) : (
             <p role="status">

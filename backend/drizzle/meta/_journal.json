@@ -22,6 +22,20 @@
       "when": 1793287632883,
       "tag": "0002_chunky_scalphunter",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1794546095214,
+      "tag": "0003_school_profile",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1794549087144,
+      "tag": "0004_organization_hierarchy",
+      "breakpoints": true
     }
   ]
 }

@@ -68,7 +68,7 @@
   font-size: 18px;
 }
 .agenda-list time span {
-  color: #b46330;
+  color: var(--brand-blue);
   font-size: 7px;
   font-weight: 800;
 }

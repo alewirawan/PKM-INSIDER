@@ -43,7 +43,7 @@
   letter-spacing: 0.06em;
 }
 .teacher-heading-aside b {
-  color: #a55f39;
+  color: var(--brand-blue);
   font-family: Georgia, serif;
   font-size: 22px;
   font-weight: 400;
@@ -130,7 +130,7 @@
   aspect-ratio: 3/4;
   overflow: hidden;
   background-color: color-mix(in srgb, var(--card-tone) 20%, #edf2ef);
-  background-image: url("/images/teacher-portraits-v1.webp");
+  background-image: none;
   background-repeat: no-repeat;
   background-size: 400% 200%;
 }
@@ -195,7 +195,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  color: #a45e38;
+  color: var(--brand-blue);
   font-size: 9px;
   font-weight: 800;
   text-transform: uppercase;

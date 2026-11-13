@@ -16,7 +16,7 @@
 .admin-page-header p,
 .admin-eyebrow {
   margin: 0 0 8px;
-  color: #a75e35;
+  color: var(--brand-blue);
   font-size: 9px;
   font-weight: 800;
   text-transform: uppercase;
@@ -202,7 +202,7 @@
   height: auto !important;
   border: 0 !important;
   background: transparent !important;
-  color: #b46330 !important;
+  color: var(--brand-blue) !important;
   font-size: 9px !important;
   font-weight: 700;
   cursor: pointer;

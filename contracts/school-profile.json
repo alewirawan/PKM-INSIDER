@@ -1,0 +1,351 @@
+{
+  "schoolName": "SMP Nurul Huda",
+  "tagline": "Berprestasi, berilmu, dan berakhlak mulia",
+  "email": "smnurulhuda.cisoka@gmail.com",
+  "address": "Jalan Cisoka–Megu, Kp. Secang RT/RW 05/04, Desa Cempaka, Kecamatan Cisoka, Kabupaten Tangerang, Banten 15730",
+  "mapLabel": "SMP/SMA Nurul Huda Cisoka, Jl. Megu–Cisoka No. 8",
+  "latitude": -6.2632777778,
+  "longitude": 106.41875,
+  "coordinateLabel": "6°15′47.8″S 106°25′07.5″E",
+  "facebookName": "SMP Nurul Huda",
+  "ppdbContacts": [
+    "Pak Humaidi",
+    "Bu Jannah"
+  ],
+  "vision": "Menghasilkan lulusan yang unggul dalam prestasi, cerdas dan berpikir, terampil dalam teknologi informasi, berakhlak mulia dan bertakwa kepada Allah SWT.",
+  "missions": [
+    "Mencerdaskan peserta didik yang beriman dan bertakwa, cerdas dan berilmu pengetahuan yang luas serta berwawasan kebangsaan nasional.",
+    "Mengembangkan jiwa kemandirian, menguasai ilmu pengetahuan dan teknologi, seni dan olahraga."
+  ],
+  "teachers": [
+    {
+      "id": "nh-fajar-anwar",
+      "name": "Bpk. Fajar Anwar, S.S",
+      "initials": "FA",
+      "subject": "Kepala Sekolah"
+    },
+    {
+      "id": "nh-rehan",
+      "name": "Bpk. Rehan",
+      "initials": "RE",
+      "subject": "PJOK"
+    },
+    {
+      "id": "nh-hasan",
+      "name": "Bpk. Hasan, S.Pd",
+      "initials": "HA",
+      "subject": "Informatika"
+    },
+    {
+      "id": "nh-siti-nurjanah",
+      "name": "Ibu Siti Nurjanah, S.Pd",
+      "initials": "SN",
+      "subject": "Matematika"
+    },
+    {
+      "id": "nh-anwar-husadat",
+      "name": "Bpk. Anwar Husadat, S.Pd.I",
+      "initials": "AH",
+      "subject": "Baca Tulis Al-Qur’an (BTQ)"
+    },
+    {
+      "id": "nh-julian",
+      "name": "Bpk. Julian",
+      "initials": "JU",
+      "subject": "Tata Usaha"
+    },
+    {
+      "id": "nh-khaerul-munajat",
+      "name": "Bpk. Khaerul Munajat, S.Hi",
+      "initials": "KM",
+      "subject": "Seni Budaya dan Keterampilan (SBK)"
+    },
+    {
+      "id": "nh-hajar-bayani-ammri",
+      "name": "Ibu Hajar Bayani Ammri, S.Pd",
+      "initials": "HB",
+      "subject": "Bahasa Indonesia"
+    },
+    {
+      "id": "nh-humaedi",
+      "name": "Bpk. Humaedi, S.Sos.I",
+      "initials": "HU",
+      "subject": "IPS"
+    },
+    {
+      "id": "nh-ripah-dahlia",
+      "name": "Ibu Ripah Dahlia, S.Pd",
+      "initials": "RD",
+      "subject": "PKn"
+    },
+    {
+      "id": "nh-rohimi-al-firdaus",
+      "name": "Bpk. Rohimi Al Firdaus",
+      "initials": "RF",
+      "subject": "Tata Usaha"
+    },
+    {
+      "id": "nh-awaludin",
+      "name": "Bpk. Awaludin, S.Pd",
+      "initials": "AW",
+      "subject": "Operator"
+    },
+    {
+      "id": "nh-haerudin",
+      "name": "Bpk. Haerudin, S.Pd",
+      "initials": "HA",
+      "subject": "Bahasa Inggris"
+    },
+    {
+      "id": "nh-sofatul-parida",
+      "name": "Ibu Sofatul Parida, S.Pd",
+      "initials": "SP",
+      "subject": "Prakarya"
+    },
+    {
+      "id": "nh-sutihat",
+      "name": "Ibu Sutihat, S.Pd",
+      "initials": "SU",
+      "subject": "Pendidikan Agama Islam (PAI)"
+    },
+    {
+      "id": "nh-tia-rahmawati",
+      "name": "Ibu Tia Rahmawati, S.Pd",
+      "initials": "TR",
+      "subject": "IPA"
+    }
+  ],
+  "clubs": [
+    {
+      "id": "nh-akustik",
+      "name": "Nurul Huda Akustik",
+      "description": "Ruang mengembangkan minat bermusik melalui kegiatan akustik."
+    },
+    {
+      "id": "nh-cooking",
+      "name": "Cooking Class",
+      "description": "Mengenal keterampilan memasak dan mengembangkan kreativitas di bidang kuliner."
+    },
+    {
+      "id": "nh-makeup",
+      "name": "Makeup Class",
+      "description": "Mengembangkan minat dan keterampilan tata rias."
+    },
+    {
+      "id": "nh-paduan-suara",
+      "name": "Paduan Suara",
+      "description": "Belajar bernyanyi bersama, mendengar, dan menjaga kekompakan."
+    },
+    {
+      "id": "nh-taekwondo",
+      "name": "Taekwondo",
+      "description": "Mengembangkan minat bela diri, kedisiplinan, dan kebugaran."
+    },
+    {
+      "id": "nh-badminton",
+      "name": "Badminton",
+      "description": "Mengembangkan keterampilan bulu tangkis dan sikap sportif."
+    },
+    {
+      "id": "nh-pmr",
+      "name": "PMR (Palang Merah Remaja)",
+      "description": "Belajar kepedulian dan keterampilan dasar pertolongan pertama."
+    }
+  ],
+  "event": {
+    "id": "a17a1708-1708-4170-8170-170817081708",
+    "slug": "semangat-kemerdekaan-17-agustus",
+    "title": "Merah Putih dan Kebersamaan di Halaman Nurul Huda",
+    "category": "Kegiatan",
+    "publishedAt": "2026-11-13T05:00:00.000Z",
+    "image": "/images/sekolah/17-agustus-bersama.jpeg",
+    "excerpt": "Suasana peringatan 17 Agustus di SMP Nurul Huda: dekorasi merah-putih, kegiatan bersama, dan kebersamaan warga sekolah.",
+    "author": "SMP Nurul Huda",
+    "content": [
+      "Peringatan 17 Agustus menjadi kesempatan bagi warga SMP Nurul Huda untuk berkumpul dan merawat semangat kebangsaan. Halaman sekolah dihiasi rangkaian merah-putih yang membentang di antara ruang-ruang kelas.",
+      "Dokumentasi kegiatan memperlihatkan kebersamaan warga sekolah dalam beragam busana, siswa yang membawa bendera Merah Putih, serta aktivitas bersama di lapangan. Suasana akrab di halaman sekolah menjadi bagian dari cerita perayaan ini.",
+      "Kegiatan bersama mengajak siswa belajar tentang kekompakan, kedisiplinan, dan saling menghargai. Semangat kemerdekaan tumbuh melalui partisipasi dan kebersamaan, sekaligus menjadi pengingat untuk terus belajar dan memberi manfaat bagi lingkungan sekitar."
+    ],
+    "gallery": [
+      {
+        "src": "/images/sekolah/17-agustus-bendera.jpeg",
+        "alt": "Tiga peserta kegiatan membawa bendera Merah Putih di halaman sekolah",
+        "caption": "Merah Putih di halaman sekolah.",
+        "width": 3024,
+        "height": 4032
+      },
+      {
+        "src": "/images/sekolah/17-agustus-lapangan.jpeg",
+        "alt": "Kegiatan bersama di lapangan dengan dekorasi merah-putih",
+        "caption": "Kegiatan bersama di bawah dekorasi kemerdekaan.",
+        "width": 1200,
+        "height": 1600
+      },
+      {
+        "src": "/images/sekolah/kegiatan-halaman.jpeg",
+        "alt": "Warga sekolah beraktivitas di halaman di antara gedung kelas",
+        "caption": "Halaman sekolah menjadi ruang berkumpul dan bergerak bersama.",
+        "width": 1280,
+        "height": 720
+      }
+    ]
+  },
+  "leaders": [
+    {
+      "id": "org-yayasan",
+      "name": "H. Abu Bakar Sidik",
+      "role": "Ketua Yayasan",
+      "initials": "AB",
+      "parentId": null,
+      "coordination": false,
+      "level": "support",
+      "focus": "SMP Nurul Huda Cisoka",
+      "tone": "sky",
+      "portraitIndex": 0
+    },
+    {
+      "id": "org-kepala",
+      "name": "Fajar Anwar, S.S.",
+      "role": "Kepala Sekolah",
+      "initials": "FA",
+      "parentId": "org-yayasan",
+      "coordination": false,
+      "level": "principal",
+      "focus": "SMP Nurul Huda Cisoka",
+      "tone": "sky",
+      "portraitIndex": 0
+    },
+    {
+      "id": "org-komite",
+      "name": "Ust. Hasbullah Hermawan",
+      "role": "Komite Sekolah",
+      "initials": "HH",
+      "parentId": "org-kepala",
+      "coordination": true,
+      "level": "support",
+      "focus": "SMP Nurul Huda Cisoka",
+      "tone": "sky",
+      "portraitIndex": 0
+    },
+    {
+      "id": "org-wakil",
+      "name": "Nurul Hidayat, S.Pd.",
+      "role": "Wakil Kepala Sekolah",
+      "initials": "NH",
+      "parentId": "org-kepala",
+      "coordination": false,
+      "level": "leadership",
+      "focus": "SMP Nurul Huda Cisoka",
+      "tone": "sky",
+      "portraitIndex": 0
+    },
+    {
+      "id": "org-operator",
+      "name": "Awaludin, S.Pd.",
+      "role": "Operator",
+      "initials": "AW",
+      "parentId": "org-wakil",
+      "coordination": false,
+      "level": "support",
+      "focus": "SMP Nurul Huda Cisoka",
+      "tone": "sky",
+      "portraitIndex": 0
+    },
+    {
+      "id": "org-kurikulum",
+      "name": "Khaerul Munajat, SH.I",
+      "role": "Waka Kurikulum",
+      "initials": "KM",
+      "parentId": "org-wakil",
+      "coordination": false,
+      "level": "leadership",
+      "focus": "SMP Nurul Huda Cisoka",
+      "tone": "sky",
+      "portraitIndex": 0
+    },
+    {
+      "id": "org-kesiswaan",
+      "name": "Humaedi, S.Sos.I",
+      "role": "Waka Kesiswaan",
+      "initials": "HU",
+      "parentId": "org-wakil",
+      "coordination": false,
+      "level": "leadership",
+      "focus": "SMP Nurul Huda Cisoka",
+      "tone": "sky",
+      "portraitIndex": 0
+    },
+    {
+      "id": "org-sarpras",
+      "name": "Hasan, S.Pd",
+      "role": "Waka Sarpras",
+      "initials": "HA",
+      "parentId": "org-wakil",
+      "coordination": false,
+      "level": "leadership",
+      "focus": "SMP Nurul Huda Cisoka",
+      "tone": "sky",
+      "portraitIndex": 0
+    },
+    {
+      "id": "org-bendahara",
+      "name": "Siti Nurjanah, S.Pd.",
+      "role": "Bendahara",
+      "initials": "SN",
+      "parentId": "org-wakil",
+      "coordination": false,
+      "level": "support",
+      "focus": "SMP Nurul Huda Cisoka",
+      "tone": "sky",
+      "portraitIndex": 0
+    },
+    {
+      "id": "org-wali-kelas",
+      "name": "Wali Kelas",
+      "role": "Wali Kelas",
+      "initials": "WK",
+      "parentId": "org-kesiswaan",
+      "coordination": false,
+      "level": "support",
+      "focus": "SMP Nurul Huda Cisoka",
+      "tone": "sky",
+      "portraitIndex": 0
+    },
+    {
+      "id": "org-guru-bidang",
+      "name": "Guru Bidang Studi",
+      "role": "Guru Bidang Studi",
+      "initials": "GB",
+      "parentId": "org-kesiswaan",
+      "coordination": false,
+      "level": "support",
+      "focus": "SMP Nurul Huda Cisoka",
+      "tone": "sky",
+      "portraitIndex": 0
+    },
+    {
+      "id": "org-perpustakaan",
+      "name": "Hajar Bayani Ammri, S.Pd",
+      "role": "Perpustakaan",
+      "initials": "HB",
+      "parentId": "org-kesiswaan",
+      "coordination": false,
+      "level": "support",
+      "focus": "SMP Nurul Huda Cisoka",
+      "tone": "sky",
+      "portraitIndex": 0
+    },
+    {
+      "id": "org-keamanan",
+      "name": "Encep",
+      "role": "Kebersihan / Keamanan",
+      "initials": "EN",
+      "parentId": "org-bendahara",
+      "coordination": false,
+      "level": "support",
+      "focus": "SMP Nurul Huda Cisoka",
+      "tone": "sky",
+      "portraitIndex": 0
+    }
+  ]
+}

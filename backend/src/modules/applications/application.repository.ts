@@ -26,7 +26,9 @@ export const labels = {
   ktp: "KTP orang tua/wali",
   kip: "PIP / KIP",
   akta: "Akta kelahiran",
-  photo: "Pas foto",
+  photo: "Pas foto (arsip)",
+  rapor: "Rapor",
+  pasfoto: "Pas foto 3×4",
 };
 export const docStatuses = {
   missing: "Belum ada",

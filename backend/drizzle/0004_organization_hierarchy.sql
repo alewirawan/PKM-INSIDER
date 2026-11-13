@@ -1,0 +1,3 @@
+ALTER TABLE "school_leaders" ADD COLUMN "parent_id" varchar(120);--> statement-breakpoint
+ALTER TABLE "school_leaders" ADD COLUMN "coordination" boolean DEFAULT false NOT NULL;--> statement-breakpoint
+ALTER TABLE "school_leaders" ADD CONSTRAINT "school_leaders_parent_id_school_leaders_id_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."school_leaders"("id") ON DELETE set null ON UPDATE no action;

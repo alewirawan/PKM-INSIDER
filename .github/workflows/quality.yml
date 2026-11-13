@@ -39,7 +39,9 @@ jobs:
       - name: Run team checks inside Docker
         run: docker compose -f compose.dev.yaml run --rm checks
       - name: Test complete admission and administration workflows
-        run: docker compose -f compose.dev.yaml run --rm -e RUN_FULL_SYSTEM_TESTS=1 backend npm test --workspace=@nurul-huda/backend -- --run tests/full-system.test.ts
+        run: |
+          docker compose -f compose.dev.yaml exec -T postgres createdb -U nurul_huda nurul_huda_workflow_test
+          docker compose -f compose.dev.yaml run --rm -e POSTGRES_DB=nurul_huda_workflow_test -e RUN_FULL_SYSTEM_TESTS=1 backend npm test --workspace=@nurul-huda/backend -- --run tests/full-system.test.ts
       - uses: actions/setup-node@v4
         with:
           node-version: 22

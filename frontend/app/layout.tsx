@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     title: "SMP Nurul Huda",
     description: "Berani Belajar. Siap Berkarya.",
     images: [
-      { url: "/og.jpg", width: 1200, height: 627, alt: "SMP Nurul Huda" },
+      { url: "/images/sekolah/gedung-sekolah.jpeg", width: 1600, height: 1200, alt: "SMP Nurul Huda" },
     ],
     locale: "id_ID",
     type: "website",
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "SMP Nurul Huda",
     description: "Berani Belajar. Siap Berkarya.",
-    images: ["/og.jpg"],
+    images: ["/images/sekolah/gedung-sekolah.jpeg"],
   },
 };
 

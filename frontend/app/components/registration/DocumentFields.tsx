@@ -57,6 +57,7 @@ export function DocumentFields({
               <input
                 type="file"
                 accept=".pdf,.jpg,.jpeg,.png"
+                aria-invalid={Boolean(errors[key])}
                 aria-describedby={errors[key] ? "file-error-" + key : undefined}
                 onChange={(event) => {
                   const file = event.target.files?.[0];

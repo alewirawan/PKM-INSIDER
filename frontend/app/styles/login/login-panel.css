@@ -78,8 +78,8 @@
     box-shadow 0.2s ease;
 }
 .admin-login-card input:focus {
-  border-color: #b97040;
-  box-shadow: 0 0 0 3px rgba(185, 112, 64, 0.09);
+  border-color: var(--brand-blue);
+  box-shadow: 0 0 0 3px rgba(24, 89, 201, 0.09);
 }
 .password-field {
   position: relative;
@@ -189,8 +189,8 @@
   overflow: hidden;
   padding: 48px;
   background:
-    linear-gradient(140deg, rgba(12, 43, 54, 0.84), rgba(12, 43, 54, 0.96)),
-    url("/images/campus.jpg") center/cover;
+    linear-gradient(140deg, rgba(16, 43, 85, 0.84), rgba(16, 43, 85, 0.96)),
+    url("/images/sekolah/halaman-sekolah.jpeg") center/cover;
   color: white;
 }
 .admin-login-page > aside::after {

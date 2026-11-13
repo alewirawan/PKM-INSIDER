@@ -13,6 +13,6 @@ export function timestamps() {
 }
 
 export type DocumentRequirements = {
-  requiredKinds: ("skl" | "ijazah" | "kk" | "ktp" | "akta")[];
+  requiredKinds: ("skl" | "ijazah" | "kk" | "ktp" | "akta" | "rapor" | "pasfoto")[];
   requireOneGraduationDocument: boolean;
 };

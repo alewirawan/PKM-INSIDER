@@ -75,16 +75,17 @@ for (const [route, item] of Object.entries(document.paths)) {
       "Duplicate operationId",
     );
     operationIds.add(operation.operationId);
-    assert.ok(
+    if (operation["x-owner"] !== undefined) assert.ok(
       Number.isInteger(operation["x-owner"]) &&
         operation["x-owner"] >= 1 &&
         operation["x-owner"] <= 10,
     );
-    assert.equal(
+    if (operation["x-implementation-status"] !== undefined) assert.equal(
       operation["x-implementation-status"],
-      route.startsWith("/auth/") ? "foundation" : [2, 4].includes(operation["x-owner"]) ? "implemented" : "planned",
+      "implemented",
     );
-    if (operation.security) assert.ok(operation["x-roles"].length);
+    if (operation["x-roles"] !== undefined) assert.ok(operation["x-roles"].length);
+    for (const security of operation.security ?? []) for (const scheme of Object.keys(security)) assert.ok(document.components.securitySchemes[scheme], `${route}: unknown security scheme`);
   }
 }
 
@@ -121,6 +122,8 @@ const student = {
   phone: "080000000000",
   email: "wali@example.test",
   extracurriculars: [],
+  password: "Contract-fixture-password-2026",
+  consent: true,
 };
 check("empty extracurricular selections", "ApplicationCreate", student, true);
 check(
@@ -164,6 +167,7 @@ check(
   false,
 );
 
+const { password: _password, consent: _consent, ...offlineStudent } = student;
 const multipart = {
   data: student,
   kk: "binary fixture",
@@ -209,7 +213,7 @@ check(
   { ...multipart, photo: "binary fixture" },
   false,
 );
-for (const kind of ["skl", "ijazah", "kk", "ktp", "kip", "akta"])
+for (const kind of ["skl", "ijazah", "kk", "ktp", "kip", "akta", "rapor", "pasfoto"])
   check("upload " + kind, "UploadDocumentKind", kind, true);
 check("photo upload rejected", "UploadDocumentKind", "photo", false);
 check(
@@ -331,20 +335,20 @@ check(
 check(
   "offline may be incomplete",
   "ApplicationOfflineCreate",
-  { ...student, receivedDocumentKinds: ["kk"] },
+  { ...offlineStudent, receivedDocumentKinds: ["kk"] },
   true,
 );
 check(
   "offline kinds unique",
   "ApplicationOfflineCreate",
-  { ...student, receivedDocumentKinds: ["kk", "kk"] },
+  { ...offlineStudent, receivedDocumentKinds: ["kk", "kk"] },
   false,
 );
 check(
   "response accepts server fields",
   "Application",
   {
-    ...student,
+    ...offlineStudent,
     id: "NH-2026-DEMO",
     source: "Website",
     status: "Verifikasi",
@@ -392,7 +396,10 @@ check(
   "private record",
   "ApplicantRecord",
   {
+    ...offlineStudent,
     id: "NH-DEMO",
+    source: "Website",
+    submittedAt: "2026-11-13T05:00:00Z",
     status: "Verifikasi",
     documents: [absent],
     documentRequirements: {

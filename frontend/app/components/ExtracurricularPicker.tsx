@@ -23,8 +23,7 @@ export function ExtracurricularPicker({
     >
       <legend>Ekstrakurikuler (opsional)</legend>
       <p id={hintId}>
-        Boleh memilih lebih dari satu atau tidak memilih. Pilihan lama tetap
-        tersimpan.
+        Pilih kegiatan yang kamu sukai. Boleh lebih dari satu, atau lewati dulu.
       </p>
       {loading && <p role="status">Memuat pilihan…</p>}
       {error && <p role="alert">{error}</p>}
@@ -38,24 +37,36 @@ export function ExtracurricularPicker({
         </button>
       )}
       {!loading && !error && !names.length && <p>Belum ada kegiatan aktif.</p>}
-      {names.map((name) => (
-        <label key={name}>
-          <input
-            type="checkbox"
-            disabled={loading || Boolean(error)}
-            checked={value.includes(name)}
-            onChange={(event) =>
-              onChange(
-                event.target.checked
-                  ? [...new Set([...value, name])]
-                  : value.filter((item) => item !== name),
-              )
-            }
-          />
-          {name}
-          {!activeNames.includes(name) ? " (pilihan sebelumnya)" : ""}
-        </label>
-      ))}
+      <div className="extracurricular-options">
+        {names.map((name) => (
+          <label
+            key={name}
+            className={value.includes(name) ? "is-selected" : ""}
+          >
+            <input
+              type="checkbox"
+              disabled={loading || Boolean(error)}
+              checked={value.includes(name)}
+              onChange={(event) =>
+                onChange(
+                  event.target.checked
+                    ? [...new Set([...value, name])]
+                    : value.filter((item) => item !== name),
+                )
+              }
+            />
+            <span>
+              {name}
+              {!activeNames.includes(name) && <small>Pilihan sebelumnya</small>}
+            </span>
+          </label>
+        ))}
+      </div>
+      <p className="extracurricular-count" role="status">
+        {value.length
+          ? `${value.length} kegiatan dipilih`
+          : "Belum ada pilihan — kamu tetap bisa melanjutkan."}
+      </p>
     </fieldset>
   );
 }

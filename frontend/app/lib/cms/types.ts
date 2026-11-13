@@ -16,7 +16,7 @@ export type StudentDocument = {
   id?: string;
   hasFile?: boolean;
   receivedPhysically?: boolean;
-  key: "kk" | "akta" | "ijazah" | "skl" | "ktp" | "kip" | "photo";
+  key: "kk" | "akta" | "ijazah" | "skl" | "ktp" | "kip" | "photo" | "rapor" | "pasfoto";
   label: string;
   status: StudentDocumentStatus;
   fileName?: string;
@@ -82,7 +82,7 @@ export type ContactMessage = {
 export type NewsletterSubscription = { email: string; subscribedAt: string };
 
 /** Jenis berkas yang boleh diwajibkan admin. kip/photo tidak termasuk. */
-export type RequirableDocumentKind = "skl" | "ijazah" | "kk" | "ktp" | "akta";
+export type RequirableDocumentKind = "skl" | "ijazah" | "kk" | "ktp" | "akta" | "rapor" | "pasfoto";
 
 /** Mengikuti DocumentRequirements pada contracts/openapi.yaml. */
 export type DocumentRequirements = {
